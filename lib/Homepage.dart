@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.only(top: 200),
+            padding: const EdgeInsets.only(top: 250),
             child: Hero(
                 tag: 'pop_up',
                 child: SvgPicture.asset('images/Logo.svg')),
