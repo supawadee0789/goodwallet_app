@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Homepage.dart';
+import 'Voice_Input.dart';
 
 void main(){
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
                 colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
               ),
             ),
-            child: HomePage(),
+            child: VoiceInput(),
         ),
       ),
 
