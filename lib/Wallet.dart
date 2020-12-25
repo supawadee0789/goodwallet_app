@@ -25,11 +25,34 @@ class _WalletState extends State<Wallet> {
           child: Column(
             children: [
               Header(),
-              TotalCard("Kuy Prayut", 9999999999999.589),
-              Container(
-                margin: EdgeInsets.only(top: 30),
-                child: ListWallet(),
-                width: MediaQuery.of(context).size.width * 0.83,
+              TotalCard("TOTAL", 9999999999999.589),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(top: 30, bottom: 50),
+                  child: ListWallet(),
+                  width: MediaQuery.of(context).size.width * 0.83,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => print('pressed'),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      color: Color(0xffE5A9B6),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(23),
+                          topRight: Radius.circular(23))),
+                  child: Center(
+                    child: Text(
+                      "Add new wallet",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
