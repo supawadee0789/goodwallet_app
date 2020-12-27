@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Homepage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main(){
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((_){
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
-  }
-  );
+  });
 }
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -33,17 +33,16 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Container(
           //Background Gradient Color
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-              ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
-            child: HomePage(),
+          ),
+          child: HomePage(),
         ),
       ),
-
     );
   }
 }

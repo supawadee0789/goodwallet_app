@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:goodwallet_app/AddWallet.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -24,17 +26,21 @@ class _WalletState extends State<Wallet> {
           ),
           child: Column(
             children: [
-              Header(),
-              TotalCard("TOTAL", 9999999999999.589),
+              HeaderWallet(),
+              TotalCard("TOTAL", 99999),
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(top: 30, bottom: 50),
-                  child: ListWallet(),
+                  child: WalletList(),
                   width: MediaQuery.of(context).size.width * 0.83,
                 ),
               ),
               GestureDetector(
-                onTap: () => print('pressed'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return AddWallet();
+                  }));
+                },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 60,
@@ -62,7 +68,7 @@ class _WalletState extends State<Wallet> {
   }
 }
 
-class Header extends StatelessWidget {
+class HeaderWallet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -180,57 +186,72 @@ class TotalCard extends StatelessWidget {
   }
 }
 
-class ListWallet extends StatelessWidget {
+class WalletList extends StatelessWidget {
   @override
-  final List<String> name = <String>['A', 'B', 'C', 'D', 'E', 'F'];
-  final List<double> money = <double>[3000, 522000, 4000, 55555, 6033.33, 8.22];
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 375,
-      child: new ListView.builder(
-          scrollDirection: Axis.vertical,
-          dragStartBehavior: DragStartBehavior.down,
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(8),
-          itemCount: name.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () => print(index),
-              child: Container(
-                height: 76,
-                width: double.infinity,
-                margin: EdgeInsets.symmetric(vertical: 7),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name[index],
-                        style:
-                            TextStyle(color: Color(0xffA1A1A1), fontSize: 20),
-                      ),
-                      Text(
-                        money[index]
-                            .toStringAsFixed(2)
-                            .replaceAllMapped(reg, mathFunc),
-                        style: TextStyle(
-                            color: Color(0xffA890FE),
-                            fontSize: 32,
-                            fontWeight: FontWeight.w600),
-                      )
-                    ],
+    CollectionReference wallet =
+        FirebaseFirestore.instance.collection('wallet');
+
+    return Container(
+      child: StreamBuilder<QuerySnapshot>(
+        stream: wallet.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot wallet = snapshot.data.documents[index];
+              return GestureDetector(
+                onTap: () {
+                  print(index);
+                },
+                child: Container(
+                  height: 76,
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(vertical: 7),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          wallet['name'],
+                          style: TextStyle(
+                              color: Color(0xffA1A1A1),
+                              fontSize: 20,
+                              decoration: TextDecoration.none),
+                        ),
+                        Text(
+                          wallet['money']
+                              .toStringAsFixed(2)
+                              .replaceAllMapped(reg, mathFunc),
+                          style: TextStyle(
+                              color: Color(0xffA890FE),
+                              fontSize: 32,
+                              fontWeight: FontWeight.w600,
+                              decoration: TextDecoration.none),
+                        )
+                      ],
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(34),
+                    color: Colors.white,
                   ),
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(34),
-                  color: Colors.white,
-                ),
-              ),
-            );
-          }),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
