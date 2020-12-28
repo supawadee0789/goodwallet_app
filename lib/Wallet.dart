@@ -28,7 +28,7 @@ class _WalletState extends State<Wallet> {
           child: Column(
             children: [
               HeaderWallet(),
-              TotalCard("TOTAL", 99999),
+              TotalCard(),
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(top: 30, bottom: 50),
@@ -126,11 +126,28 @@ class HeaderWallet extends StatelessWidget {
 
 class TotalCard extends StatelessWidget {
   @override
-  final String title;
-  final money;
-  TotalCard(this.title, this.money);
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
+
+  double money = 0;
+  getTotal() {
+    return fetchTotal().then((value) {
+      money = value;
+      return value;
+    }).catchError((error) => throw (error));
+  }
+
+  Future<double> fetchTotal() async {
+    double money = 0;
+    await for (var snapshot
+        in Firestore.instance.collection('wallet').snapshots()) {
+      for (var wallet in snapshot.documents) {
+        final cost = wallet.get('money');
+        money = money + cost;
+      }
+      return money;
+    }
+  }
 
   Widget build(BuildContext context) {
     return Container(
@@ -144,7 +161,7 @@ class TotalCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 15.0),
             child: Text(
-              title,
+              "TOTAL",
               style: TextStyle(
                   color: Color(0xffA1A1A1),
                   fontSize: 20,
@@ -152,23 +169,33 @@ class TotalCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Container(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: 300.0,
-                maxHeight: 100.0,
-              ),
-              child: AutoSizeText(
-                money.toStringAsFixed(2).replaceAllMapped(reg, mathFunc),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 41.0,
-                    color: Color(0xffA890FE),
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
+          FutureBuilder(
+            future: getTotal(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) {
+                getTotal();
+                return Text('0');
+              } else {
+                return Container(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 300.0,
+                      maxHeight: 100.0,
+                    ),
+                    child: AutoSizeText(
+                      money.toStringAsFixed(2).replaceAllMapped(reg, mathFunc),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 41.0,
+                          color: Color(0xffA890FE),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                );
+              }
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -191,6 +218,7 @@ class WalletList extends StatelessWidget {
   @override
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
+
   Widget build(BuildContext context) {
     Query wallets = FirebaseFirestore.instance
         .collection('wallet')
@@ -260,8 +288,12 @@ class WalletList extends StatelessWidget {
                     foregroundColor: Colors.white,
                     color: Color(0x00000000),
                     onTap: () async {
-                      print(index);
                       await wallet.reference.delete();
+                      MaterialPageRoute materialPageRoute = MaterialPageRoute(
+                          builder: (BuildContext buildcontext) {
+                        return Wallet();
+                      });
+                      Navigator.of(context).push(materialPageRoute);
                     },
                   ),
                 ],
