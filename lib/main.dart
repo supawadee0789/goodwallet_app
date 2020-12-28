@@ -3,16 +3,14 @@ import 'package:flutter/services.dart';
 import 'Homepage.dart';
 import 'Voice_Input.dart';
 
-void main(){
-
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((_){
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
-  }
-  );
+  });
 }
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -34,17 +32,16 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Container(
           //Background Gradient Color
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-              ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
-            child: VoiceInput(),
+          ),
+          child: VoiceInput(),
         ),
       ),
-
     );
   }
 }

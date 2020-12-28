@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+
 import "dart:async";
 
 class VoiceInput extends StatefulWidget {
@@ -20,7 +22,7 @@ class _VoiceInputState extends State<VoiceInput> {
           child: Column(
             children: [
               SizedBox(
-                height: 200,
+                height: 100,
               ),
               Container(
                 child: Column(
@@ -57,7 +59,7 @@ class _VoiceInputState extends State<VoiceInput> {
                   margin: EdgeInsets.only(top: 23),
                   height: 70,
                   width: 70,
-                  child: RadialProgress()),
+                  child: RecordingButton()),
             ],
           ),
         ));
@@ -153,18 +155,15 @@ class _RadialProgressState extends State<RadialProgress>
     if (_loopActive) return; // check if loop is active
 
     _loopActive = true;
-
     while (_buttonPressed) {
       // do your thing
       setState(() {
         progressDegrees = widget.goalCompleted + x * _progressAnimation.value;
       });
       x += 0.01;
-
       // wait a second
       await Future.delayed(Duration(milliseconds: 50));
     }
-
     _loopActive = false;
   } // recording
 
@@ -179,7 +178,7 @@ class _RadialProgressState extends State<RadialProgress>
         _buttonPressed = false;
         setState(() {
           progressDegrees = widget.goalCompleted + 0 * _progressAnimation.value;
-        });
+        }); // stop recording
         x = 0;
       }, // stop recording
       child: Container(
@@ -238,5 +237,55 @@ class RadialPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
+  }
+}
+
+class RecordingButton extends StatefulWidget {
+  @override
+  _RecordingButtonState createState() => _RecordingButtonState();
+}
+
+class _RecordingButtonState extends State<RecordingButton> {
+  stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = 'Press the button and start speaking';
+  double _confidence = 1.0;
+  bool _buttonPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+        onPointerDown: (details) async {
+          _buttonPressed = true;
+          bool available = await _speech.initialize(
+            onStatus: (val) => print('onStatus: $val'),
+            onError: (val) => print('onError: $val'),
+          );
+          if (available) {
+            setState(() => _isListening = true);
+            _speech.listen(
+              onResult: (val) => setState(() {
+                _text = val.recognizedWords;
+                if (val.hasConfidenceRating && val.confidence > 0) {
+                  _confidence = val.confidence;
+                }
+              }),
+            );
+          }
+        }, // recording
+        onPointerUp: (details) async {
+          _buttonPressed = false;
+          await Future.delayed(Duration(milliseconds: 1000));
+          setState(() => _isListening = false);
+          _speech.stop();
+          print(_text);
+        }, // stop recording
+        child: RadialProgress());
   }
 }
