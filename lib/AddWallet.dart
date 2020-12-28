@@ -93,6 +93,7 @@ class _AddWalletState extends State<AddWallet> {
                   _fireStore.collection('wallet').add({
                     'name': name,
                     'money': money,
+                    'createdOn': Timestamp.now(),
                   });
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return Wallet();

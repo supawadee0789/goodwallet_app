@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:goodwallet_app/AddWallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -191,12 +192,13 @@ class WalletList extends StatelessWidget {
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
   Widget build(BuildContext context) {
-    CollectionReference wallet =
-        FirebaseFirestore.instance.collection('wallet');
+    Query wallets = FirebaseFirestore.instance
+        .collection('wallet')
+        .orderBy('createdOn', descending: false);
 
     return Container(
       child: StreamBuilder<QuerySnapshot>(
-        stream: wallet.snapshots(),
+        stream: wallets.snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
@@ -209,44 +211,60 @@ class WalletList extends StatelessWidget {
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               DocumentSnapshot wallet = snapshot.data.documents[index];
-              return GestureDetector(
-                onTap: () {
-                  print(index);
-                },
-                child: Container(
-                  height: 76,
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(vertical: 7),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          wallet['name'],
-                          style: TextStyle(
-                              color: Color(0xffA1A1A1),
-                              fontSize: 20,
-                              decoration: TextDecoration.none),
-                        ),
-                        Text(
-                          wallet['money']
-                              .toStringAsFixed(2)
-                              .replaceAllMapped(reg, mathFunc),
-                          style: TextStyle(
-                              color: Color(0xffA890FE),
-                              fontSize: 32,
-                              fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.none),
-                        )
-                      ],
+              return Slidable(
+                actionPane: SlidableDrawerActionPane(),
+                actionExtentRatio: 0.25,
+                child: GestureDetector(
+                  onTap: () {
+                    print(index);
+                  },
+                  child: Container(
+                    height: 76,
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(vertical: 7),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            wallet['name'],
+                            style: TextStyle(
+                                color: Color(0xffA1A1A1),
+                                fontSize: 20,
+                                decoration: TextDecoration.none),
+                          ),
+                          Text(
+                            wallet['money']
+                                .toStringAsFixed(2)
+                                .replaceAllMapped(reg, mathFunc),
+                            style: TextStyle(
+                                color: Color(0xffA890FE),
+                                fontSize: 32,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.none),
+                          )
+                        ],
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(34),
+                      color: Colors.white,
                     ),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(34),
-                    color: Colors.white,
-                  ),
                 ),
+                secondaryActions: <Widget>[
+                  IconSlideAction(
+                    caption: 'Delete',
+                    icon: Icons.delete,
+                    foregroundColor: Colors.white,
+                    color: Color(0x00000000),
+                    onTap: () async {
+                      print(index);
+                      await wallet.reference.delete();
+                    },
+                  ),
+                ],
               );
             },
           );
