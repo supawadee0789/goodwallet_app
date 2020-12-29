@@ -3,10 +3,45 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import "dart:async";
+
+class VoiceInputMainPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        textTheme: TextTheme(
+          body1: TextStyle(
+            fontFamily: "HinSiliguri",
+            fontSize: 20.0,
+            color: Colors.white,
+          ),
+          button: TextStyle(
+            fontFamily: "HinSiliguri",
+            fontSize: 20.0,
+          ),
+        ),
+      ),
+      home: Scaffold(
+        body: Container(
+          //Background Gradient Color
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
+            ),
+          ),
+          child: VoiceInput(),
+        ),
+      ),
+    );
+  }
+}
 
 class VoiceInput extends StatefulWidget {
   @override
@@ -14,54 +49,150 @@ class VoiceInput extends StatefulWidget {
 }
 
 class _VoiceInputState extends State<VoiceInput> {
+  //ui variables
+  double _opacity = 1.0;
+  double _textOpacity = 0.0;
+  var _opacityDuration = const Duration(milliseconds: 500);
+  var _animationDuration = const Duration(milliseconds: 600);
+
+  //speech to text variables
+  stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = 'Press the button and start speaking';
+  bool _buttonPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var _screenWidth = MediaQuery.of(context).size.width;
+    var _screenHeight = MediaQuery.of(context).size.height;
     return Align(
         alignment: Alignment.center,
-        child: Container(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 100,
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Container(
-                      width: 280,
-                      child: Text(
-                        'Example',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 22),
-                      ),
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                ),
+                AnimatedOpacity(
+                  duration: _opacityDuration,
+                  opacity: _opacity,
+                  child: Container(
+                    height: _screenHeight * 0.4,
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 280,
+                          child: Text(
+                            'Example',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(fontSize: 22),
+                          ),
+                        ),
+                        AnimatedPositioned(
+                          duration: _animationDuration,
+                          top: _buttonPressed ? 0 : 18,
+                          child: VoiceExample('plus',
+                              'รายรับ: ได้เงินจากแม่ 200 บาท', 0xff379243),
+                        ),
+                        AnimatedPositioned(
+                          duration: _animationDuration,
+                          top: _buttonPressed ? 0 : 102,
+                          child: VoiceExample('minus',
+                              'รายจ่าย: ซื้อข้าวกะเพรา 45 บาท', 0xffC3374E),
+                        ),
+                        AnimatedPositioned(
+                          duration: _animationDuration,
+                          top: _buttonPressed ? 0 : 184,
+                          child: VoiceExample('transfer',
+                              'การโอน: โอนเงินไป cash 80 บาท', 0xffE1B152),
+                        ),
+                      ],
                     ),
-                    VoiceExample(
-                        'plus', 'รายรับ: ได้เงินจากแม่ 200 บาท', 0xff379243),
-                    VoiceExample(
-                        'minus', 'รายจ่าย: ซื้อข้าวกะเพรา 45 บาท', 0xffC3374E),
-                    VoiceExample('transfer', 'การโอน: โอนเงินไป cash 80 บาท',
-                        0xffE1B152),
-                  ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 102,
-                width: double.infinity,
-              ),
-              Container(
-                child: Text(
-                  'Press and hold the button\nto record your word',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
+                SizedBox(
+                  height: 102,
+                  width: _screenWidth,
                 ),
-              ),
-              Container(
+                Container(
+                  child: Text(
+                    'Press and hold the button\nto record your word',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                Container(
                   margin: EdgeInsets.only(top: 23),
                   height: 70,
                   width: 70,
-                  child: RecordingButton()),
-            ],
-          ),
+                  child: Listener(
+                      onPointerDown: (details) async {
+                        setState(() {
+                          _opacity = 0;
+                          _textOpacity = 1;
+                        });
+                        _text = '';
+                        _buttonPressed = true;
+                        bool available = await _speech.initialize(
+                          onStatus: (val) => print('onStatus: $val'),
+                          onError: (val) => print('onError: $val'),
+                        );
+                        if (available) {
+                          setState(() => _isListening = true);
+                          _speech.listen(
+                            onResult: (val) => setState(() {
+                              _text = val.recognizedWords;
+                              setState(() {
+                                _text = _text;
+                              });
+                            }),
+                          );
+                        }
+                      }, // recording
+                      onPointerUp: (details) async {
+                        _buttonPressed = false;
+                        await Future.delayed(Duration(milliseconds: 1000));
+                        setState(() => _isListening = false);
+                        _speech.stop();
+                        print('final result = ' + _text);
+                        await Future.delayed(Duration(milliseconds: 2000));
+                        setState(() {
+                          _opacity = 1;
+                          _textOpacity = 0;
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ConfirmationMainPage(text: _text)),
+                        );
+                      }, // stop recording
+                      child: RadialProgress()),
+                )
+              ],
+            ),
+            AnimatedOpacity(
+              duration: _opacityDuration,
+              opacity: _textOpacity,
+              child: Container(
+                constraints: BoxConstraints(maxWidth: _screenWidth * 0.8),
+                margin: EdgeInsets.only(bottom: 150),
+                child: Text(
+                  _text,
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
         ));
   }
 }
@@ -237,55 +368,5 @@ class RadialPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
-  }
-}
-
-class RecordingButton extends StatefulWidget {
-  @override
-  _RecordingButtonState createState() => _RecordingButtonState();
-}
-
-class _RecordingButtonState extends State<RecordingButton> {
-  stt.SpeechToText _speech;
-  bool _isListening = false;
-  String _text = 'Press the button and start speaking';
-  double _confidence = 1.0;
-  bool _buttonPressed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _speech = stt.SpeechToText();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Listener(
-        onPointerDown: (details) async {
-          _buttonPressed = true;
-          bool available = await _speech.initialize(
-            onStatus: (val) => print('onStatus: $val'),
-            onError: (val) => print('onError: $val'),
-          );
-          if (available) {
-            setState(() => _isListening = true);
-            _speech.listen(
-              onResult: (val) => setState(() {
-                _text = val.recognizedWords;
-                if (val.hasConfidenceRating && val.confidence > 0) {
-                  _confidence = val.confidence;
-                }
-              }),
-            );
-          }
-        }, // recording
-        onPointerUp: (details) async {
-          _buttonPressed = false;
-          await Future.delayed(Duration(milliseconds: 1000));
-          setState(() => _isListening = false);
-          _speech.stop();
-          print(_text);
-        }, // stop recording
-        child: RadialProgress());
   }
 }
