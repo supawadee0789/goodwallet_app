@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:goodwallet_app/Header.dart';
+import 'package:goodwallet_app/components/Header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Wallet.dart';
 

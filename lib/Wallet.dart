@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:goodwallet_app/AddWallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'CreateWallet.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -244,7 +245,10 @@ class WalletList extends StatelessWidget {
                 actionExtentRatio: 0.25,
                 child: GestureDetector(
                   onTap: () {
-                    print(index);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return new CreateWallet(index);
+                    }));
                   },
                   child: Container(
                     height: 76,
@@ -289,11 +293,10 @@ class WalletList extends StatelessWidget {
                     color: Color(0x00000000),
                     onTap: () async {
                       await wallet.reference.delete();
-                      MaterialPageRoute materialPageRoute = MaterialPageRoute(
-                          builder: (BuildContext buildcontext) {
-                        return Wallet();
-                      });
-                      Navigator.of(context).push(materialPageRoute);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return new Wallet();
+                      }));
                     },
                   ),
                 ],
