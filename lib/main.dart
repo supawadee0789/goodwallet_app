@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:goodwallet_app/ConfirmedPage.dart';
+import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'Homepage.dart';
 import 'Voice_Input.dart';
 
