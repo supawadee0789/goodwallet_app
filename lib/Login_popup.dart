@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:goodwallet_app/Wallet.dart';
 
 class LoginPopup extends StatefulWidget {
   @override
@@ -88,7 +89,13 @@ class _LoginPopupState extends State<LoginPopup> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24.0)),
                           padding: EdgeInsets.all(6),
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.push(context,MaterialPageRoute(
+                                builder: (context){
+                              return Wallet();
+                            }
+                            ));
+                          },
                           color: Color(0xff8C35B1),
                           child: Text("Sign In",style: TextStyle(fontSize: 14),),
                           textColor: Colors.white,

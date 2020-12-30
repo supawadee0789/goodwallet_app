@@ -4,9 +4,11 @@ import 'package:goodwallet_app/ConfirmedPage.dart';
 import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'Homepage.dart';
 import 'Voice_Input.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
@@ -41,7 +43,8 @@ class MyApp extends StatelessWidget {
               colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
           ),
-          child: VoiceInput(),
+          child: HomePage(),
+
         ),
       ),
     );
