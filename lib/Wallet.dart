@@ -45,7 +45,7 @@ class _WalletState extends State<Wallet> {
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 60,
+                  height: MediaQuery.of(context).size.height * 0.078,
                   decoration: BoxDecoration(
                       color: Color(0xffE5A9B6),
                       borderRadius: BorderRadius.only(
@@ -153,7 +153,7 @@ class TotalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.80,
-      height: 160,
+      height: MediaQuery.of(context).size.height * 0.198,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(34)),
       child: Column(
@@ -251,7 +251,7 @@ class WalletList extends StatelessWidget {
                     }));
                   },
                   child: Container(
-                    height: 76,
+                    height: MediaQuery.of(context).size.height * 0.096,
                     width: double.infinity,
                     margin: EdgeInsets.symmetric(vertical: 7),
                     child: Padding(
