@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:goodwallet_app/ConfirmedPage.dart';
+import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'Homepage.dart';
+import 'Voice_Input.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -41,6 +44,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           child: HomePage(),
+
         ),
       ),
     );
