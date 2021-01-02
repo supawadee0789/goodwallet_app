@@ -31,7 +31,7 @@ class ConfirmedMainPage extends StatelessWidget {
               colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
           ),
-          child: ConfirmedPage(),
+          child: SafeArea(child: ConfirmedPage()),
         ),
       ),
     );

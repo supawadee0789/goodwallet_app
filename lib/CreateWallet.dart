@@ -69,7 +69,7 @@ class ThisWallet extends StatelessWidget {
             SizedBox(height: 8),
             Container(
               width: _screenWidth * 0.8,
-              height: _screenHeight * 0.525,
+              height: _screenHeight * 0.5,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(32),
                   color: Color.fromRGBO(255, 255, 255, 0.66)),

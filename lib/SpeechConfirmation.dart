@@ -3,9 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as Http;
+import 'dart:convert' as utf8;
+
 import "dart:async";
 
 import 'package:goodwallet_app/ConfirmedPage.dart';
+import 'package:goodwallet_app/Voice_Input.dart';
+import 'components/Header.dart';
 
 class ConfirmationMainPage extends StatelessWidget {
   final String text;
@@ -37,7 +43,7 @@ class ConfirmationMainPage extends StatelessWidget {
               colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
           ),
-          child: ConfirmationPage(resultText: text),
+          child: SafeArea(child: ConfirmationPage(resultText: text)),
         ),
       ),
     );
@@ -54,6 +60,29 @@ class ConfirmationPage extends StatefulWidget {
 }
 
 class _ConfirmationPageState extends State<ConfirmationPage> {
+  var tokens;
+
+  String type; // type of transaction eg. income expense transfer
+  String _class; // class of transaction eg. health food
+  String name; // name of transaction eg. ซื้อข้าวกระเพรา
+  var cost; // cost of transaction
+  String targetWallet; // target wallet to transfer money
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void WordSegmentation(_text) async {
+    var url = "https://api.aiforthai.in.th/tlexplus?text=" + _text;
+    await Http.get(url, headers: {"Apikey": "elHOb4Ksl715HkIu6Leq5ZdcnYX39SPP"})
+        .then((response) {
+      print("Response status: ${response.body}");
+      var parsedJson = utf8.jsonDecode(response.body);
+      tokens = parsedJson['tokens'];
+    });
+  }
+
   final String resultText;
   _ConfirmationPageState({Key key, @required this.resultText});
   String _editImage = 'images/ConfirmationPage_Edit.svg';
@@ -66,7 +95,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       alignment: Alignment.center,
       child: Column(
         children: [
-          SizedBox(height: 100, width: _screenWidth),
+          Header(),
+          SizedBox(height: 10, width: _screenWidth),
           Container(
             height: 217,
             width: 211,
@@ -154,9 +184,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     child: Listener(
                       onPointerDown: (detail) {
                         print('cancel');
-                        Navigator.pop(
+                        Navigator.push(
                           context,
-                        );
+                          MaterialPageRoute(
+                              builder: (context) => VoiceInputMainPage()),
+                        ); // cancel confirmation
                       },
                       child: SvgPicture.asset(
                         'images/cross-mark-on-a-black-circle-background.svg',
@@ -171,13 +203,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   child: Container(
                     alignment: Alignment.centerRight,
                     child: Listener(
-                      onPointerDown: (detail) {
+                      onPointerDown: (detail) async {
+                        await WordSegmentation(resultText);
                         print('confirm');
+                        print(checkType(tokens[0]));
+                        print(checkCost(tokens));
+                        print(checkName(tokens, checkCost(tokens)));
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ConfirmedMainPage()),
-                        );
+                        ); // confirm to add transaction
                       },
                       child: SvgPicture.asset(
                         'images/check-mark.svg',
@@ -194,4 +230,46 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       ),
     );
   }
+}
+
+checkType(input) {
+  String _type;
+  if (input == 'ได้') {
+    _type = 'income';
+  } else if (input == 'ซื้อ') {
+    _type = 'expense';
+  } else if (input == 'โอน') {
+    _type = 'transfer';
+  } else {
+    _type = 'none';
+  }
+  return _type;
+}
+
+checkCost(array) {
+  var costLoc = -1;
+  for (var loc = array.length - 1; loc >= 0; loc--) {
+    if (_isNumeric(array[loc])) {
+      costLoc = loc;
+      break;
+    }
+  }
+  print(array[costLoc]);
+  return costLoc;
+}
+
+bool _isNumeric(String str) {
+  if (str == null) {
+    return false;
+  }
+  return double.tryParse(str) != null;
+}
+
+checkName(array, costLoc) {
+  var name;
+  for (var loc = array.length - 1; loc >= costLoc - 1; loc--) {
+    array.removeLast();
+  }
+  name = array;
+  return name;
 }

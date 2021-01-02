@@ -6,6 +6,7 @@ import 'package:goodwallet_app/AddWallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'CreateWallet.dart';
+import 'Voice_Input.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -199,7 +200,7 @@ class TotalCard extends StatelessWidget {
             },
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
               "BAHT",
               style: TextStyle(

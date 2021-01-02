@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../Voice_Input.dart';
 
 class BottomBar extends StatelessWidget {
   @override
@@ -26,7 +27,12 @@ class BottomBar extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.079,
             width: MediaQuery.of(context).size.height * 0.079,
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => VoiceInputMainPage()),
+                );
+              },
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,

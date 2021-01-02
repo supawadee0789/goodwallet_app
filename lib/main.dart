@@ -15,6 +15,22 @@ void main() async {
   });
 }
 
+void getFlexSize(screenWidth, screenHeight, pixelSize) {
+  double designWidth = 360;
+  double designHeight = 760;
+  double designSize = 360.0 * 760;
+  double screenSize = screenWidth * screenHeight;
+  return pixelSize / designSize * screenSize;
+}
+
+void getFlexHeight(screenHeight, pixelHeight) {
+  return pixelHeight / 760 * screenHeight;
+}
+
+void getFlexWidth(screenWidth, pixelWidth) {
+  return pixelWidth / 360 * screenWidth;
+}
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -44,7 +60,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
           child: HomePage(),
-
         ),
       ),
     );

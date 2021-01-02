@@ -30,14 +30,14 @@ class TransList extends StatelessWidget {
             }
             return Container(
               width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.42,
+              height: MediaQuery.of(context).size.height * 0.38,
               child: ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot trans = snapshot.data.documents[index];
                     return Container(
                         margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                        height: MediaQuery.of(context).size.height * 0.09,
+                        height: MediaQuery.of(context).size.height * 0.08,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16)),
@@ -64,6 +64,7 @@ class TransList extends StatelessWidget {
                                       Text(
                                         trans['name'],
                                         style: TextStyle(
+                                            fontFamily: 'Knit',
                                             color: Color(0xff6A2388),
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700),

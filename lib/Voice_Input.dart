@@ -7,6 +7,8 @@ import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
+import 'package:goodwallet_app/components/Header.dart';
+
 import "dart:async";
 
 class VoiceInputMainPage extends StatelessWidget {
@@ -36,7 +38,7 @@ class VoiceInputMainPage extends StatelessWidget {
               colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
           ),
-          child: VoiceInput(),
+          child: SafeArea(child: VoiceInput()),
         ),
       ),
     );
@@ -78,8 +80,9 @@ class _VoiceInputState extends State<VoiceInput> {
           children: [
             Column(
               children: [
+                Header(),
                 SizedBox(
-                  height: 100,
+                  height: 10,
                 ),
                 AnimatedOpacity(
                   duration: _opacityDuration,
@@ -119,7 +122,7 @@ class _VoiceInputState extends State<VoiceInput> {
                   ),
                 ),
                 SizedBox(
-                  height: 102,
+                  height: 70,
                   width: _screenWidth,
                 ),
                 Container(
