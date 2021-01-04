@@ -84,7 +84,7 @@ class _ConfirmedPageState extends State<ConfirmedPage> {
                 print('go to add transaction page');
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VoiceInputMainPage()),
+                  MaterialPageRoute(builder: (context) => VoiceInput()),
                 );
               },
               child: Text(

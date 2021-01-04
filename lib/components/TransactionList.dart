@@ -11,6 +11,8 @@ class TransList extends StatelessWidget {
   Function mathFunc = (Match match) => '${match[1]},';
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
       child: StreamBuilder<QuerySnapshot>(
           stream: wallets
@@ -29,15 +31,25 @@ class TransList extends StatelessWidget {
               return Text("Loading");
             }
             return Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.38,
+              width: screenWidth * 311 / 360,
+              height: screenHeight * 290 / 760,
               child: ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot trans = snapshot.data.documents[index];
+                    var time = DateFormat.yMMMd()
+                        .add_jm()
+                        .format(DateTime.parse(
+                            trans['createdOn'].toDate().toString()))
+                        .split(" ");
                     return Container(
-                        margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                        height: MediaQuery.of(context).size.height * 0.08,
+                        margin: EdgeInsets.fromLTRB(
+                            15 / 360 * screenWidth,
+                            5 / 760 * screenHeight,
+                            15 / 360 * screenWidth,
+                            5 / 760 * screenHeight),
+                        height: screenHeight * 66 / 760,
+                        width: screenWidth * 281 / 360,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16)),
@@ -48,12 +60,15 @@ class TransList extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 22, right: 14),
+                                    padding: EdgeInsets.only(
+                                        left: 22 / 360 * screenWidth,
+                                        right: 14 / 360 * screenWidth),
                                     child: Icon(
                                       Icons.add_photo_alternate,
                                       color: Color(0xffC88EC5),
-                                      size: 40,
+                                      size: 40 /
+                                          (360 * 760) *
+                                          (screenHeight * screenWidth),
                                     ),
                                   ),
                                   Column(
@@ -66,22 +81,14 @@ class TransList extends StatelessWidget {
                                         style: TextStyle(
                                             fontFamily: 'Knit',
                                             color: Color(0xff6A2388),
-                                            fontSize: 18,
+                                            fontSize: 18 /
+                                                (760 * 360) *
+                                                (screenHeight * screenWidth),
                                             fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 2),
+                                      SizedBox(height: 2 / 760 * screenHeight),
                                       Text(
-                                        DateFormat.yMMMd()
-                                            .add_jm()
-                                            .format(DateTime.parse(
-                                                trans['createdOn']
-                                                    .toDate()
-                                                    .toString()))
-                                            .substring(13, 20),
-                                        // DateTime.parse(
-                                        //         trans['createdOn'].toString())
-                                        //     .toString()
-                                        //     .toString(),
+                                        time[3] + " " + time[4],
                                         style: TextStyle(
                                             color: Color(0xffBCBCBC),
                                             fontSize: 11),
@@ -100,7 +107,9 @@ class TransList extends StatelessWidget {
                                         .replaceAllMapped(reg, mathFunc),
                                 style: TextStyle(
                                     color: Color(0xff6A2388),
-                                    fontSize: 18,
+                                    fontSize: 18 /
+                                        (760 * 360) *
+                                        (screenHeight * screenWidth),
                                     fontWeight: FontWeight.w700),
                               ),
                             ),

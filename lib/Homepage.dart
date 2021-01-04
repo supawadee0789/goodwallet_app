@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:goodwallet_app/main.dart';
 import 'Login_popup.dart';
+import 'main.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,18 +12,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    var _screenWidth = MediaQuery.of(context).size.width;
+    var _screenHeight = MediaQuery.of(context).size.height;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.only(top: 250),
+            padding: EdgeInsets.only(top: (252.5 / 760) * _screenHeight),
             child:
                 Hero(tag: 'pop_up', child: SvgPicture.asset('images/Logo.svg')),
           ),
           Container(
-            padding: const EdgeInsets.only(bottom: 50),
+            padding: EdgeInsets.only(bottom: (38 / 760) * _screenHeight),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {

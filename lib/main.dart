@@ -15,7 +15,7 @@ void main() async {
   });
 }
 
-void getFlexSize(screenWidth, screenHeight, pixelSize) {
+getFlexSize(screenWidth, screenHeight, pixelSize) {
   double designWidth = 360;
   double designHeight = 760;
   double designSize = 360.0 * 760;
@@ -23,11 +23,11 @@ void getFlexSize(screenWidth, screenHeight, pixelSize) {
   return pixelSize / designSize * screenSize;
 }
 
-void getFlexHeight(screenHeight, pixelHeight) {
+getFlexHeight(screenHeight, pixelHeight) {
   return pixelHeight / 760 * screenHeight;
 }
 
-void getFlexWidth(screenWidth, pixelWidth) {
+getFlexWidth(screenWidth, pixelWidth) {
   return pixelWidth / 360 * screenWidth;
 }
 

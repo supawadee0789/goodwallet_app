@@ -166,8 +166,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             height: 53,
           ),
           Container(
+            width: _screenWidth * 0.8,
             child: Text(
               resultText ?? 'waiting for text',
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 28),
             ),
           ),
@@ -187,8 +189,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         print('cancel');
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => VoiceInputMainPage()),
+                          MaterialPageRoute(builder: (context) => VoiceInput()),
                         ); // cancel confirmation
                       },
                       child: SvgPicture.asset(
@@ -211,7 +212,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         // print(checkCost(tokens));
                         _fireStore
                             .collection('wallet')
-                            .document('PT1L2kEa5djuxfpC1Ftg')
+                            .document('uOLtbBvDP9lJ2UDfP1GU')
                             .collection('transaction')
                             .add({
                           'class': 'food',

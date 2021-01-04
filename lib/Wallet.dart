@@ -16,6 +16,8 @@ class Wallet extends StatefulWidget {
 class _WalletState extends State<Wallet> {
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -74,8 +76,14 @@ class _WalletState extends State<Wallet> {
 class HeaderWallet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(26, 17, 22.5, 60),
+      padding: EdgeInsets.fromLTRB(
+          26 / 360 * screenWidth,
+          17 / 760 * screenHeight,
+          22.5 / 360 * screenWidth,
+          60 / 760 * screenHeight),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -88,7 +96,7 @@ class HeaderWallet extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 15,
+            width: 15 / 360 * screenWidth,
           ),
           Text(
             "WALLET",
@@ -107,7 +115,7 @@ class HeaderWallet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 15,
+                  width: 15 / 360 * screenWidth,
                 ),
                 IconButton(
                   onPressed: () => {},
@@ -152,16 +160,18 @@ class TotalCard extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      width: MediaQuery.of(context).size.width * 0.80,
-      height: MediaQuery.of(context).size.height * 0.198,
+      width: 314 / 360 * screenWidth,
+      height: 147 / 760 * screenHeight,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(34)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 15.0),
+            padding: EdgeInsets.only(top: 15 / 760 * screenHeight),
             child: Text(
               "TOTAL",
               style: TextStyle(
@@ -182,7 +192,7 @@ class TotalCard extends StatelessWidget {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: 300.0,
-                      maxHeight: 100.0,
+                      maxHeight: 54 / 760 * screenHeight,
                     ),
                     child: AutoSizeText(
                       money.toStringAsFixed(2).replaceAllMapped(reg, mathFunc),
@@ -200,7 +210,7 @@ class TotalCard extends StatelessWidget {
             },
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.only(bottom: 7 / 760 * screenHeight),
             child: Text(
               "BAHT",
               style: TextStyle(
