@@ -35,6 +35,11 @@ class TransList extends StatelessWidget {
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot trans = snapshot.data.documents[index];
+                    var time = DateFormat.yMMMd()
+                        .add_jm()
+                        .format(DateTime.parse(
+                            trans['createdOn'].toDate().toString()))
+                        .split(" ");
                     return Container(
                         margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         height: MediaQuery.of(context).size.height * 0.08,
@@ -71,17 +76,7 @@ class TransList extends StatelessWidget {
                                       ),
                                       SizedBox(height: 2),
                                       Text(
-                                        DateFormat.yMMMd()
-                                            .add_jm()
-                                            .format(DateTime.parse(
-                                                trans['createdOn']
-                                                    .toDate()
-                                                    .toString()))
-                                            .substring(13, 20),
-                                        // DateTime.parse(
-                                        //         trans['createdOn'].toString())
-                                        //     .toString()
-                                        //     .toString(),
+                                        time[3] + " " + time[4],
                                         style: TextStyle(
                                             color: Color(0xffBCBCBC),
                                             fontSize: 11),
