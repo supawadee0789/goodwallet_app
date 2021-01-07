@@ -33,7 +33,7 @@ class BottomBar extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VoiceInputMainPage()),
+                  MaterialPageRoute(builder: (context) => VoiceInput()),
                 );
               },
               child: Container(

@@ -10,16 +10,18 @@ class WalletCard extends StatelessWidget {
   Function mathFunc = (Match match) => '${match[1]},';
 
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
-        width: MediaQuery.of(context).size.width * 0.80,
-        height: MediaQuery.of(context).size.height * 0.2,
+        width: 309 / 360 * screenWidth,
+        height: 147 / 760 * screenHeight,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(34)),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 15.0),
+                padding: EdgeInsets.only(top: 15 / 760 * screenHeight),
                 child: Text(
                   name,
                   style: TextStyle(
@@ -33,7 +35,7 @@ class WalletCard extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 300.0,
-                    maxHeight: 100.0,
+                    maxHeight: 54 / 760 * screenHeight,
                   ),
                   child: AutoSizeText(
                     money.toStringAsFixed(2).replaceAllMapped(reg, mathFunc),
@@ -48,7 +50,7 @@ class WalletCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.only(bottom: 7 / 760 * screenHeight),
                 child: Text(
                   "BAHT",
                   style: TextStyle(

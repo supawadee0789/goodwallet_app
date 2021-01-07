@@ -61,19 +61,20 @@ class ConfirmationPage extends StatefulWidget {
 
 class _ConfirmationPageState extends State<ConfirmationPage> {
   var tokens;
-
   String type; // type of transaction eg. income expense transfer
   String _class; // class of transaction eg. health food
   String name; // name of transaction eg. ซื้อข้าวกระเพรา
   var cost; // cost of transaction
   String targetWallet; // target wallet to transfer money
 
+  final _fireStore = Firestore.instance;
+
   @override
   void initState() {
     super.initState();
   }
 
-  void WordSegmentation(_text) async {
+  Future WordSegmentation(_text) async {
     var url = "https://api.aiforthai.in.th/tlexplus?text=" + _text;
     await Http.get(url, headers: {"Apikey": "elHOb4Ksl715HkIu6Leq5ZdcnYX39SPP"})
         .then((response) {
@@ -165,8 +166,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             height: 53,
           ),
           Container(
+            width: _screenWidth * 0.8,
             child: Text(
               resultText ?? 'waiting for text',
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 28),
             ),
           ),
@@ -186,8 +189,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         print('cancel');
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => VoiceInputMainPage()),
+                          MaterialPageRoute(builder: (context) => VoiceInput()),
                         ); // cancel confirmation
                       },
                       child: SvgPicture.asset(
@@ -206,9 +208,19 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                       onPointerDown: (detail) async {
                         await WordSegmentation(resultText);
                         print('confirm');
-                        print(checkType(tokens[0]));
-                        print(checkCost(tokens));
-                        print(checkName(tokens, checkCost(tokens)));
+                        // print(checkName(tokens, checkCost(tokens)));
+                        // print(checkCost(tokens));
+                        _fireStore
+                            .collection('wallet')
+                            .document('uOLtbBvDP9lJ2UDfP1GU')
+                            .collection('transaction')
+                            .add({
+                          'class': 'food',
+                          'cost': double.parse(checkCost(tokens)) ?? 0,
+                          'createdOn': FieldValue.serverTimestamp(),
+                          'name': checkName(tokens, checkCost(tokens)),
+                          'type': checkType(tokens[0]) ?? 'null'
+                        });
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -255,7 +267,7 @@ checkCost(array) {
     }
   }
   print(array[costLoc]);
-  return costLoc;
+  return array[costLoc];
 }
 
 bool _isNumeric(String str) {
@@ -266,10 +278,15 @@ bool _isNumeric(String str) {
 }
 
 checkName(array, costLoc) {
-  var name;
-  for (var loc = array.length - 1; loc >= costLoc - 1; loc--) {
+  print(array);
+  for (var i = 0; i <= 3; i++) {
     array.removeLast();
+    print(array);
   }
-  name = array;
-  return name;
+  var name = StringBuffer();
+
+  array.forEach((item) {
+    name.write(item);
+  });
+  return name.toString();
 }
