@@ -67,46 +67,6 @@ class BottomBar extends StatelessWidget {
     );
   }
 }
-//
-// class IconTransition extends StatefulWidget {
-//   @override
-//   _IconTransitionState createState() => _IconTransitionState();
-// }
-//
-// class _IconTransitionState extends State<IconTransition> {
-//   List<bool> isSelected = List.generate(3, (index) => false);
-//   @override
-//   Widget build(BuildContext context) {
-//     return ToggleButtons(
-//       constraints: ,
-//       renderBorder: false,
-//       color: Colors.white60,
-//       selectedColor: Colors.white,
-//       disabledColor: null,
-//       fillColor: Color(0000),
-//       splashColor: Color(0000),
-//       children: [
-//         Icon(Icons.account_balance_wallet),
-//         Icon(Icons.leaderboard),
-//         Icon(Icons.monetization_on),
-//       ],
-//       onPressed: (int index) {
-//         setState(() {
-//           for (int buttonIndex = 0;
-//               buttonIndex < isSelected.length;
-//               buttonIndex++) {
-//             if (buttonIndex == index) {
-//               isSelected[buttonIndex] = true;
-//             } else {
-//               isSelected[buttonIndex] = false;
-//             }
-//           }
-//         });
-//       },
-//       isSelected: isSelected,
-//     );
-//   }
-// }
 
 class IconTransition extends StatelessWidget {
   List<Widget> _icon = [
@@ -127,23 +87,22 @@ class IconTransition extends StatelessWidget {
     );
   }
 }
-// IconList("Wallet", Icons.account_balance_wallet_outlined,
-// Icons.account_balance_wallet),
-// IconList("Graph", Icons.leaderboard_outlined, Icons.leaderboard),
-// IconList("Budget", Icons.monetization_on_outlined,
-// Icons.monetization_on_rounded),
 
 class IconList extends StatefulWidget {
+  final activeIcon;
+  final inactiveIcon;
+  final title;
+  IconList(this.title, this.inactiveIcon, this.activeIcon);
   @override
-  _IconListState createState() => _IconListState();
+  _IconListState createState() =>
+      _IconListState(title, inactiveIcon, activeIcon);
 }
 
 class _IconListState extends State<IconList> {
-  List<Map<String, Icon>> _icon = [
-    {'Wallet': Icon(Icons.account_balance_wallet_outlined)},
-    {'Graph': Icon(Icons.leaderboard_outlined)},
-    {'Budget': Icon(Icons.monetization_on_outlined)},
-  ];
+  final activeIcon;
+  final inactiveIcon;
+  final title;
+  _IconListState(this.title, this.inactiveIcon, this.activeIcon);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -152,18 +111,16 @@ class _IconListState extends State<IconList> {
           Padding(
             padding: EdgeInsets.only(bottom: 0.2),
             child: Text(
-              _icon[0].keys,
+              title,
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
           GestureDetector(
             onTap: () {
-              setState(() {
-                active = true;
-              });
+              print(title + ' pressed!');
             },
             child: Icon(
-              active == true ? _active : _inactive,
+              activeIcon,
               color: Colors.white,
               size: 26,
             ),
