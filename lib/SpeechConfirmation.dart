@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as Http;
 import 'dart:convert' as utf8;
+import 'package:carousel_slider/carousel_slider.dart';
 
 import "dart:async";
 
@@ -86,8 +87,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
   final String resultText;
   _ConfirmationPageState({Key key, @required this.resultText});
-  String _editImage = 'images/ConfirmationPage_Edit.svg';
-  bool _isEditing = true;
+
   @override
   Widget build(BuildContext context) {
     var _screenWidth = MediaQuery.of(context).size.width;
@@ -112,53 +112,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             child: Column(
               children: [
                 Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          margin: EdgeInsets.only(right: 14.5),
-                          child: Text(
-                            'Expense',
-                            style: TextStyle(fontSize: 28),
-                          )),
-                      Listener(
-                        onPointerDown: (detail) {
-                          setState(() {
-                            if (_isEditing) {
-                              _editImage = 'images/edit_arrow_white.svg';
-                              _isEditing = false;
-                              print('editing');
-                            } else {
-                              _editImage = 'images/ConfirmationPage_Edit.svg';
-                              _isEditing = true;
-                              print('edited');
-                            }
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          _editImage,
-                          height: 20.0,
-                          width: 20.0,
-                          color: _isEditing ? null : Colors.white,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 26),
-                  child: Column(children: [
-                    SvgPicture.asset(
-                      'images/medical-kit.svg',
-                      height: 71.0,
-                      width: 85.0,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 14),
-                      child: Text('Health'),
-                    )
-                  ]),
-                ),
+                    child: Text(
+                  'Expense',
+                  style: TextStyle(fontSize: 28),
+                )),
+                ClassSlider(),
               ],
             ),
           ),
@@ -187,6 +145,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     child: Listener(
                       onPointerDown: (detail) {
                         print('cancel');
+                        print(checkClass(_currentIndex));
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => VoiceInput()),
@@ -215,7 +174,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             .document('uOLtbBvDP9lJ2UDfP1GU')
                             .collection('transaction')
                             .add({
-                          'class': 'food',
+                          'class': checkClass(_currentIndex),
                           'cost': double.parse(checkCost(tokens)) ?? 0,
                           'createdOn': FieldValue.serverTimestamp(),
                           'name': checkName(tokens, checkCost(tokens)),
@@ -240,6 +199,88 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
           )
         ],
       ),
+    );
+  }
+}
+
+int _currentIndex = 0;
+
+class ClassSlider extends StatefulWidget {
+  @override
+  _ClassSliderState createState() => _ClassSliderState();
+}
+
+class _ClassSliderState extends State<ClassSlider> {
+  List cardList = [
+    ClassItem('Food'),
+    ClassItem('Daily use'),
+    ClassItem('Household'),
+    ClassItem('Travel'),
+    ClassItem('Health'),
+    ClassItem('Entertainment'),
+    ClassItem('Housing')
+  ];
+  List<T> map<T>(List list, Function handler) {
+    List<T> result = [];
+    for (var i = 0; i < list.length; i++) {
+      result.add(handler(i, list[i]));
+    }
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 160.0,
+        autoPlay: false,
+        // autoPlayInterval: Duration(seconds: 3),
+        // autoPlayAnimationDuration: Duration(milliseconds: 800),
+        // autoPlayCurve: Curves.fastOutSlowIn,
+        pauseAutoPlayOnTouch: true,
+        aspectRatio: 2.0,
+        onPageChanged: (index, reason) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+      items: cardList.map((card) {
+        return Builder(builder: (BuildContext context) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.30,
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+              color: Color(0xff9967B2),
+              child: card,
+            ),
+          );
+        });
+      }).toList(),
+    );
+  }
+}
+
+class ClassItem extends StatelessWidget {
+  @override
+  final class_name;
+  ClassItem(this.class_name);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 26),
+      child: Column(children: [
+        SvgPicture.asset(
+          'images/' + class_name + '.svg',
+          height: 71.0,
+          width: 85.0,
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 14),
+          child: Text(class_name),
+        )
+      ]),
     );
   }
 }
@@ -289,4 +330,52 @@ checkName(array, costLoc) {
     name.write(item);
   });
   return name.toString();
+}
+
+checkClass(_index) {
+  String className;
+  switch (_index) {
+    case 0:
+      {
+        className = 'food';
+      }
+      break;
+
+    case 1:
+      {
+        className = 'daily_use';
+      }
+      break;
+    case 2:
+      {
+        className = 'household';
+      }
+      break;
+    case 3:
+      {
+        className = 'travel';
+      }
+      break;
+    case 4:
+      {
+        className = 'health';
+      }
+      break;
+    case 5:
+      {
+        className = 'entertainment';
+      }
+      break;
+    case 6:
+      {
+        className = 'housing';
+      }
+      break;
+    default:
+      {
+        className = 'food';
+      }
+      break;
+  }
+  return className;
 }

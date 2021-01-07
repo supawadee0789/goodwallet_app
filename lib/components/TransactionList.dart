@@ -61,8 +61,8 @@ class TransList extends StatelessWidget {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        left: 22 / 360 * screenWidth,
-                                        right: 14 / 360 * screenWidth),
+                                        left: 14 / 360 * screenWidth,
+                                        right: 10 / 360 * screenWidth),
                                     child: Icon(
                                       Icons.add_photo_alternate,
                                       color: Color(0xffC88EC5),
@@ -81,7 +81,7 @@ class TransList extends StatelessWidget {
                                         style: TextStyle(
                                             fontFamily: 'Knit',
                                             color: Color(0xff6A2388),
-                                            fontSize: 18 /
+                                            fontSize: 15 /
                                                 (760 * 360) *
                                                 (screenHeight * screenWidth),
                                             fontWeight: FontWeight.w700),
@@ -107,7 +107,7 @@ class TransList extends StatelessWidget {
                                         .replaceAllMapped(reg, mathFunc),
                                 style: TextStyle(
                                     color: Color(0xff6A2388),
-                                    fontSize: 18 /
+                                    fontSize: 15 /
                                         (760 * 360) *
                                         (screenHeight * screenWidth),
                                     fontWeight: FontWeight.w700),
