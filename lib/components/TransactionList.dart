@@ -3,12 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-class TransList extends StatelessWidget {
+
+
+class TransList extends StatefulWidget {
+  final arg;
+  TransList(this.arg);
+  @override
+  _TransListState createState() => _TransListState(arg);
+}
+
+class _TransListState extends State<TransList> {
   final index;
-  TransList(this.index);
+  _TransListState(this.index);
   final wallets = FirebaseFirestore.instance;
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
+  String name;
+  String firstHalf;
+  String secondHalf;
+  bool flag = true;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -37,6 +55,15 @@ class TransList extends StatelessWidget {
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot trans = snapshot.data.documents[index];
+                    name = trans['name'];
+                    if (name.length > 15) {
+                      firstHalf = name.substring(0, 15);
+                      secondHalf = name.substring(15, name.length);
+                    } else {
+                      firstHalf = name;
+                      secondHalf = "";
+                    }
+
                     var time = DateFormat.yMMMd()
                         .add_jm()
                         .format(DateTime.parse(
@@ -60,9 +87,11 @@ class TransList extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Padding(
+
                                     padding: EdgeInsets.only(
-                                        left: 14 / 360 * screenWidth,
-                                        right: 10 / 360 * screenWidth),
+                                        left: 22 / 360 * screenWidth,
+                                        right: 14 / 360 * screenWidth),
+
                                     child: Icon(
                                       Icons.add_photo_alternate,
                                       color: Color(0xffC88EC5),
@@ -75,16 +104,38 @@ class TransList extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        trans['name'],
-                                        style: TextStyle(
-                                            fontFamily: 'Knit',
-                                            color: Color(0xff6A2388),
-                                            fontSize: 15 /
-                                                (760 * 360) *
-                                                (screenHeight * screenWidth),
-                                            fontWeight: FontWeight.w700),
+                                    children: <Widget>[
+                                      GestureDetector(
+                                        child: Container(
+                                          child: secondHalf.isEmpty
+                                              ? new Text(
+                                                  firstHalf,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Knit',
+                                                      color: Color(0xff6A2388),
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                )
+                                              : Text(
+                                                  flag
+                                                      ? (firstHalf + "...")
+                                                      : (firstHalf +
+                                                          secondHalf),
+                                                  style: TextStyle(
+                                                      fontFamily: 'Knit',
+                                                      color: Color(0xff6A2388),
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            flag = !flag;
+                                          });
+                                        },
+
                                       ),
                                       SizedBox(height: 2 / 760 * screenHeight),
                                       Text(
@@ -99,7 +150,7 @@ class TransList extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: 17.0),
+                              padding: const EdgeInsets.only(right: 8),
                               child: Text(
                                 "฿ " +
                                     trans['cost']
@@ -107,10 +158,11 @@ class TransList extends StatelessWidget {
                                         .replaceAllMapped(reg, mathFunc),
                                 style: TextStyle(
                                     color: Color(0xff6A2388),
-                                    fontSize: 15 /
+                                    fontSize: 18 /
                                         (760 * 360) *
                                         (screenHeight * screenWidth),
                                     fontWeight: FontWeight.w700),
+                                textAlign: TextAlign.right,
                               ),
                             ),
                           ],
