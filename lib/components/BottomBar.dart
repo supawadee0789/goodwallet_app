@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Voice_Input.dart';
@@ -52,6 +55,74 @@ class BottomBar extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                 ),
               ),
+            ),
+          ),
+          Positioned(
+            bottom: (MediaQuery.of(context).size.height * 0.079) * 0.2,
+            // left: (MediaQuery.of(context).size.width * 0.079) * 2,
+            child: IconTransition(),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class IconTransition extends StatelessWidget {
+  List<Widget> _icon = [
+    IconList("Wallet", Icons.account_balance_wallet_outlined,
+        Icons.account_balance_wallet),
+    IconList("Graph", Icons.leaderboard_outlined, Icons.leaderboard),
+    IconList("Budget", Icons.monetization_on_outlined,
+        Icons.monetization_on_rounded),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: _icon,
+      ),
+    );
+  }
+}
+
+class IconList extends StatefulWidget {
+  final activeIcon;
+  final inactiveIcon;
+  final title;
+  IconList(this.title, this.inactiveIcon, this.activeIcon);
+  @override
+  _IconListState createState() =>
+      _IconListState(title, inactiveIcon, activeIcon);
+}
+
+class _IconListState extends State<IconList> {
+  final activeIcon;
+  final inactiveIcon;
+  final title;
+  _IconListState(this.title, this.inactiveIcon, this.activeIcon);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 0.2),
+            child: Text(
+              title,
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              print(title + ' pressed!');
+            },
+            child: Icon(
+              activeIcon,
+              color: Colors.white,
+              size: 26,
             ),
           ),
         ],
