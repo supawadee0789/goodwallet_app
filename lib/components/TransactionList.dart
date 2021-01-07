@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-
-
 class TransList extends StatefulWidget {
   final arg;
   TransList(this.arg);
@@ -87,11 +85,9 @@ class _TransListState extends State<TransList> {
                               child: Row(
                                 children: [
                                   Padding(
-
                                     padding: EdgeInsets.only(
                                         left: 22 / 360 * screenWidth,
                                         right: 14 / 360 * screenWidth),
-
                                     child: Icon(
                                       Icons.add_photo_alternate,
                                       color: Color(0xffC88EC5),
@@ -135,7 +131,6 @@ class _TransListState extends State<TransList> {
                                             flag = !flag;
                                           });
                                         },
-
                                       ),
                                       SizedBox(height: 2 / 760 * screenHeight),
                                       Text(
