@@ -11,31 +11,16 @@ import 'package:goodwallet_app/components/Header.dart';
 
 import "dart:async";
 
-class VoiceInputMainPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        //Background Gradient Color
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-          ),
-        ),
-        child: SafeArea(child: VoiceInput()),
-      ),
-    );
-  }
-}
-
 class VoiceInput extends StatefulWidget {
+  final index;
+  VoiceInput(this.index);
   @override
-  _VoiceInputState createState() => _VoiceInputState();
+  _VoiceInputState createState() => _VoiceInputState(index);
 }
 
 class _VoiceInputState extends State<VoiceInput> {
+  final _walletIndex;
+  _VoiceInputState(this._walletIndex);
   //ui variables
   double _opacity = 1.0;
   double _textOpacity = 0.0;
@@ -192,8 +177,8 @@ class _VoiceInputState extends State<VoiceInput> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        ConfirmationMainPage(text: _text)),
+                                    builder: (context) => ConfirmationMainPage(
+                                        text: _text, index: _walletIndex)),
                               );
                             }, // stop recording
                             child: RadialProgress()),

@@ -16,7 +16,9 @@ import 'components/Header.dart';
 
 class ConfirmationMainPage extends StatelessWidget {
   final String text;
-  ConfirmationMainPage({Key key, @required this.text}) : super(key: key);
+  final index;
+  ConfirmationMainPage({Key key, @required this.text, this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,8 @@ class ConfirmationMainPage extends StatelessWidget {
               colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
           ),
-          child: SafeArea(child: ConfirmationPage(resultText: text)),
+          child:
+              SafeArea(child: ConfirmationPage(resultText: text, index: index)),
         ),
       ),
     );
@@ -53,14 +56,21 @@ class ConfirmationMainPage extends StatelessWidget {
 
 class ConfirmationPage extends StatefulWidget {
   final String resultText;
-  ConfirmationPage({Key key, @required this.resultText}) : super(key: key);
+  final index;
+  ConfirmationPage({Key key, @required this.resultText, this.index})
+      : super(key: key);
 
   @override
   _ConfirmationPageState createState() =>
-      _ConfirmationPageState(resultText: resultText);
+      _ConfirmationPageState(resultText: resultText, index: index);
 }
 
 class _ConfirmationPageState extends State<ConfirmationPage> {
+  final String resultText;
+  final index;
+  String _screenType = '';
+  _ConfirmationPageState({Key key, @required this.resultText, this.index});
+
   var tokens;
   String type; // type of transaction eg. income expense transfer
   String _class; // class of transaction eg. health food
@@ -73,6 +83,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   @override
   void initState() {
     super.initState();
+    WordSegmentation(resultText);
+    print(tokens);
+    print(index);
   }
 
   Future WordSegmentation(_text) async {
@@ -82,11 +95,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       print("Response status: ${response.body}");
       var parsedJson = utf8.jsonDecode(response.body);
       tokens = parsedJson['tokens'];
+      setState(() {
+        cost = double.parse((checkCost(tokens)));
+        name = checkName(tokens, checkCost(tokens));
+        _screenType = checkType(tokens[0]);
+        type = _screenType;
+        if (type == 'Expense') {
+          cost = -cost;
+        }
+      });
     });
   }
-
-  final String resultText;
-  _ConfirmationPageState({Key key, @required this.resultText});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +132,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               children: [
                 Container(
                     child: Text(
-                  'Expense',
+                  _screenType,
                   style: TextStyle(fontSize: 28),
                 )),
                 ClassSlider(),
@@ -148,7 +167,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         print(checkClass(_currentIndex));
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => VoiceInput()),
+                          MaterialPageRoute(
+                              builder: (context) => VoiceInput('')),
                         ); // cancel confirmation
                       },
                       child: SvgPicture.asset(
@@ -171,19 +191,29 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         // print(checkCost(tokens));
                         _fireStore
                             .collection('wallet')
-                            .document('uOLtbBvDP9lJ2UDfP1GU')
+                            .document(index)
                             .collection('transaction')
                             .add({
                           'class': checkClass(_currentIndex),
-                          'cost': double.parse(checkCost(tokens)) ?? 0,
+                          'cost': cost ?? 0,
                           'createdOn': FieldValue.serverTimestamp(),
-                          'name': checkName(tokens, checkCost(tokens)),
-                          'type': checkType(tokens[0]) ?? 'null'
+                          'name': name,
+                          'type': type.toLowerCase() ?? 'null'
                         });
+
+                        CollectionReference wallet =
+                            FirebaseFirestore.instance.collection('wallet');
+                        wallet
+                          ..doc(index)
+                              .update({'money': FieldValue.increment(cost)})
+                              .then((value) => print("Wallet Updated"))
+                              .catchError((error) =>
+                                  print("Failed to update wallet: $error"));
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ConfirmedMainPage()),
+                              builder: (context) => ConfirmedMainPage(index)),
                         ); // confirm to add transaction
                       },
                       child: SvgPicture.asset(
@@ -288,11 +318,11 @@ class ClassItem extends StatelessWidget {
 checkType(input) {
   String _type;
   if (input == 'ได้') {
-    _type = 'income';
+    _type = 'Income';
   } else if (input == 'ซื้อ') {
-    _type = 'expense';
+    _type = 'Expense';
   } else if (input == 'โอน') {
-    _type = 'transfer';
+    _type = 'Transfer';
   } else {
     _type = 'none';
   }

@@ -8,7 +8,7 @@ import 'package:goodwallet_app/components/WalletCard.dart';
 import 'package:goodwallet_app/components/BottomBar.dart';
 
 class CreateWallet extends StatefulWidget {
-  final arg;
+  final arg; // wallet index
   CreateWallet(this.arg);
   @override
   _CreateWalletState createState() => _CreateWalletState(arg);
@@ -104,7 +104,7 @@ class ThisWallet extends StatelessWidget {
                   ],
                 ),
               ),
-              BottomBar(),
+              BottomBar(index),
             ],
           ),
         ),

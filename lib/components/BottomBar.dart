@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../Voice_Input.dart';
 
 class BottomBar extends StatelessWidget {
+  final index;
+  BottomBar(this.index);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,7 +35,7 @@ class BottomBar extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VoiceInput()),
+                  MaterialPageRoute(builder: (context) => VoiceInput(index)),
                 );
               },
               child: Container(

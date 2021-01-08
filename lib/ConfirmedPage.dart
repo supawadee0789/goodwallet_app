@@ -6,6 +6,8 @@ import 'package:goodwallet_app/Voice_Input.dart';
 import 'package:goodwallet_app/CreateWallet.dart';
 
 class ConfirmedMainPage extends StatelessWidget {
+  final index;
+  ConfirmedMainPage(this.index);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +34,7 @@ class ConfirmedMainPage extends StatelessWidget {
               colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
             ),
           ),
-          child: SafeArea(child: ConfirmedPage()),
+          child: SafeArea(child: ConfirmedPage(index)),
         ),
       ),
     );
@@ -40,11 +42,15 @@ class ConfirmedMainPage extends StatelessWidget {
 }
 
 class ConfirmedPage extends StatefulWidget {
+  final index;
+  ConfirmedPage(this.index);
   @override
-  _ConfirmedPageState createState() => _ConfirmedPageState();
+  _ConfirmedPageState createState() => _ConfirmedPageState(index);
 }
 
 class _ConfirmedPageState extends State<ConfirmedPage> {
+  final index;
+  _ConfirmedPageState(this.index);
   @override
   Widget build(BuildContext context) {
     var _screenWidth = MediaQuery.of(context).size.width;
@@ -85,7 +91,7 @@ class _ConfirmedPageState extends State<ConfirmedPage> {
                 print('go to add transaction page');
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VoiceInput()),
+                  MaterialPageRoute(builder: (context) => VoiceInput('')),
                 );
               },
               child: Text(
@@ -109,11 +115,8 @@ class _ConfirmedPageState extends State<ConfirmedPage> {
             ),
             child: Listener(
               onPointerDown: (detail) {
-                print('going to transaction lists');
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => CreateWallet()),
-                // );
+                print('going to transaction lists of wallet' + index);
+                // Navigator.pop(context);
               },
               child: Text(
                 'SHOW TRANSACTIONS',
