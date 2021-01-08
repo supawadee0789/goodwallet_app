@@ -51,8 +51,7 @@ class ThisWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -61,53 +60,55 @@ class ThisWallet extends StatelessWidget {
             colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Header(),
-            WalletCard(name, money),
-            SizedBox(height: 8),
-            Container(
-              width: _screenWidth * 0.8,
-              height: _screenHeight * 0.5,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(32),
-                  color: Color.fromRGBO(255, 255, 255, 0.66)),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(23, 19, 0, 0),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Today List",
-                      style: TextStyle(
-                        color: Color(0xff8C35B1),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Header(),
+              WalletCard(name, money),
+              SizedBox(height: 8),
+              Container(
+                width: _screenWidth * 0.8,
+                height: _screenHeight * 0.5,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(32),
+                    color: Color.fromRGBO(255, 255, 255, 0.66)),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(23, 19, 0, 0),
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Today List",
+                        style: TextStyle(
+                          color: Color(0xff8C35B1),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ),
-                  TransList(index),
-                  GestureDetector(
-                    onTap: () {
-                      print('pressed');
-                    },
-                    child: Text(
-                      "see more",
-                      style: TextStyle(
-                        color: Color(0xff8C35B1),
-                        decoration: TextDecoration.underline,
-                        fontSize: 11,
+                    TransList(index),
+                    GestureDetector(
+                      onTap: () {
+                        print('pressed');
+                      },
+                      child: Text(
+                        "see more",
+                        style: TextStyle(
+                          color: Color(0xff8C35B1),
+                          decoration: TextDecoration.underline,
+                          fontSize: 11,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            BottomBar(),
-          ],
+              BottomBar(),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

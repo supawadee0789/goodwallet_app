@@ -15,17 +15,17 @@ class _AddWalletState extends State<AddWallet> {
   double money = 0;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-            ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
+        ),
+        child: SafeArea(
           child: Column(
             children: [
               Header(),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/Voice_Input.dart';
+import 'package:goodwallet_app/CreateWallet.dart';
 
 class ConfirmedMainPage extends StatelessWidget {
   @override
@@ -109,6 +110,10 @@ class _ConfirmedPageState extends State<ConfirmedPage> {
             child: Listener(
               onPointerDown: (detail) {
                 print('going to transaction lists');
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => CreateWallet()),
+                // );
               },
               child: Text(
                 'SHOW TRANSACTIONS',
