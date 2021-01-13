@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:goodwallet_app/HistoryPage.dart';
 import 'package:goodwallet_app/components/Header.dart';
 import 'package:goodwallet_app/components/TransactionList.dart';
 import 'package:goodwallet_app/components/WalletCard.dart';
@@ -90,7 +91,10 @@ class ThisWallet extends StatelessWidget {
                   TransList(index),
                   GestureDetector(
                     onTap: () {
-                      print('pressed');
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return new History(index);
+                      }));
                     },
                     child: Text(
                       "see more",

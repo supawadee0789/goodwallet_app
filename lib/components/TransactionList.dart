@@ -19,7 +19,8 @@ class _TransListState extends State<TransList> {
   String name;
   String firstHalf;
   String secondHalf;
-  bool flag = true;
+  bool costOverflow;
+  final _formattedNumber = NumberFormat.compact().format(1000000);
   @override
   void initState() {
     super.initState();
@@ -62,6 +63,11 @@ class _TransListState extends State<TransList> {
                       secondHalf = "";
                     }
 
+                    if (trans['cost'] > 1000) {
+                      costOverflow = true;
+                    } else {
+                      costOverflow = false;
+                    }
                     var time = DateFormat.yMMMd()
                         .add_jm()
                         .format(DateTime.parse(
@@ -86,8 +92,8 @@ class _TransListState extends State<TransList> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        left: 22 / 360 * screenWidth,
-                                        right: 14 / 360 * screenWidth),
+                                        left: 11 / 360 * screenWidth,
+                                        right: 10 / 360 * screenWidth),
                                     child: Icon(
                                       Icons.add_photo_alternate,
                                       color: Color(0xffC88EC5),
@@ -101,36 +107,26 @@ class _TransListState extends State<TransList> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      GestureDetector(
-                                        child: Container(
-                                          child: secondHalf.isEmpty
-                                              ? new Text(
-                                                  firstHalf,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Knit',
-                                                      color: Color(0xff6A2388),
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                )
-                                              : Text(
-                                                  flag
-                                                      ? (firstHalf + "...")
-                                                      : (firstHalf +
-                                                          secondHalf),
-                                                  style: TextStyle(
-                                                      fontFamily: 'Knit',
-                                                      color: Color(0xff6A2388),
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            flag = !flag;
-                                          });
-                                        },
+                                      Container(
+                                        child: secondHalf.isEmpty
+                                            ? new Text(
+                                                firstHalf,
+                                                style: TextStyle(
+                                                    fontFamily: 'Knit',
+                                                    color: Color(0xff6A2388),
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              )
+                                            : Text(
+                                                firstHalf + "...",
+                                                style: TextStyle(
+                                                    fontFamily: 'Knit',
+                                                    color: Color(0xff6A2388),
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
                                       ),
                                       SizedBox(height: 2 / 760 * screenHeight),
                                       Text(
@@ -146,19 +142,31 @@ class _TransListState extends State<TransList> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: Text(
-                                "฿ " +
-                                    trans['cost']
-                                        .toStringAsFixed(2)
-                                        .replaceAllMapped(reg, mathFunc),
-                                style: TextStyle(
-                                    color: Color(0xff6A2388),
-                                    fontSize: 18 /
-                                        (760 * 360) *
-                                        (screenHeight * screenWidth),
-                                    fontWeight: FontWeight.w700),
-                                textAlign: TextAlign.right,
-                              ),
+                              child: costOverflow
+                                  ? new Text(
+                                      "฿ " +
+                                          NumberFormat.compact()
+                                              .format(trans['cost']),
+                                      style: TextStyle(
+                                          color: Color(0xff6A2388),
+                                          fontSize: 18 /
+                                              (760 * 360) *
+                                              (screenHeight * screenWidth),
+                                          fontWeight: FontWeight.w700),
+                                    )
+                                  : Text(
+                                      "฿ " +
+                                          trans['cost']
+                                              .toStringAsFixed(2)
+                                              .replaceAllMapped(reg, mathFunc),
+                                      style: TextStyle(
+                                          color: Color(0xff6A2388),
+                                          fontSize: 18 /
+                                              (760 * 360) *
+                                              (screenHeight * screenWidth),
+                                          fontWeight: FontWeight.w700),
+                                      textAlign: TextAlign.right,
+                                    ),
                             ),
                           ],
                         ));
