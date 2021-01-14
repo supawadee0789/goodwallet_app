@@ -88,7 +88,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         cost = double.parse((checkCost(tokens, textType)));
         _screenType = checkType(tokens[0]);
         type = _screenType;
-        name = checkName(tokens);
+        name = checkName(tokens, type);
 
         if (type == 'Expense') {
           cost = -cost;
@@ -307,7 +307,7 @@ class ClassItem extends StatelessWidget {
 
 checkType(input) {
   String _type;
-  if (input == 'ได้') {
+  if (input == 'ได้เงิน') {
     _type = 'Income';
   } else if (input == 'ซื้อ') {
     _type = 'Expense';
@@ -340,16 +340,19 @@ bool _isNumeric(String str) {
   return double.tryParse(str) != null;
 }
 
-checkName(array) {
+checkName(array, type) {
+  if (type == 'expense') {
+    array.removeAt(0);
+    if (array[0] == ' ') {
+      array.removeAt(0);
+    }
+  }
   print(array);
   for (var i = 0; i <= 3; i++) {
     array.removeLast();
     print(array);
   }
-  array.removeAt(0);
-  if (array[0] == ' ') {
-    array.removeAt(0);
-  }
+
   var name = StringBuffer();
 
   array.forEach((item) {
