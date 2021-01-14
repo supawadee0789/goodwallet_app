@@ -22,33 +22,18 @@ class ConfirmationMainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(
-          body1: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
-            color: Colors.white,
-          ),
-          button: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
+    return Scaffold(
+      body: Container(
+        //Background Gradient Color
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-      ),
-      home: Scaffold(
-        body: Container(
-          //Background Gradient Color
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-            ),
-          ),
-          child:
-              SafeArea(child: ConfirmationPage(resultText: text, index: index)),
-        ),
+        child:
+            SafeArea(child: ConfirmationPage(resultText: text, index: index)),
       ),
     );
   }
@@ -72,6 +57,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   _ConfirmationPageState({Key key, @required this.resultText, this.index});
 
   var tokens;
+  var textType;
   String type; // type of transaction eg. income expense transfer
   String _class; // class of transaction eg. health food
   String name; // name of transaction eg. ซื้อข้าวกระเพรา
@@ -89,17 +75,21 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   }
 
   Future WordSegmentation(_text) async {
-    var url = "https://api.aiforthai.in.th/tlexplus?text=" + _text;
+    var url = "https://api.aiforthai.in.th/lextoplus?text=" + _text;
     await Http.get(url, headers: {"Apikey": "elHOb4Ksl715HkIu6Leq5ZdcnYX39SPP"})
         .then((response) {
       print("Response status: ${response.body}");
       var parsedJson = utf8.jsonDecode(response.body);
+      print(parsedJson);
       tokens = parsedJson['tokens'];
+      textType = parsedJson['types'];
+      print(tokens);
       setState(() {
-        cost = double.parse((checkCost(tokens)));
-        name = checkName(tokens, checkCost(tokens));
+        cost = double.parse((checkCost(tokens, textType)));
         _screenType = checkType(tokens[0]);
         type = _screenType;
+        name = checkName(tokens);
+
         if (type == 'Expense') {
           cost = -cost;
         }
@@ -329,16 +319,18 @@ checkType(input) {
   return _type;
 }
 
-checkCost(array) {
+checkCost(array, textType) {
   var costLoc = -1;
   for (var loc = array.length - 1; loc >= 0; loc--) {
-    if (_isNumeric(array[loc])) {
+    print(array[loc]);
+    if (textType[loc] == 2) {
       costLoc = loc;
+      print('number found!');
       break;
     }
   }
   print(array[costLoc]);
-  return array[costLoc];
+  return array[costLoc].replaceAll(',', '');
 }
 
 bool _isNumeric(String str) {
@@ -348,11 +340,15 @@ bool _isNumeric(String str) {
   return double.tryParse(str) != null;
 }
 
-checkName(array, costLoc) {
+checkName(array) {
   print(array);
   for (var i = 0; i <= 3; i++) {
     array.removeLast();
     print(array);
+  }
+  array.removeAt(0);
+  if (array[0] == ' ') {
+    array.removeAt(0);
   }
   var name = StringBuffer();
 
