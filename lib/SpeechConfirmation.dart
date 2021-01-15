@@ -56,46 +56,39 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   String _screenType = '';
   _ConfirmationPageState({Key key, @required this.resultText, this.index});
 
-  var tokens;
-  var textType;
-  String type; // type of transaction eg. income expense transfer
-  String _class; // class of transaction eg. health food
-  String name; // name of transaction eg. ซื้อข้าวกระเพรา
-  var cost; // cost of transaction
-  String targetWallet; // target wallet to transfer money
-
   final _fireStore = Firestore.instance;
-
+  var currentTransaction;
   @override
   void initState() {
     super.initState();
     WordSegmentation(resultText);
-    print(tokens);
+    // print(currentTransaction.tokens);
     print(index);
   }
 
   Future WordSegmentation(_text) async {
     var url = "https://api.aiforthai.in.th/lextoplus?text=" + _text;
     await Http.get(url, headers: {"Apikey": "elHOb4Ksl715HkIu6Leq5ZdcnYX39SPP"})
-        .then((response) {
+        .then((response) async {
       print("Response status: ${response.body}");
       var parsedJson = utf8.jsonDecode(response.body);
       print(parsedJson);
-      tokens = parsedJson['tokens'];
-      textType = parsedJson['types'];
-      print(tokens);
+      currentTransaction =
+          new Transaction(parsedJson['tokens'], parsedJson['types']);
+      print(currentTransaction.tokens);
+      await currentTransaction.setAllVariables();
       setState(() {
-        cost = double.parse((checkCost(tokens, textType)));
-        _screenType = checkType(tokens[0]);
-        type = _screenType;
-        name = checkName(tokens, type);
-
-        if (type == 'Expense') {
-          cost = -cost;
+        _screenType = currentTransaction.type;
+        if (_screenType == 'Income') {
+          buttonCarouselController.animateToPage(7);
+        } else if (_screenType == 'Transfer') {
+          buttonCarouselController.animateToPage(8);
         }
       });
     });
   }
+
+  CarouselController buttonCarouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -122,10 +115,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               children: [
                 Container(
                     child: Text(
-                  _screenType,
+                  _screenType ?? 'none',
                   style: TextStyle(fontSize: 28),
                 )),
-                ClassSlider(),
+                ClassSlider(buttonCarouselController),
               ],
             ),
           ),
@@ -154,7 +147,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     child: Listener(
                       onPointerDown: (detail) {
                         print('cancel');
-                        print(checkClass(_currentIndex));
+                        print(classCarousel(_currentIndex));
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -184,18 +177,22 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             .document(index)
                             .collection('transaction')
                             .add({
-                          'class': checkClass(_currentIndex),
-                          'cost': cost ?? 0,
+                          'class': classCarousel(_currentIndex),
+                          'cost': currentTransaction.cost ?? 0,
                           'createdOn': FieldValue.serverTimestamp(),
-                          'name': name,
-                          'type': type.toLowerCase() ?? 'null'
+                          'name': currentTransaction.name,
+                          'type':
+                              currentTransaction.type.toLowerCase() ?? 'null'
                         });
 
                         CollectionReference wallet =
                             FirebaseFirestore.instance.collection('wallet');
                         wallet
                           ..doc(index)
-                              .update({'money': FieldValue.increment(cost)})
+                              .update({
+                                'money': FieldValue.increment(
+                                    currentTransaction.cost)
+                              })
                               .then((value) => print("Wallet Updated"))
                               .catchError((error) =>
                                   print("Failed to update wallet: $error"));
@@ -226,11 +223,16 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 int _currentIndex = 0;
 
 class ClassSlider extends StatefulWidget {
+  final buttonCarouselController;
+  ClassSlider(this.buttonCarouselController);
   @override
-  _ClassSliderState createState() => _ClassSliderState();
+  _ClassSliderState createState() =>
+      _ClassSliderState(buttonCarouselController);
 }
 
 class _ClassSliderState extends State<ClassSlider> {
+  final buttonCarouselController;
+  _ClassSliderState(this.buttonCarouselController);
   List cardList = [
     ClassItem('Food'),
     ClassItem('Daily use'),
@@ -238,7 +240,9 @@ class _ClassSliderState extends State<ClassSlider> {
     ClassItem('Travel'),
     ClassItem('Health'),
     ClassItem('Entertainment'),
-    ClassItem('Housing')
+    ClassItem('Housing'),
+    ClassItem('Income'),
+    ClassItem('Transfer')
   ];
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -251,6 +255,7 @@ class _ClassSliderState extends State<ClassSlider> {
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
+      carouselController: buttonCarouselController,
       options: CarouselOptions(
         height: 160.0,
         autoPlay: false,
@@ -295,6 +300,7 @@ class ClassItem extends StatelessWidget {
           'images/' + class_name + '.svg',
           height: 71.0,
           width: 85.0,
+          color: Colors.white,
         ),
         Container(
           margin: EdgeInsets.only(top: 14),
@@ -305,32 +311,89 @@ class ClassItem extends StatelessWidget {
   }
 }
 
-checkType(input) {
-  String _type;
-  if (input == 'ได้เงิน') {
-    _type = 'Income';
-  } else if (input == 'ซื้อ') {
-    _type = 'Expense';
-  } else if (input == 'โอน') {
-    _type = 'Transfer';
-  } else {
-    _type = 'none';
-  }
-  return _type;
-}
+class Transaction {
+  var tokens;
+  var textType;
+  String type; // type of transaction eg. income expense transfer
+  String _class; // class of transaction eg. health food
+  String name; // name of transaction eg. ซื้อข้าวกระเพรา
+  var cost; // cost of transaction
+  String targetWallet; // target wallet to transfer money
 
-checkCost(array, textType) {
-  var costLoc = -1;
-  for (var loc = array.length - 1; loc >= 0; loc--) {
-    print(array[loc]);
-    if (textType[loc] == 2) {
-      costLoc = loc;
-      print('number found!');
-      break;
+  Transaction(this.tokens, this.textType);
+
+  void setAllVariables() async {
+    print('tokens = ');
+    print(this.tokens);
+    await this.deleteSpace();
+    this.checkType();
+    this.checkCost();
+    this.checkName();
+  }
+
+  void deleteSpace() {
+    for (var index = 0; index < this.tokens.length; index++) {
+      if (this.textType[index] == 3) {
+        this.tokens.removeAt(index);
+        this.textType.removeAt(index);
+      }
+    }
+    print(tokens);
+  }
+
+  void checkType() {
+    var input = this.tokens[0];
+    String _type;
+    if (input == 'ได้เงิน') {
+      _type = 'Income';
+    } else if (input == 'ซื้อ') {
+      _type = 'Expense';
+    } else if (input == 'โอน') {
+      _type = 'Transfer';
+    } else {
+      _type = 'none';
+    }
+    this.type = _type;
+  }
+
+  void checkCost() async {
+    var array = this.tokens;
+    var costLoc = -1;
+    for (var loc = array.length - 1; loc >= 0; loc--) {
+      print(array[loc]);
+      if (this.textType[loc] == 2) {
+        costLoc = loc;
+        print('number found!');
+        break;
+      }
+    }
+    print(array[costLoc]);
+    var localCost = array[costLoc].replaceAll(',', '');
+    print(localCost);
+    this.cost = double.parse(localCost);
+    if (this.type == 'Expense') {
+      this.cost = -this.cost;
     }
   }
-  print(array[costLoc]);
-  return array[costLoc].replaceAll(',', '');
+
+  void checkName() {
+    var array = this.tokens;
+    if (this.type == 'expense') {
+      array.removeAt(0);
+    }
+    print(array);
+    for (var i = 0; i < 2; i++) {
+      array.removeLast();
+      print(array);
+    }
+
+    var name = StringBuffer();
+
+    array.forEach((item) {
+      name.write(item);
+    });
+    this.name = name.toString();
+  }
 }
 
 bool _isNumeric(String str) {
@@ -340,28 +403,7 @@ bool _isNumeric(String str) {
   return double.tryParse(str) != null;
 }
 
-checkName(array, type) {
-  if (type == 'expense') {
-    array.removeAt(0);
-    if (array[0] == ' ') {
-      array.removeAt(0);
-    }
-  }
-  print(array);
-  for (var i = 0; i <= 3; i++) {
-    array.removeLast();
-    print(array);
-  }
-
-  var name = StringBuffer();
-
-  array.forEach((item) {
-    name.write(item);
-  });
-  return name.toString();
-}
-
-checkClass(_index) {
+classCarousel(_index) {
   String className;
   switch (_index) {
     case 0:
@@ -398,6 +440,16 @@ checkClass(_index) {
     case 6:
       {
         className = 'housing';
+      }
+      break;
+    case 7:
+      {
+        className = 'income';
+      }
+      break;
+    case 8:
+      {
+        className = 'transfer';
       }
       break;
     default:

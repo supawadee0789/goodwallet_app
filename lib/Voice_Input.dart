@@ -95,7 +95,7 @@ class _VoiceInputState extends State<VoiceInput> {
                             AnimatedPositioned(
                               duration: _animationDuration,
                               top: _buttonPressed ? 0 : 184,
-                              child: VoiceExample('transfer',
+                              child: VoiceExample('transferLogo',
                                   'การโอน: โอนเงินไป cash 80 บาท', 0xffE1B152),
                             ),
                           ],
