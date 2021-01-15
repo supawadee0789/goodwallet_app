@@ -9,7 +9,7 @@ import 'package:goodwallet_app/components/WalletCard.dart';
 import 'package:goodwallet_app/components/BottomBar.dart';
 
 class CreateWallet extends StatefulWidget {
-  final arg;
+  final arg; // wallet index
   CreateWallet(this.arg);
   @override
   _CreateWalletState createState() => _CreateWalletState(arg);
@@ -52,8 +52,7 @@ class ThisWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -98,6 +97,7 @@ class ThisWallet extends StatelessWidget {
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: _screenHeight * 0.01),
+
                       child: Text(
                         "see more",
                         style: TextStyle(
@@ -107,14 +107,14 @@ class ThisWallet extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            BottomBar(),
-          ],
+              BottomBar(index),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

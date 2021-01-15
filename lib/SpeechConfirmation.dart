@@ -16,36 +16,24 @@ import 'components/Header.dart';
 
 class ConfirmationMainPage extends StatelessWidget {
   final String text;
-  ConfirmationMainPage({Key key, @required this.text}) : super(key: key);
+  final index;
+  ConfirmationMainPage({Key key, @required this.text, this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(
-          body1: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
-            color: Colors.white,
-          ),
-          button: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
+    return Scaffold(
+      body: Container(
+        //Background Gradient Color
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-      ),
-      home: Scaffold(
-        body: Container(
-          //Background Gradient Color
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-            ),
-          ),
-          child: SafeArea(child: ConfirmationPage(resultText: text)),
-        ),
+        child:
+            SafeArea(child: ConfirmationPage(resultText: text, index: index)),
       ),
     );
   }
@@ -53,40 +41,56 @@ class ConfirmationMainPage extends StatelessWidget {
 
 class ConfirmationPage extends StatefulWidget {
   final String resultText;
-  ConfirmationPage({Key key, @required this.resultText}) : super(key: key);
+  final index;
+  ConfirmationPage({Key key, @required this.resultText, this.index})
+      : super(key: key);
 
   @override
   _ConfirmationPageState createState() =>
-      _ConfirmationPageState(resultText: resultText);
+      _ConfirmationPageState(resultText: resultText, index: index);
 }
 
 class _ConfirmationPageState extends State<ConfirmationPage> {
-  var tokens;
-  String type; // type of transaction eg. income expense transfer
-  String _class; // class of transaction eg. health food
-  String name; // name of transaction eg. ซื้อข้าวกระเพรา
-  var cost; // cost of transaction
-  String targetWallet; // target wallet to transfer money
+  final String resultText;
+  final index;
+  String _screenType = '';
+  _ConfirmationPageState({Key key, @required this.resultText, this.index});
 
   final _fireStore = Firestore.instance;
-
+  var currentTransaction;
   @override
   void initState() {
     super.initState();
+    WordSegmentation(resultText);
+    // print(currentTransaction.tokens);
+    print(index);
   }
 
   Future WordSegmentation(_text) async {
-    var url = "https://api.aiforthai.in.th/tlexplus?text=" + _text;
+    var url = "https://api.aiforthai.in.th/lextoplus?text=" + _text;
     await Http.get(url, headers: {"Apikey": "elHOb4Ksl715HkIu6Leq5ZdcnYX39SPP"})
-        .then((response) {
+        .then((response) async {
       print("Response status: ${response.body}");
       var parsedJson = utf8.jsonDecode(response.body);
-      tokens = parsedJson['tokens'];
+      print(parsedJson);
+      currentTransaction =
+          new Transaction(parsedJson['tokens'], parsedJson['types']);
+      print(currentTransaction.tokens);
+      await currentTransaction.setAllVariables();
+      setState(() {
+        _screenType = currentTransaction.type;
+        if (_screenType == 'Income') {
+          buttonCarouselController.animateToPage(7,
+              duration: Duration(milliseconds: 300), curve: Curves.linear);
+        } else if (_screenType == 'Transfer') {
+          buttonCarouselController.animateToPage(8,
+              duration: Duration(milliseconds: 300), curve: Curves.linear);
+        }
+      });
     });
   }
 
-  final String resultText;
-  _ConfirmationPageState({Key key, @required this.resultText});
+  CarouselController buttonCarouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +117,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               children: [
                 Container(
                     child: Text(
-                  'Expense',
+                  _screenType ?? 'none',
                   style: TextStyle(fontSize: 28),
                 )),
-                ClassSlider(),
+                ClassSlider(buttonCarouselController),
               ],
             ),
           ),
@@ -145,10 +149,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     child: Listener(
                       onPointerDown: (detail) {
                         print('cancel');
-                        print(checkClass(_currentIndex));
+                        print(classCarousel(_currentIndex));
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => VoiceInput()),
+                          MaterialPageRoute(
+                              builder: (context) => VoiceInput('')),
                         ); // cancel confirmation
                       },
                       child: SvgPicture.asset(
@@ -171,19 +176,33 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         // print(checkCost(tokens));
                         _fireStore
                             .collection('wallet')
-                            .document('uOLtbBvDP9lJ2UDfP1GU')
+                            .document(index)
                             .collection('transaction')
                             .add({
-                          'class': checkClass(_currentIndex),
-                          'cost': double.parse(checkCost(tokens)) ?? 0,
+                          'class': classCarousel(_currentIndex),
+                          'cost': currentTransaction.cost ?? 0,
                           'createdOn': FieldValue.serverTimestamp(),
-                          'name': checkName(tokens, checkCost(tokens)),
-                          'type': checkType(tokens[0]) ?? 'null'
+                          'name': currentTransaction.name,
+                          'type':
+                              currentTransaction.type.toLowerCase() ?? 'null'
                         });
+
+                        CollectionReference wallet =
+                            FirebaseFirestore.instance.collection('wallet');
+                        wallet
+                          ..doc(index)
+                              .update({
+                                'money': FieldValue.increment(
+                                    currentTransaction.cost)
+                              })
+                              .then((value) => print("Wallet Updated"))
+                              .catchError((error) =>
+                                  print("Failed to update wallet: $error"));
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ConfirmedMainPage()),
+                              builder: (context) => ConfirmedMainPage(index)),
                         ); // confirm to add transaction
                       },
                       child: SvgPicture.asset(
@@ -206,11 +225,16 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 int _currentIndex = 0;
 
 class ClassSlider extends StatefulWidget {
+  final buttonCarouselController;
+  ClassSlider(this.buttonCarouselController);
   @override
-  _ClassSliderState createState() => _ClassSliderState();
+  _ClassSliderState createState() =>
+      _ClassSliderState(buttonCarouselController);
 }
 
 class _ClassSliderState extends State<ClassSlider> {
+  final buttonCarouselController;
+  _ClassSliderState(this.buttonCarouselController);
   List cardList = [
     ClassItem('Food'),
     ClassItem('Daily use'),
@@ -218,7 +242,9 @@ class _ClassSliderState extends State<ClassSlider> {
     ClassItem('Travel'),
     ClassItem('Health'),
     ClassItem('Entertainment'),
-    ClassItem('Housing')
+    ClassItem('Housing'),
+    ClassItem('Income'),
+    ClassItem('Transfer')
   ];
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -231,6 +257,7 @@ class _ClassSliderState extends State<ClassSlider> {
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
+      carouselController: buttonCarouselController,
       options: CarouselOptions(
         height: 160.0,
         autoPlay: false,
@@ -275,40 +302,103 @@ class ClassItem extends StatelessWidget {
           'images/' + class_name + '.svg',
           height: 71.0,
           width: 85.0,
+          color: Colors.white,
         ),
         Container(
           margin: EdgeInsets.only(top: 14),
-          child: Text(class_name),
+          child: Text(
+            class_name,
+            style: TextStyle(fontSize: 18),
+          ),
         )
       ]),
     );
   }
 }
 
-checkType(input) {
-  String _type;
-  if (input == 'ได้') {
-    _type = 'income';
-  } else if (input == 'ซื้อ') {
-    _type = 'expense';
-  } else if (input == 'โอน') {
-    _type = 'transfer';
-  } else {
-    _type = 'none';
-  }
-  return _type;
-}
+class Transaction {
+  var tokens;
+  var textType;
+  String type; // type of transaction eg. income expense transfer
+  String _class; // class of transaction eg. health food
+  String name; // name of transaction eg. ซื้อข้าวกระเพรา
+  var cost; // cost of transaction
+  String targetWallet; // target wallet to transfer money
 
-checkCost(array) {
-  var costLoc = -1;
-  for (var loc = array.length - 1; loc >= 0; loc--) {
-    if (_isNumeric(array[loc])) {
-      costLoc = loc;
-      break;
+  Transaction(this.tokens, this.textType);
+
+  void setAllVariables() async {
+    print('tokens = ');
+    print(this.tokens);
+    await this.deleteSpace();
+    this.checkType();
+    this.checkCost();
+    this.checkName();
+  }
+
+  void deleteSpace() {
+    for (var index = 0; index < this.tokens.length; index++) {
+      if (this.textType[index] == 3) {
+        this.tokens.removeAt(index);
+        this.textType.removeAt(index);
+      }
+    }
+    print(tokens);
+  }
+
+  void checkType() {
+    var input = this.tokens[0];
+    String _type;
+    if (input == 'ได้เงิน') {
+      _type = 'Income';
+    } else if (input == 'ซื้อ') {
+      _type = 'Expense';
+    } else if (input == 'โอน') {
+      _type = 'Transfer';
+    } else {
+      _type = 'none';
+    }
+    this.type = _type;
+  }
+
+  void checkCost() async {
+    var array = this.tokens;
+    var costLoc = -1;
+    for (var loc = array.length - 1; loc >= 0; loc--) {
+      print(array[loc]);
+      if (this.textType[loc] == 2) {
+        costLoc = loc;
+        print('number found!');
+        break;
+      }
+    }
+    print(array[costLoc]);
+    var localCost = array[costLoc].replaceAll(',', '');
+    print(localCost);
+    this.cost = double.parse(localCost);
+    if (this.type == 'Expense') {
+      this.cost = -this.cost;
     }
   }
-  print(array[costLoc]);
-  return array[costLoc];
+
+  void checkName() {
+    var array = this.tokens;
+    if (this.type == 'expense') {
+      array.removeAt(0);
+    }
+    print(array);
+    for (var i = 0; i < 2; i++) {
+      array.removeLast();
+      print(array);
+    }
+
+    var name = StringBuffer();
+
+    array.forEach((item) {
+      name.write(item);
+    });
+    this.name = name.toString();
+  }
 }
 
 bool _isNumeric(String str) {
@@ -318,21 +408,7 @@ bool _isNumeric(String str) {
   return double.tryParse(str) != null;
 }
 
-checkName(array, costLoc) {
-  print(array);
-  for (var i = 0; i <= 3; i++) {
-    array.removeLast();
-    print(array);
-  }
-  var name = StringBuffer();
-
-  array.forEach((item) {
-    name.write(item);
-  });
-  return name.toString();
-}
-
-checkClass(_index) {
+classCarousel(_index) {
   String className;
   switch (_index) {
     case 0:
@@ -369,6 +445,16 @@ checkClass(_index) {
     case 6:
       {
         className = 'housing';
+      }
+      break;
+    case 7:
+      {
+        className = 'income';
+      }
+      break;
+    case 8:
+      {
+        className = 'transfer';
       }
       break;
     default:

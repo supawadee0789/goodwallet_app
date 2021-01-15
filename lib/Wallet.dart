@@ -18,17 +18,17 @@ class _WalletState extends State<Wallet> {
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          //Background Gradient Color
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-            ),
+    return Scaffold(
+      body: Container(
+        //Background Gradient Color
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
+        ),
+        child: SafeArea(
           child: Column(
             children: [
               HeaderWallet(),

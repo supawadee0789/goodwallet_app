@@ -11,31 +11,16 @@ import 'package:goodwallet_app/components/Header.dart';
 
 import "dart:async";
 
-class VoiceInputMainPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        //Background Gradient Color
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-          ),
-        ),
-        child: SafeArea(child: VoiceInput()),
-      ),
-    );
-  }
-}
-
 class VoiceInput extends StatefulWidget {
+  final index;
+  VoiceInput(this.index);
   @override
-  _VoiceInputState createState() => _VoiceInputState();
+  _VoiceInputState createState() => _VoiceInputState(index);
 }
 
 class _VoiceInputState extends State<VoiceInput> {
+  final _walletIndex;
+  _VoiceInputState(this._walletIndex);
   //ui variables
   double _opacity = 1.0;
   double _textOpacity = 0.0;
@@ -58,163 +43,140 @@ class _VoiceInputState extends State<VoiceInput> {
   Widget build(BuildContext context) {
     var _screenWidth = MediaQuery.of(context).size.width;
     var _screenHeight = MediaQuery.of(context).size.height;
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(
-          body1: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20 / (760 * 360) * (_screenHeight * _screenWidth),
-            color: Colors.white,
-          ),
-          button: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20 / (760 * 360) * (_screenHeight * _screenWidth),
+    return Scaffold(
+      body: Container(
+        //Background Gradient Color
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-      ),
-      home: Scaffold(
-        body: Container(
-          //Background Gradient Color
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-            ),
-          ),
-          child: SafeArea(
-            child: Align(
-              alignment: Alignment.center,
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  Column(
-                    children: [
-                      Header(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AnimatedOpacity(
-                        duration: _opacityDuration,
-                        opacity: _opacity,
-                        child: Container(
-                          height: _screenHeight * 0.4,
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 280,
-                                child: Text(
-                                  'Example',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(fontSize: 22),
-                                ),
+        child: SafeArea(
+          child: Align(
+            alignment: Alignment.center,
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Column(
+                  children: [
+                    Header(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    AnimatedOpacity(
+                      duration: _opacityDuration,
+                      opacity: _opacity,
+                      child: Container(
+                        height: _screenHeight * 0.4,
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: 280,
+                              child: Text(
+                                'Example',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: 22),
                               ),
-                              AnimatedPositioned(
-                                duration: _animationDuration,
-                                top: _buttonPressed ? 0 : 18,
-                                child: VoiceExample(
-                                    'plus',
-                                    'รายรับ: ได้เงินจากแม่ 200 บาท',
-                                    0xff379243),
-                              ),
-                              AnimatedPositioned(
-                                duration: _animationDuration,
-                                top: _buttonPressed ? 0 : 102,
-                                child: VoiceExample(
-                                    'minus',
-                                    'รายจ่าย: ซื้อข้าวกะเพรา 45 บาท',
-                                    0xffC3374E),
-                              ),
-                              AnimatedPositioned(
-                                duration: _animationDuration,
-                                top: _buttonPressed ? 0 : 184,
-                                child: VoiceExample(
-                                    'transfer',
-                                    'การโอน: โอนเงินไป cash 80 บาท',
-                                    0xffE1B152),
-                              ),
-                            ],
-                          ),
+                            ),
+                            AnimatedPositioned(
+                              duration: _animationDuration,
+                              top: _buttonPressed ? 0 : 18,
+                              child: VoiceExample('plus',
+                                  'รายรับ: ได้เงินจากแม่ 200 บาท', 0xff379243),
+                            ),
+                            AnimatedPositioned(
+                              duration: _animationDuration,
+                              top: _buttonPressed ? 0 : 102,
+                              child: VoiceExample('minus',
+                                  'รายจ่าย: ซื้อข้าวกะเพรา 45 บาท', 0xffC3374E),
+                            ),
+                            AnimatedPositioned(
+                              duration: _animationDuration,
+                              top: _buttonPressed ? 0 : 184,
+                              child: VoiceExample('transferLogo',
+                                  'การโอน: โอนเงินไป cash 80 บาท', 0xffE1B152),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 102 / 760 * _screenHeight,
-                        width: _screenWidth,
-                      ),
-                      Container(
-                        child: Text(
-                          'Press and hold the button\nto record your word',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 23),
-                        height: 70,
-                        width: 70,
-                        child: Listener(
-                            onPointerDown: (details) async {
-                              setState(() {
-                                _opacity = 0;
-                                _textOpacity = 1;
-                              });
-                              _text = '';
-                              _buttonPressed = true;
-                              bool available = await _speech.initialize(
-                                onStatus: (val) => print('onStatus: $val'),
-                                onError: (val) => print('onError: $val'),
-                              );
-                              if (available) {
-                                setState(() => _isListening = true);
-                                _speech.listen(
-                                  onResult: (val) => setState(() {
-                                    _text = val.recognizedWords;
-                                    setState(() {
-                                      _text = _text;
-                                    });
-                                  }),
-                                );
-                              }
-                            }, // recording
-                            onPointerUp: (details) async {
-                              _buttonPressed = false;
-                              await Future.delayed(
-                                  Duration(milliseconds: 1000));
-                              setState(() => _isListening = false);
-                              _speech.stop();
-                              print('final result = ' + _text);
-                              await Future.delayed(
-                                  Duration(milliseconds: 1000));
-                              setState(() {
-                                _opacity = 1;
-                                _textOpacity = 0;
-                              });
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ConfirmationMainPage(text: _text)),
-                              );
-                            }, // stop recording
-                            child: RadialProgress()),
-                      )
-                    ],
-                  ),
-                  AnimatedOpacity(
-                    duration: _opacityDuration,
-                    opacity: _textOpacity,
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: _screenWidth * 0.8),
-                      margin: EdgeInsets.only(bottom: 150),
-                      child: Text(
-                        _text,
-                        style: TextStyle(fontSize: 30, color: Colors.white),
-                        textAlign: TextAlign.center,
                       ),
                     ),
+                    SizedBox(
+                      height: 102 / 760 * _screenHeight,
+                      width: _screenWidth,
+                    ),
+                    Container(
+                      child: Text(
+                        'Press and hold the button\nto record your word',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 23),
+                      height: 70,
+                      width: 70,
+                      child: Listener(
+                          onPointerDown: (details) async {
+                            setState(() {
+                              _opacity = 0;
+                              _textOpacity = 1;
+                            });
+                            _text = '';
+                            _buttonPressed = true;
+                            bool available = await _speech.initialize(
+                              onStatus: (val) => print('onStatus: $val'),
+                              onError: (val) => print('onError: $val'),
+                            );
+                            if (available) {
+                              setState(() => _isListening = true);
+                              _speech.listen(
+                                onResult: (val) => setState(() {
+                                  _text = val.recognizedWords;
+                                  setState(() {
+                                    _text = _text;
+                                  });
+                                }),
+                              );
+                            }
+                          }, // recording
+                          onPointerUp: (details) async {
+                            _buttonPressed = false;
+                            await Future.delayed(Duration(milliseconds: 1000));
+                            setState(() => _isListening = false);
+                            _speech.stop();
+                            print('final result = ' + _text);
+                            await Future.delayed(Duration(milliseconds: 1000));
+                            setState(() {
+                              _opacity = 1;
+                              _textOpacity = 0;
+                            });
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ConfirmationMainPage(
+                                      text: _text, index: _walletIndex)),
+                            );
+                          }, // stop recording
+                          child: RadialProgress()),
+                    )
+                  ],
+                ),
+                AnimatedOpacity(
+                  duration: _opacityDuration,
+                  opacity: _textOpacity,
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: _screenWidth * 0.8),
+                    margin: EdgeInsets.only(bottom: 150),
+                    child: Text(
+                      _text,
+                      style: TextStyle(fontSize: 30, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
