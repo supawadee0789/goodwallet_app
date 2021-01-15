@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:goodwallet_app/components/IconSelector.dart';
 
 class TransList extends StatefulWidget {
   final arg;
@@ -19,11 +21,22 @@ class _TransListState extends State<TransList> {
   String name;
   String firstHalf;
   String secondHalf;
-  bool costOverflow;
+  bool isIncome;
+  var income;
+  var expense;
+  var _start;
+  var _end;
   final _formattedNumber = NumberFormat.compact().format(1000000);
   @override
   void initState() {
     super.initState();
+    DateTime now = DateTime.now();
+    DateTime utc = DateTime.utc(now.year, now.month, now.day);
+    _start = Timestamp.fromMillisecondsSinceEpoch(
+        utc.add(Duration(hours: -7)).millisecondsSinceEpoch);
+    _end = Timestamp.fromMillisecondsSinceEpoch(utc
+        .add(Duration(hours: 16, minutes: 59, seconds: 59))
+        .millisecondsSinceEpoch);
   }
 
   @override
@@ -37,7 +50,7 @@ class _TransListState extends State<TransList> {
               .document(index)
               .collection('transaction')
               .orderBy('createdOn', descending: false)
-              .snapshots(),
+              .startAt([_start]).endAt([_end]).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -49,25 +62,46 @@ class _TransListState extends State<TransList> {
             }
             return Container(
               width: screenWidth * 311 / 360,
-              height: screenHeight * 290 / 760,
+              height: screenHeight * 300 / 760,
               child: ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot trans = snapshot.data.documents[index];
                     name = trans['name'];
-                    if (name.length > 15) {
-                      firstHalf = name.substring(0, 15);
-                      secondHalf = name.substring(15, name.length);
+                    if (name.length > 13) {
+                      firstHalf = name.substring(0, 11);
+                      secondHalf = name.substring(11, name.length);
                     } else {
                       firstHalf = name;
                       secondHalf = "";
                     }
 
-                    if (trans['cost'] > 1000) {
-                      costOverflow = true;
+                    if (trans['cost'] > 0) {
+                      isIncome = true;
+                      if (trans['cost'] > 10000) {
+                        income = '+' +
+                            NumberFormat.compact()
+                                .format(trans['cost'])
+                                .toString();
+                      } else {
+                        income = '+' +
+                            trans['cost']
+                                .toStringAsFixed(2)
+                                .replaceAllMapped(reg, mathFunc);
+                      }
                     } else {
-                      costOverflow = false;
+                      isIncome = false;
+                      if (trans['cost'] < -10000) {
+                        expense = NumberFormat.compact()
+                            .format(trans['cost'])
+                            .toString();
+                      } else {
+                        expense = trans['cost']
+                            .toStringAsFixed(2)
+                            .replaceAllMapped(reg, mathFunc);
+                      }
                     }
+
                     var time = DateFormat.yMMMd()
                         .add_jm()
                         .format(DateTime.parse(
@@ -94,12 +128,15 @@ class _TransListState extends State<TransList> {
                                     padding: EdgeInsets.only(
                                         left: 11 / 360 * screenWidth,
                                         right: 10 / 360 * screenWidth),
-                                    child: Icon(
-                                      Icons.add_photo_alternate,
-                                      color: Color(0xffC88EC5),
-                                      size: 40 /
-                                          (360 * 760) *
-                                          (screenHeight * screenWidth),
+                                    child: Container(
+                                      height: screenHeight * 0.08,
+                                      width: screenWidth * 0.08,
+                                      child: SvgPicture.asset(
+                                        select(trans['class']),
+                                        color: Color(0xffC88EC5),
+                                        height: screenHeight * 0.07,
+                                        width: screenWidth * 0.07,
+                                      ),
                                     ),
                                   ),
                                   Column(
@@ -142,11 +179,9 @@ class _TransListState extends State<TransList> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: costOverflow
+                              child: isIncome
                                   ? new Text(
-                                      "฿ " +
-                                          NumberFormat.compact()
-                                              .format(trans['cost']),
+                                      "฿ " + income,
                                       style: TextStyle(
                                           color: Color(0xff6A2388),
                                           fontSize: 18 /
@@ -155,10 +190,7 @@ class _TransListState extends State<TransList> {
                                           fontWeight: FontWeight.w700),
                                     )
                                   : Text(
-                                      "฿ " +
-                                          trans['cost']
-                                              .toStringAsFixed(2)
-                                              .replaceAllMapped(reg, mathFunc),
+                                      "฿ " + expense,
                                       style: TextStyle(
                                           color: Color(0xff6A2388),
                                           fontSize: 18 /

@@ -69,7 +69,7 @@ class ThisWallet extends StatelessWidget {
             WalletCard(name, money),
             SizedBox(height: 8),
             Container(
-              width: _screenWidth * 0.8,
+              width: _screenWidth * 0.85,
               height: _screenHeight * 0.5,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(32),
@@ -96,12 +96,15 @@ class ThisWallet extends StatelessWidget {
                         return new History(index);
                       }));
                     },
-                    child: Text(
-                      "see more",
-                      style: TextStyle(
-                        color: Color(0xff8C35B1),
-                        decoration: TextDecoration.underline,
-                        fontSize: 11,
+                    child: Container(
+                      margin: EdgeInsets.only(top: _screenHeight * 0.01),
+                      child: Text(
+                        "see more",
+                        style: TextStyle(
+                          color: Color(0xff8C35B1),
+                          decoration: TextDecoration.underline,
+                          fontSize: 11,
+                        ),
                       ),
                     ),
                   ),
