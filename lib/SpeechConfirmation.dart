@@ -80,9 +80,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       setState(() {
         _screenType = currentTransaction.type;
         if (_screenType == 'Income') {
-          buttonCarouselController.animateToPage(7);
+          buttonCarouselController.animateToPage(7,
+              duration: Duration(milliseconds: 300), curve: Curves.linear);
         } else if (_screenType == 'Transfer') {
-          buttonCarouselController.animateToPage(8);
+          buttonCarouselController.animateToPage(8,
+              duration: Duration(milliseconds: 300), curve: Curves.linear);
         }
       });
     });
@@ -304,7 +306,10 @@ class ClassItem extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(top: 14),
-          child: Text(class_name),
+          child: Text(
+            class_name,
+            style: TextStyle(fontSize: 18),
+          ),
         )
       ]),
     );
