@@ -3,14 +3,16 @@ import 'package:goodwallet_app/components/Calendar.dart';
 
 class History extends StatefulWidget {
   final index;
-  History(this.index);
+  final firebaseInstance;
+  History(this.index, this.firebaseInstance);
   @override
-  _HistoryState createState() => _HistoryState(index);
+  _HistoryState createState() => _HistoryState(index, firebaseInstance);
 }
 
 class _HistoryState extends State<History> {
   final index;
-  _HistoryState(this.index);
+  final firebaseInstance;
+  _HistoryState(this.index, this.firebaseInstance);
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -58,7 +60,7 @@ class _HistoryState extends State<History> {
                     ),
                   ],
                 ),
-                Calendar(index),
+                Calendar(firebaseInstance.walletID),
               ],
             ),
           ),

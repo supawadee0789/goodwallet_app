@@ -43,12 +43,12 @@ String select(String _classItem) {
       break;
     case "shopping":
       {
-        img = "images/Daily use.svg";
+        img = "images/Shopping.svg";
       }
       break;
     default:
       {
-        img = "images/Daily use.svg";
+        img = "images/Shopping.svg";
       }
       break;
   }

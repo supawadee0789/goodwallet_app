@@ -3,50 +3,66 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:goodwallet_app/HistoryPage.dart';
+import 'package:goodwallet_app/Wallet.dart';
 import 'package:goodwallet_app/components/Header.dart';
 import 'package:goodwallet_app/components/TransactionList.dart';
 import 'package:goodwallet_app/components/WalletCard.dart';
 import 'package:goodwallet_app/components/BottomBar.dart';
 
+// show wallet list
 class CreateWallet extends StatefulWidget {
-  final arg; // wallet index
-  CreateWallet(this.arg);
+  final firebaseInstance;
+  CreateWallet(this.firebaseInstance);
   @override
-  _CreateWalletState createState() => _CreateWalletState(arg);
+  _CreateWalletState createState() => _CreateWalletState(firebaseInstance);
 }
 
 class _CreateWalletState extends State<CreateWallet> {
-  final arg;
-  _CreateWalletState(this.arg);
+  final firebaseInstance;
+  _CreateWalletState(this.firebaseInstance);
   @override
   Widget build(BuildContext context) {
-    Query wallets = FirebaseFirestore.instance
-        .collection('wallet')
-        .orderBy('createdOn', descending: false);
     return Container(
       child: StreamBuilder<QuerySnapshot>(
-          stream: wallets.snapshots(),
+          stream: firebaseInstance.wallets.snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError && snapshot.data.docs[arg] == null) {
+            if (snapshot.hasError &&
+                snapshot.data.docs[firebaseInstance.walletIndex] == null) {
               return Text('Something went wrong');
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text("Loading");
             }
-            DocumentSnapshot wallet = snapshot.data.docs[arg];
-            return ThisWallet(wallet['name'], wallet['money'], wallet.id);
+            DocumentSnapshot wallet =
+                snapshot.data.docs[firebaseInstance.walletIndex];
+            return ThisWallet(
+                wallet['name'], wallet['money'], wallet.id, firebaseInstance);
           }),
     );
   }
 }
 
-class ThisWallet extends StatelessWidget {
+class ThisWallet extends StatefulWidget {
+  final firebaseInstance;
   final String name;
   final money;
   final index;
-  ThisWallet(this.name, this.money, this.index);
+
+  ThisWallet(this.name, this.money, this.index, this.firebaseInstance);
+
+  @override
+  _ThisWalletState createState() => _ThisWalletState(
+      this.name, this.money, this.index, this.firebaseInstance);
+}
+
+class _ThisWalletState extends State<ThisWallet> {
+  final firebaseInstance;
+  final String name;
+  final money;
+  final index;
+  _ThisWalletState(this.name, this.money, this.index, this.firebaseInstance);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +81,7 @@ class ThisWallet extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Header(),
-            WalletCard(name, money),
+            WalletCard(widget.name, widget.money),
             SizedBox(height: 8),
             Container(
               width: _screenWidth * 0.85,
@@ -87,17 +103,17 @@ class ThisWallet extends StatelessWidget {
                       ),
                     ),
                   ),
-                  TransList(index),
+                  TransList(firebaseInstance.walletID, firebaseInstance),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return new History(index);
+                        return new History(
+                            firebaseInstance.walletID, firebaseInstance);
                       }));
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: _screenHeight * 0.01),
-
+                      // margin: EdgeInsets.only(top: _screenHeight * 0.01),
                       child: Text(
                         "see more",
                         style: TextStyle(
@@ -107,12 +123,12 @@ class ThisWallet extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
-              BottomBar(index),
-            ],
-          ),
+            ),
+            BottomBar(widget.index, widget.firebaseInstance),
+          ],
         ),
       ),
     );

@@ -6,21 +6,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-
+import 'components/WalletSlider.dart';
 import 'package:goodwallet_app/components/Header.dart';
 
 import "dart:async";
 
 class VoiceInput extends StatefulWidget {
   final index;
-  VoiceInput(this.index);
+  final firebaseInstance;
+  VoiceInput(this.index, this.firebaseInstance);
   @override
-  _VoiceInputState createState() => _VoiceInputState(index);
+  _VoiceInputState createState() => _VoiceInputState(index, firebaseInstance);
 }
 
 class _VoiceInputState extends State<VoiceInput> {
   final _walletIndex;
-  _VoiceInputState(this._walletIndex);
+  final firebaseInstance;
+  _VoiceInputState(this._walletIndex, this.firebaseInstance);
   //ui variables
   double _opacity = 1.0;
   double _textOpacity = 0.0;
@@ -65,6 +67,7 @@ class _VoiceInputState extends State<VoiceInput> {
                     SizedBox(
                       height: 10,
                     ),
+                    WalletSlider(firebaseInstance),
                     AnimatedOpacity(
                       duration: _opacityDuration,
                       opacity: _opacity,
@@ -96,14 +99,14 @@ class _VoiceInputState extends State<VoiceInput> {
                               duration: _animationDuration,
                               top: _buttonPressed ? 0 : 184,
                               child: VoiceExample('transferLogo',
-                                  'การโอน: โอนเงินไป cash 80 บาท', 0xffE1B152),
+                                  'การโอน: โอนเงิน 80 บาท', 0xffE1B152),
                             ),
                           ],
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: 102 / 760 * _screenHeight,
+                      height: 60 / 760 * _screenHeight,
                       width: _screenWidth,
                     ),
                     Container(
@@ -156,7 +159,10 @@ class _VoiceInputState extends State<VoiceInput> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ConfirmationMainPage(
-                                      text: _text, index: _walletIndex)),
+                                        text: _text,
+                                        index: _walletIndex,
+                                        firebaseInstance: firebaseInstance,
+                                      )),
                             );
                           }, // stop recording
                           child: RadialProgress()),

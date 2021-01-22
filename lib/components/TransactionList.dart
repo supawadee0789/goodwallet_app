@@ -7,14 +7,17 @@ import 'package:goodwallet_app/components/IconSelector.dart';
 
 class TransList extends StatefulWidget {
   final arg;
-  TransList(this.arg);
+  final firebaseInstance;
+
+  TransList(this.arg, this.firebaseInstance);
   @override
-  _TransListState createState() => _TransListState(arg);
+  _TransListState createState() => _TransListState(arg, firebaseInstance);
 }
 
 class _TransListState extends State<TransList> {
   final index;
-  _TransListState(this.index);
+  final firebaseInstance;
+  _TransListState(this.index, this.firebaseInstance);
   final wallets = FirebaseFirestore.instance;
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
@@ -47,7 +50,7 @@ class _TransListState extends State<TransList> {
       child: StreamBuilder<QuerySnapshot>(
           stream: wallets
               .collection('wallet')
-              .document(index)
+              .document(firebaseInstance.walletID.toString())
               .collection('transaction')
               .orderBy('createdOn', descending: false)
               .startAt([_start]).endAt([_end]).snapshots(),
