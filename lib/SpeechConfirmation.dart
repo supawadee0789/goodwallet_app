@@ -63,6 +63,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   final index;
   final firebaseInstance;
   String _screenType = '';
+  var carouselAbsorb = false;
   _ConfirmationPageState(
       {Key key, @required this.resultText, this.index, this.firebaseInstance});
 
@@ -93,9 +94,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       setState(() {
         _screenType = currentTransaction.type;
         if (_screenType == 'Income') {
+          carouselAbsorb = true;
           buttonCarouselController.animateToPage(7,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         } else if (_screenType == 'Transfer') {
+          carouselAbsorb = true;
           buttonCarouselController.animateToPage(8,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         }
@@ -129,15 +132,18 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   style: BorderStyle.solid),
               borderRadius: BorderRadius.all(Radius.circular(21.0)),
             ),
-            child: Column(
-              children: [
-                Container(
-                    child: Text(
-                  _screenType ?? 'none',
-                  style: TextStyle(fontSize: 28),
-                )),
-                ClassSlider(buttonCarouselController),
-              ],
+            child: AbsorbPointer(
+              absorbing: carouselAbsorb,
+              child: Column(
+                children: [
+                  Container(
+                      child: Text(
+                    _screenType ?? 'none',
+                    style: TextStyle(fontSize: 28),
+                  )),
+                  ClassSlider(buttonCarouselController),
+                ],
+              ),
             ),
           ),
           SizedBox(
