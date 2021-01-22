@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:goodwallet_app/Homepage.dart';
 import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-
+import 'package:flutter_page_transition/flutter_page_transition.dart';
 import 'package:goodwallet_app/components/Header.dart';
-
+import 'Manual_income.dart';
 import "dart:async";
 
 class VoiceInput extends StatefulWidget {
@@ -176,6 +177,39 @@ class _VoiceInputState extends State<VoiceInput> {
                     ),
                   ),
                 ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(PageTransition(
+                          type: PageTransitionType.rippleRightUp,
+                          child: ManualIncome(_walletIndex)));
+                    },
+                    child: Container(
+                      height: _screenHeight * 0.07,
+                      width: _screenHeight * 0.065,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(60),
+                          bottomLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                        ),
+                        color: Colors.white,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: MediaQuery.of(context).size.height * 0.015,
+                          horizontal:
+                              MediaQuery.of(context).size.width * 0.015),
+                      child: SvgPicture.asset(
+                        'images/edit.svg',
+                        color: Color(0xffCB80AD),
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.bottomRight,
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
