@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:goodwallet_app/components/Header.dart';
 import 'package:goodwallet_app/components/Manual_income_component.dart';
 import 'package:goodwallet_app/components/Manual_expense_component.dart';
+import 'package:goodwallet_app/components/Manual_transfer_component.dart';
 
 class ManualIncome extends StatefulWidget {
   final _walletID;
@@ -174,6 +175,15 @@ class _ManualIncomeState extends State<ManualIncome> {
                           child: AnimatedOpacity(
                             child: ExpenseComponent(_walletID),
                             opacity: expenseOpacity,
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.linear,
+                          ),
+                        ),
+                        IgnorePointer(
+                          ignoring: !transfer,
+                          child: AnimatedOpacity(
+                            child: TransferComponent(_walletID),
+                            opacity: transferOpacity,
                             duration: Duration(milliseconds: 200),
                             curve: Curves.linear,
                           ),
