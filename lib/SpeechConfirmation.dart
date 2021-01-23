@@ -141,7 +141,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     _screenType ?? 'none',
                     style: TextStyle(fontSize: 28),
                   )),
-                  ClassSlider(buttonCarouselController),
+                  ClassSlider(buttonCarouselController, _screenType),
                 ],
               ),
             ),
@@ -245,15 +245,17 @@ int _currentIndex = 0;
 
 class ClassSlider extends StatefulWidget {
   final buttonCarouselController;
-  ClassSlider(this.buttonCarouselController);
+  final _screenType;
+  ClassSlider(this.buttonCarouselController, this._screenType);
   @override
   _ClassSliderState createState() =>
-      _ClassSliderState(buttonCarouselController);
+      _ClassSliderState(buttonCarouselController, _screenType);
 }
 
 class _ClassSliderState extends State<ClassSlider> {
   final buttonCarouselController;
-  _ClassSliderState(this.buttonCarouselController);
+  final _screenType;
+  _ClassSliderState(this.buttonCarouselController, this._screenType);
   List cardList = [
     ClassItem('Food'),
     ClassItem('Shopping'),
@@ -265,6 +267,7 @@ class _ClassSliderState extends State<ClassSlider> {
     ClassItem('Income'),
     ClassItem('Transfer')
   ];
+
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
     for (var i = 0; i < list.length; i++) {
@@ -326,7 +329,11 @@ class ClassItem extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 14),
           child: Text(
-            class_name,
+            class_name == 'Income'
+                ? ''
+                : class_name == 'Transfer'
+                    ? ''
+                    : class_name,
             style: TextStyle(fontSize: 18),
           ),
         )

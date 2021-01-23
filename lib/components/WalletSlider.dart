@@ -40,7 +40,7 @@ class _WalletSliderState extends State<WalletSlider> {
 
         return Container(
           height: MediaQuery.of(context).size.height * 0.05, //0.05
-          width: MediaQuery.of(context).size.width * 0.45, //0.45
+          width: MediaQuery.of(context).size.width * 0.6, //0.45
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30), color: Colors.white),
           margin: EdgeInsets.only(bottom: 20),
