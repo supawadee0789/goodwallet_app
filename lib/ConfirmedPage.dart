@@ -10,32 +10,17 @@ class ConfirmedMainPage extends StatelessWidget {
   ConfirmedMainPage(this.index);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(
-          body1: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
-            color: Colors.white,
-          ),
-          button: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
+    return Scaffold(
+      body: Container(
+        //Background Gradient Color
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-      ),
-      home: Scaffold(
-        body: Container(
-          //Background Gradient Color
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
-            ),
-          ),
-          child: SafeArea(child: ConfirmedPage(index)),
-        ),
+        child: SafeArea(child: ConfirmedPage(index)),
       ),
     );
   }
@@ -89,10 +74,10 @@ class _ConfirmedPageState extends State<ConfirmedPage> {
             child: Listener(
               onPointerDown: (detail) {
                 print('go to add transaction page');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VoiceInput('')),
-                );
+                var count = 0;
+                Navigator.popUntil(context, (route) {
+                  return count++ == 2;
+                });
               },
               child: Text(
                 'ADD NEW TRANSACTION',
@@ -116,7 +101,10 @@ class _ConfirmedPageState extends State<ConfirmedPage> {
             child: Listener(
               onPointerDown: (detail) {
                 print('going to transaction lists of wallet' + index);
-                // Navigator.pop(context);
+                var count = 0;
+                Navigator.popUntil(context, (route) {
+                  return count++ == 3;
+                });
               },
               child: Text(
                 'SHOW TRANSACTIONS',

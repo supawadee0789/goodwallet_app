@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as Http;
 import 'dart:convert' as utf8;
 import 'package:carousel_slider/carousel_slider.dart';
-
+import 'components/WalletSlider.dart';
 import "dart:async";
 
 import 'package:goodwallet_app/ConfirmedPage.dart';
@@ -17,7 +17,9 @@ import 'components/Header.dart';
 class ConfirmationMainPage extends StatelessWidget {
   final String text;
   final index;
-  ConfirmationMainPage({Key key, @required this.text, this.index})
+  final firebaseInstance;
+  ConfirmationMainPage(
+      {Key key, @required this.text, this.index, this.firebaseInstance})
       : super(key: key);
 
   @override
@@ -32,8 +34,12 @@ class ConfirmationMainPage extends StatelessWidget {
             colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-        child:
-            SafeArea(child: ConfirmationPage(resultText: text, index: index)),
+        child: SafeArea(
+            child: ConfirmationPage(
+          resultText: text,
+          index: index,
+          firebaseInstance: firebaseInstance,
+        )),
       ),
     );
   }
@@ -42,30 +48,38 @@ class ConfirmationMainPage extends StatelessWidget {
 class ConfirmationPage extends StatefulWidget {
   final String resultText;
   final index;
-  ConfirmationPage({Key key, @required this.resultText, this.index})
+  final firebaseInstance;
+  ConfirmationPage(
+      {Key key, @required this.resultText, this.index, this.firebaseInstance})
       : super(key: key);
 
   @override
-  _ConfirmationPageState createState() =>
-      _ConfirmationPageState(resultText: resultText, index: index);
+  _ConfirmationPageState createState() => _ConfirmationPageState(
+      resultText: resultText, index: index, firebaseInstance: firebaseInstance);
 }
 
 class _ConfirmationPageState extends State<ConfirmationPage> {
   final String resultText;
   final index;
+  final firebaseInstance;
   String _screenType = '';
-  _ConfirmationPageState({Key key, @required this.resultText, this.index});
+  var carouselAbsorb = false;
+  _ConfirmationPageState(
+      {Key key, @required this.resultText, this.index, this.firebaseInstance});
 
+  // ignore: deprecated_member_use
   final _fireStore = Firestore.instance;
   var currentTransaction;
   @override
   void initState() {
     super.initState();
     WordSegmentation(resultText);
+    _currentIndex = 0;
     // print(currentTransaction.tokens);
     print(index);
   }
 
+  // ignore: non_constant_identifier_names
   Future WordSegmentation(_text) async {
     var url = "https://api.aiforthai.in.th/lextoplus?text=" + _text;
     await Http.get(url, headers: {"Apikey": "elHOb4Ksl715HkIu6Leq5ZdcnYX39SPP"})
@@ -80,9 +94,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       setState(() {
         _screenType = currentTransaction.type;
         if (_screenType == 'Income') {
+          carouselAbsorb = true;
           buttonCarouselController.animateToPage(7,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         } else if (_screenType == 'Transfer') {
+          carouselAbsorb = true;
           buttonCarouselController.animateToPage(8,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         }
@@ -103,6 +119,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
           Header(),
           SizedBox(height: 10, width: _screenWidth),
           Container(
+            child: WalletSlider(firebaseInstance),
+          ),
+          Container(
             height: 217,
             width: 211,
             decoration: BoxDecoration(
@@ -113,15 +132,18 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   style: BorderStyle.solid),
               borderRadius: BorderRadius.all(Radius.circular(21.0)),
             ),
-            child: Column(
-              children: [
-                Container(
-                    child: Text(
-                  _screenType ?? 'none',
-                  style: TextStyle(fontSize: 28),
-                )),
-                ClassSlider(buttonCarouselController),
-              ],
+            child: AbsorbPointer(
+              absorbing: carouselAbsorb,
+              child: Column(
+                children: [
+                  Container(
+                      child: Text(
+                    _screenType ?? 'none',
+                    style: TextStyle(fontSize: 28),
+                  )),
+                  ClassSlider(buttonCarouselController, _screenType),
+                ],
+              ),
             ),
           ),
           SizedBox(
@@ -136,7 +158,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             ),
           ),
           SizedBox(
-            height: 85,
+            height: 43,
           ),
           Container(
             width: _screenWidth * 0.7,
@@ -150,14 +172,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                       onPointerDown: (detail) {
                         print('cancel');
                         print(classCarousel(_currentIndex));
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VoiceInput('')),
-                        ); // cancel confirmation
+                        Navigator.pop(context); // cancel confirmation
                       },
                       child: SvgPicture.asset(
-                        'images/cross-mark-on-a-black-circle-background.svg',
+                        'images/cross-mark-on-a-black-circle-background.svg', // cancel svg
                         height: 85.0,
                         width: 85.0,
                       ),
@@ -176,7 +194,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         // print(checkCost(tokens));
                         _fireStore
                             .collection('wallet')
-                            .document(index)
+                            // ignore: deprecated_member_use
+                            .document(firebaseInstance.walletID.toString())
                             .collection('transaction')
                             .add({
                           'class': classCarousel(_currentIndex),
@@ -190,14 +209,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         CollectionReference wallet =
                             FirebaseFirestore.instance.collection('wallet');
                         wallet
-                          ..doc(index)
-                              .update({
-                                'money': FieldValue.increment(
-                                    currentTransaction.cost)
-                              })
-                              .then((value) => print("Wallet Updated"))
-                              .catchError((error) =>
-                                  print("Failed to update wallet: $error"));
+                            .doc(firebaseInstance.walletID.toString())
+                            .update({
+                              'money':
+                                  FieldValue.increment(currentTransaction.cost)
+                            })
+                            .then((value) => print("Wallet Updated"))
+                            .catchError((error) =>
+                                print("Failed to update wallet: $error"));
 
                         Navigator.push(
                           context,
@@ -206,7 +225,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         ); // confirm to add transaction
                       },
                       child: SvgPicture.asset(
-                        'images/check-mark.svg',
+                        'images/check-mark.svg', // confirm svg
                         height: 85.0,
                         width: 85.0,
                       ),
@@ -226,18 +245,20 @@ int _currentIndex = 0;
 
 class ClassSlider extends StatefulWidget {
   final buttonCarouselController;
-  ClassSlider(this.buttonCarouselController);
+  final _screenType;
+  ClassSlider(this.buttonCarouselController, this._screenType);
   @override
   _ClassSliderState createState() =>
-      _ClassSliderState(buttonCarouselController);
+      _ClassSliderState(buttonCarouselController, _screenType);
 }
 
 class _ClassSliderState extends State<ClassSlider> {
   final buttonCarouselController;
-  _ClassSliderState(this.buttonCarouselController);
+  final _screenType;
+  _ClassSliderState(this.buttonCarouselController, this._screenType);
   List cardList = [
     ClassItem('Food'),
-    ClassItem('Daily use'),
+    ClassItem('Shopping'),
     ClassItem('Household'),
     ClassItem('Travel'),
     ClassItem('Health'),
@@ -246,6 +267,7 @@ class _ClassSliderState extends State<ClassSlider> {
     ClassItem('Income'),
     ClassItem('Transfer')
   ];
+
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
     for (var i = 0; i < list.length; i++) {
@@ -307,7 +329,11 @@ class ClassItem extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 14),
           child: Text(
-            class_name,
+            class_name == 'Income'
+                ? ''
+                : class_name == 'Transfer'
+                    ? ''
+                    : class_name,
             style: TextStyle(fontSize: 18),
           ),
         )
@@ -349,11 +375,15 @@ class Transaction {
   void checkType() {
     var input = this.tokens[0];
     String _type;
-    if (input == 'ได้เงิน') {
+    var income = ['ได้เงิน', 'ได้'];
+    var expense = ['ซื้อ', 'จ่าย'];
+    var transfer = ['โอน'];
+
+    if (income.contains(input)) {
       _type = 'Income';
-    } else if (input == 'ซื้อ') {
+    } else if (expense.contains(input)) {
       _type = 'Expense';
-    } else if (input == 'โอน') {
+    } else if (transfer.contains(input)) {
       _type = 'Transfer';
     } else {
       _type = 'none';
@@ -383,7 +413,7 @@ class Transaction {
 
   void checkName() {
     var array = this.tokens;
-    if (this.type == 'expense') {
+    if (this.type == 'Expense') {
       array.removeAt(0);
     }
     print(array);
@@ -398,6 +428,8 @@ class Transaction {
       name.write(item);
     });
     this.name = name.toString();
+    print(this.name);
+    print(this.type);
   }
 }
 
@@ -419,7 +451,7 @@ classCarousel(_index) {
 
     case 1:
       {
-        className = 'daily_use';
+        className = 'shopping';
       }
       break;
     case 2:

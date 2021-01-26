@@ -136,6 +136,7 @@ class HeaderWallet extends StatelessWidget {
 
 class TotalCard extends StatelessWidget {
   @override
+  // string format for money (comma)
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
 
@@ -226,19 +227,18 @@ class TotalCard extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class WalletList extends StatelessWidget {
   @override
+  // string format for money (comma)
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
 
   Widget build(BuildContext context) {
-    Query wallets = FirebaseFirestore.instance
-        .collection('wallet')
-        .orderBy('createdOn', descending: false);
-
+    dynamic firebaseInstance = FirebaseInstance();
     return Container(
       child: StreamBuilder<QuerySnapshot>(
-        stream: wallets.snapshots(),
+        stream: firebaseInstance.wallets.snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
@@ -248,8 +248,10 @@ class WalletList extends StatelessWidget {
             return Text("Loading");
           }
           return ListView.builder(
+            // ignore: deprecated_member_use
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
+              // ignore: deprecated_member_use
               DocumentSnapshot wallet = snapshot.data.documents[index];
               return Slidable(
                 actionPane: SlidableDrawerActionPane(),
@@ -258,7 +260,9 @@ class WalletList extends StatelessWidget {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return new CreateWallet(index);
+                      firebaseInstance.walletIndex = index;
+                      firebaseInstance.walletID = wallet.id;
+                      return new CreateWallet(firebaseInstance);
                     }));
                   },
                   child: Container(
@@ -318,4 +322,13 @@ class WalletList extends StatelessWidget {
       ),
     );
   }
+}
+
+class FirebaseInstance {
+  // WalletInstance(this.wallets);
+  Query wallets = FirebaseFirestore.instance
+      .collection('wallet')
+      .orderBy('createdOn', descending: false);
+  var walletIndex;
+  var walletID;
 }

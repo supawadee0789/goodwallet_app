@@ -7,7 +7,8 @@ import '../Voice_Input.dart';
 
 class BottomBar extends StatelessWidget {
   final index;
-  BottomBar(this.index);
+  final firebaseInstance;
+  BottomBar(this.index, this.firebaseInstance);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +36,9 @@ class BottomBar extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VoiceInput(index)),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          VoiceInput(index, firebaseInstance)),
                 );
               },
               child: Container(

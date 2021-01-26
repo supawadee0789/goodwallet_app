@@ -95,9 +95,7 @@ class _AddWalletState extends State<AddWallet> {
                     'money': money,
                     'createdOn': Timestamp.now(),
                   });
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return new Wallet();
-                  }));
+                  Navigator.pop(context);
                 },
                 child: Container(
                   height: 51,
