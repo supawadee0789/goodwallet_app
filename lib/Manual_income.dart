@@ -45,7 +45,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                     vertical: MediaQuery.of(context).size.height * 0.05,
                     horizontal: MediaQuery.of(context).size.width * 0.08),
                 alignment: Alignment.topCenter,
-                height: _screenHeight * 0.87,
+                height: _screenHeight * 0.8,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius:

@@ -64,6 +64,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   final firebaseInstance;
   String _screenType = '';
   var carouselAbsorb = false;
+  var iconOpacity = 1.0;
   _ConfirmationPageState(
       {Key key, @required this.resultText, this.index, this.firebaseInstance});
 
@@ -95,10 +96,13 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         _screenType = currentTransaction.type;
         if (_screenType == 'Income') {
           carouselAbsorb = true;
+          iconOpacity = 0;
+
           buttonCarouselController.animateToPage(7,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         } else if (_screenType == 'Transfer') {
           carouselAbsorb = true;
+          iconOpacity = 0;
           buttonCarouselController.animateToPage(8,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         }
@@ -141,7 +145,35 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     _screenType ?? 'none',
                     style: TextStyle(fontSize: 28),
                   )),
-                  ClassSlider(buttonCarouselController, _screenType),
+                  Container(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      child: Stack(
+                    children: [
+                      ClassSlider(buttonCarouselController, _screenType),
+                      Positioned(
+                          left: 5,
+                          top: 45,
+                          child: Opacity(
+                            opacity: iconOpacity,
+                            child: Icon(
+                              Icons.keyboard_arrow_left_rounded,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          )),
+                      Positioned(
+                          right: 5,
+                          top: 45,
+                          child: Opacity(
+                            opacity: iconOpacity,
+                            child: Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          )),
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -373,17 +405,17 @@ class Transaction {
   }
 
   void checkType() {
-    var input = this.tokens[0];
+    var input = this.tokens;
     String _type;
     var income = ['ได้เงิน', 'ได้'];
     var expense = ['ซื้อ', 'จ่าย'];
     var transfer = ['โอน'];
 
-    if (income.contains(input)) {
+    if (income.any((e) => input.contains(e))) {
       _type = 'Income';
-    } else if (expense.contains(input)) {
+    } else if (expense.any((e) => input.contains(e))) {
       _type = 'Expense';
-    } else if (transfer.contains(input)) {
+    } else if (transfer.any((e) => input.contains(e))) {
       _type = 'Transfer';
     } else {
       _type = 'none';

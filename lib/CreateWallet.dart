@@ -77,7 +77,6 @@ class _ThisWalletState extends State<ThisWallet> {
             colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -115,39 +114,15 @@ class _ThisWalletState extends State<ThisWallet> {
                     },
                     child: Container(
                       // margin: EdgeInsets.only(top: _screenHeight * 0.01),
-
                       child: Text(
-                        "Today List",
+                        "see more",
                         style: TextStyle(
                           color: Color(0xff8C35B1),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                          decoration: TextDecoration.underline,
+                          fontSize: 11,
                         ),
                       ),
                     ),
-
-                    TransList(index),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return new History(index);
-                        }));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(top: _screenHeight * 0.01),
-                        child: Text(
-                          "see more",
-                          style: TextStyle(
-                            color: Color(0xff8C35B1),
-                            decoration: TextDecoration.underline,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
                   )
                 ],
               ),

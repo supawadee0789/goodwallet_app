@@ -35,7 +35,7 @@ class _WalletState extends State<Wallet> {
               TotalCard(),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(top: 30, bottom: 50),
+                  margin: EdgeInsets.only(top: 30),
                   child: WalletList(),
                   width: MediaQuery.of(context).size.width * 0.83,
                 ),

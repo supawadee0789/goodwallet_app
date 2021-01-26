@@ -6,7 +6,7 @@ Widget expenseClass(type, title) {
   return Column(
     children: [
       Container(
-        height: 36,
+        height: 33,
         child: SvgPicture.asset(
           './images/$type.svg',
           color: Color(0xff8C35B1),
@@ -16,7 +16,7 @@ Widget expenseClass(type, title) {
       SizedBox(height: 3),
       Text(
         title,
-        style: TextStyle(color: Color(0xff8C35B1), fontSize: 9),
+        style: TextStyle(color: Color(0xff8C35B1), fontSize: 6.5),
       )
     ],
   );
@@ -76,7 +76,6 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Flexible(
-                flex: 2,
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -170,7 +169,7 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
                   child: AnimatedOpacity(
                     duration: Duration(milliseconds: 100),
                     opacity: _class == 7 ? 1 : 0.5,
-                    child: expenseClass('Daily use', 'Shopping'),
+                    child: expenseClass('Shopping', 'Shopping'),
                   ),
                 ),
               ),
