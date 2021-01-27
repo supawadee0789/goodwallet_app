@@ -34,13 +34,13 @@ class _HomePageState extends State<HomePage> {
               },
               child: Column(
                 children: <Widget>[
-                  Icon(
-                    Icons.keyboard_arrow_up_rounded,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  // Icon(
+                  //   Icons.keyboard_arrow_up_rounded,
+                  //   color: Colors.white,
+                  //   size: 30,
+                  // ),
                   Text(
-                    "SWIPE UP\nTO START",
+                    "TOUCH\nTO START",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white),
                   ),
