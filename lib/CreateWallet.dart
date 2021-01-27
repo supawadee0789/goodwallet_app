@@ -77,60 +77,58 @@ class _ThisWalletState extends State<ThisWallet> {
             colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Header(),
-              WalletCard(widget.name, widget.money),
-              SizedBox(height: 8),
-              Container(
-                width: _screenWidth * 0.85,
-                height: _screenHeight * 0.5,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                    color: Color.fromRGBO(255, 255, 255, 0.66)),
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(23, 19, 0, 0),
-                      alignment: Alignment.topLeft,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Header(),
+            WalletCard(widget.name, widget.money),
+            SizedBox(height: 8),
+            Container(
+              width: _screenWidth * 0.85,
+              height: _screenHeight * 0.5,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(32),
+                  color: Color.fromRGBO(255, 255, 255, 0.66)),
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(23, 19, 0, 0),
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Today List",
+                      style: TextStyle(
+                        color: Color(0xff8C35B1),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  TransList(firebaseInstance.walletID, firebaseInstance),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return new History(
+                            firebaseInstance.walletID, firebaseInstance);
+                      }));
+                    },
+                    child: Container(
+                      // margin: EdgeInsets.only(top: _screenHeight * 0.01),
                       child: Text(
-                        "Today List",
+                        "see more",
                         style: TextStyle(
                           color: Color(0xff8C35B1),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                          decoration: TextDecoration.underline,
+                          fontSize: 11,
                         ),
                       ),
                     ),
-                    TransList(firebaseInstance.walletID, firebaseInstance),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return new History(
-                              firebaseInstance.walletID, firebaseInstance);
-                        }));
-                      },
-                      child: Container(
-                        // margin: EdgeInsets.only(top: _screenHeight * 0.01),
-                        child: Text(
-                          "see more",
-                          style: TextStyle(
-                            color: Color(0xff8C35B1),
-                            decoration: TextDecoration.underline,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
-              BottomBar(widget.index, widget.firebaseInstance),
-            ],
-          ),
+            ),
+            BottomBar(widget.index, widget.firebaseInstance),
+          ],
         ),
       ),
     );

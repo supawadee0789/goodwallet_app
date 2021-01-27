@@ -52,9 +52,8 @@ class _TransListState extends State<TransList> {
               .collection('wallet')
               .document(firebaseInstance.walletID.toString())
               .collection('transaction')
-              .orderBy('createdOn', descending: true)
-              // .startAt([_start]).endAt([_end]).snapshots(),
-              .startAt([_end]).endAt([_start]).snapshots(),
+              .orderBy('createdOn', descending: false)
+              .startAt([_start]).endAt([_end]).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
