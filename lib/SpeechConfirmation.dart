@@ -67,6 +67,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   String _screenType = '';
   var carouselAbsorb = false;
   var iconOpacity = 1.0;
+  var transferOpacity = 0.0;
   _ConfirmationPageState(
       {Key key, @required this.resultText, this.index, this.firebaseInstance});
 
@@ -107,6 +108,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         } else if (_screenType == 'Transfer') {
           carouselAbsorb = true;
           iconOpacity = 0;
+          transferOpacity = 1;
           buttonCarouselController.animateToPage(8,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         }
@@ -180,11 +182,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     Positioned(
                         left: 25,
                         bottom: 5,
-                        child: Row(
-                          children: [
-                            Text('To : '),
-                            WalletSelector(currentTransaction)
-                          ],
+                        child: Opacity(
+                          opacity: transferOpacity,
+                          child: Row(
+                            children: [
+                              Text('To : '),
+                              WalletSelector(currentTransaction)
+                            ],
+                          ),
                         ))
                   ],
                 ))
