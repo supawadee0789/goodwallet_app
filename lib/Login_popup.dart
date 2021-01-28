@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/Wallet.dart';
+import 'package:goodwallet_app/SignInPage.dart';
 
 class LoginPopup extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _LoginPopupState extends State<LoginPopup> {
   Widget build(BuildContext context) {
     var _screenWidth = MediaQuery.of(context).size.width;
     var _screenHeight = MediaQuery.of(context).size.height;
+    var signInButton;
     return Material(
       child: Stack(
         children: [
@@ -89,56 +91,60 @@ class _LoginPopupState extends State<LoginPopup> {
                   SizedBox(
                     height: 57 / 760 * _screenHeight,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Hero(
-                        tag: 'login_button',
-                        child: FlatButton(
+                  Hero(
+                    tag: 'Login-button',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
                           height: 47 / 760 * _screenHeight,
                           minWidth: 114.5 / 360 * _screenWidth,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24.0)),
                           padding: EdgeInsets.all(6),
                           onPressed: () {
+                            signInButton = 1;
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return Wallet();
+                              return SignIn(signInButton);
                             }));
                           },
                           color: Color(0xff8C35B1),
                           child: Text(
                             "Sign In",
                             style: TextStyle(
-                                fontSize: 17 /
+                                fontSize: 14 /
                                     (360 * 760) *
                                     (_screenHeight * _screenWidth)),
                           ),
                           textColor: Colors.white,
                         ),
-                      ),
-                      SizedBox(width: (11 / 360) * _screenWidth),
-                      Hero(
-                        tag: 'signup_buttton',
-                        child: FlatButton(
+                        SizedBox(width: (11 / 360) * _screenWidth),
+                        FlatButton(
                           height: 47 / 760 * _screenHeight,
                           minWidth: 114.5 / 360 * _screenWidth,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24.0)),
                           padding: EdgeInsets.all(6),
-                          onPressed: () {},
+                          onPressed: () {
+                            signInButton = 0;
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return SignIn(signInButton);
+                            }));
+                          },
                           color: Color(0xffB58FE7),
                           child: Text(
                             "Sign Up",
                             style: TextStyle(
-                                fontSize: 17 /
+                                fontSize: 14 /
                                     (360 * 760) *
                                     (_screenHeight * _screenWidth)),
                           ),
                           textColor: Colors.white,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
