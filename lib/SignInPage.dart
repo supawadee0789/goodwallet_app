@@ -70,7 +70,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 50, bottom: 20),
+                  margin: EdgeInsets.only(
+                      top: 50 / 760 * _screenHeight,
+                      bottom: 20 / 360 * _screenWidth),
                   child: Hero(
                     tag: 'pop_up',
                     child: GestureDetector(
@@ -85,7 +87,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                     padding: EdgeInsets.only(
                         left: _screenWidth * 0.1,
                         right: _screenWidth * 0.1,
-                        bottom: _screenHeight * 0.07),
+                        bottom: _screenHeight * 0.05),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(71),
@@ -210,6 +212,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           cursorColor: Colors.black,
                                           keyboardType: TextInputType.text,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(50.0)),
@@ -235,8 +241,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 14.0,
-                                                bottom: 10.0,
-                                                top: 14),
+                                                bottom: 5.0,
+                                                top: 5),
                                             child: Text(
                                               "Password",
                                               style: TextStyle(
@@ -250,6 +256,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           cursorColor: Colors.black,
                                           keyboardType: TextInputType.text,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(50.0)),
@@ -443,7 +453,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           alignment: Alignment.centerLeft,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 14.0, bottom: 10.0),
+                                                left: 14.0, bottom: 3),
                                             child: Text(
                                               "Username",
                                               style: TextStyle(
@@ -457,6 +467,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           cursorColor: Colors.black,
                                           keyboardType: TextInputType.text,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(50.0)),
@@ -482,7 +496,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 14.0,
-                                                bottom: 10.0,
+                                                bottom: 3.0,
                                                 top: 10.0),
                                             child: Text(
                                               "Email",
@@ -497,6 +511,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           cursorColor: Colors.black,
                                           keyboardType: TextInputType.text,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(50.0)),
@@ -522,7 +540,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 14.0,
-                                                bottom: 10.0,
+                                                bottom: 3.0,
                                                 top: 10.0),
                                             child: Text(
                                               "Password",
@@ -537,6 +555,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           cursorColor: Colors.black,
                                           keyboardType: TextInputType.text,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(50.0)),
@@ -562,7 +584,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 14.0,
-                                                bottom: 10.0,
+                                                bottom: 3.0,
                                                 top: 10.0),
                                             child: Text(
                                               "Confirm Password",
@@ -577,6 +599,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           cursorColor: Colors.black,
                                           keyboardType: TextInputType.text,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(50.0)),
