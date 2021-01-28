@@ -87,6 +87,15 @@ class _IncomeComponentState extends State<IncomeComponent> {
                 'name': note,
                 'type': 'income'
               });
+
+              CollectionReference wallet =
+                  FirebaseFirestore.instance.collection('wallet');
+              wallet
+                  .doc(_walletID)
+                  .update({'money': FieldValue.increment(amount)})
+                  .then((value) => print("Wallet Updated"))
+                  .catchError(
+                      (error) => print("Failed to update wallet: $error"));
               var counter = 0;
               Navigator.popUntil(context, (route) {
                 return counter++ == 2;

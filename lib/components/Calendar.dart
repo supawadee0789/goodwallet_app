@@ -261,7 +261,21 @@ class _CalendarState extends State<Calendar> {
                               icon: Icons.delete,
                               foregroundColor: Colors.white,
                               color: Color(0x000000),
-                              onTap: () {},
+                              onTap: () async {
+                                await trans.reference.delete();
+                                CollectionReference wallet = FirebaseFirestore
+                                    .instance
+                                    .collection('wallet');
+                                wallet
+                                    .doc(index.toString())
+                                    .update({
+                                      'money':
+                                          FieldValue.increment(trans['cost'])
+                                    })
+                                    .then((value) => print("Wallet Updated"))
+                                    .catchError((error) => print(
+                                        "Failed to update wallet: $error"));
+                              },
                             ),
                           ],
                         );

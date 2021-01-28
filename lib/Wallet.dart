@@ -308,10 +308,11 @@ class WalletList extends StatelessWidget {
                     color: Color(0x00000000),
                     onTap: () async {
                       await wallet.reference.delete();
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) {
-                      //   return new Wallet();
-                      // }));
+                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return new Wallet();
+                      }));
                     },
                   ),
                 ],
