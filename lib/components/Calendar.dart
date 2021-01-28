@@ -16,8 +16,8 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  final index;
-  _CalendarState(this.index);
+  final walletID;
+  _CalendarState(this.walletID);
   CalendarController _calendarController;
 
   @override
@@ -108,7 +108,7 @@ class _CalendarState extends State<Calendar> {
             child: StreamBuilder<QuerySnapshot>(
                 stream: wallets
                     .collection('wallet')
-                    .document(index)
+                    .document(walletID)
                     .collection('transaction')
                     .orderBy('createdOn', descending: false)
                     .startAt([_start]).endAt([_end]).snapshots(),
@@ -267,10 +267,10 @@ class _CalendarState extends State<Calendar> {
                                     .instance
                                     .collection('wallet');
                                 wallet
-                                    .doc(index.toString())
+                                    .doc(walletID.toString())
                                     .update({
                                       'money':
-                                          FieldValue.increment(trans['cost'])
+                                          FieldValue.increment(-trans['cost'])
                                     })
                                     .then((value) => print("Wallet Updated"))
                                     .catchError((error) => print(

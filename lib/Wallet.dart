@@ -36,7 +36,7 @@ class _WalletState extends State<Wallet> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(top: 30),
-                  child: WalletList(),
+                  child: WalletList(this),
                   width: MediaQuery.of(context).size.width * 0.83,
                 ),
               ),
@@ -229,6 +229,8 @@ class TotalCard extends StatelessWidget {
 
 // ignore: must_be_immutable
 class WalletList extends StatelessWidget {
+  _WalletState parent;
+  WalletList(this.parent);
   @override
   // string format for money (comma)
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
@@ -308,11 +310,12 @@ class WalletList extends StatelessWidget {
                     color: Color(0x00000000),
                     onTap: () async {
                       await wallet.reference.delete();
-                      Navigator.pop(context);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return new Wallet();
-                      }));
+                      parent.setState(() {});
+                      // Navigator.pop(context);
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) {
+                      //   return new Wallet();
+                      // }));
                     },
                   ),
                 ],
