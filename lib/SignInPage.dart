@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/Login_popup.dart';
 import 'package:goodwallet_app/Wallet.dart';
+import 'package:goodwallet_app/components/SignUp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignIn extends StatefulWidget {
   final popUpSignIn;
@@ -18,10 +20,16 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
   _SignInState(this.popUpSignIn);
   double signIn = 0;
   double signUp = 1;
-
+  String email;
+  String password;
+  final _text = TextEditingController();
+  final _text2 = TextEditingController();
+  bool _validate = false;
+  final _auth = FirebaseAuth.instance;
   @override
   void initState() {
     super.initState();
+    _validate = false;
     setState(() {
       _controller = AnimationController(
         duration: const Duration(milliseconds: 300),
@@ -45,9 +53,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
     _controller2.dispose();
+    _text.dispose();
+    super.dispose();
   }
 
   @override
@@ -127,7 +136,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                   },
                                   color: signIn == 1
                                       ? Color(0xff8C35B1)
-                                      : Colors.white,
+                                      : Color(0xFFF4F6FF),
                                   child: Text(
                                     "Sign In",
                                     style: TextStyle(
@@ -136,7 +145,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             (_screenHeight * _screenWidth)),
                                   ),
                                   textColor: signIn == 1
-                                      ? Colors.white
+                                      ? Color(0xFFF4F6FF)
                                       : Color(0xff8C35B1),
                                 ),
                                 SizedBox(width: (14 / 360) * _screenWidth),
@@ -161,7 +170,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                   },
                                   color: signUp == 1
                                       ? Color(0xffB58FE7)
-                                      : Colors.white,
+                                      : Color(0xFFF4F6FF),
                                   child: Text(
                                     "Sign Up",
                                     style: TextStyle(
@@ -170,7 +179,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             (_screenHeight * _screenWidth)),
                                   ),
                                   textColor: signUp == 1
-                                      ? Colors.white
+                                      ? Color(0xFFF4F6FF)
                                       : Color(0xffB58FE7),
                                 ),
                               ],
@@ -210,8 +219,13 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                         ),
                                         TextField(
                                           cursorColor: Colors.black,
-                                          keyboardType: TextInputType.text,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          controller: _text,
                                           decoration: InputDecoration(
+                                            errorText: _validate
+                                                ? 'Value Can\'t Be Empty'
+                                                : null,
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 0,
@@ -230,11 +244,28 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                   color: Color(0xffB58FE7),
                                                   width: 1.5),
                                             ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.red[100],
+                                                  width: 1.5),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.red[100],
+                                                  width: 1.5),
+                                            ),
                                           ),
                                           style: TextStyle(fontSize: 16),
-                                          // onChanged: (String str) {
-                                          // setState(() {});
-                                          // },
+                                          onChanged: (String str) {
+                                            setState(() {
+                                              email = str;
+                                            });
+                                          },
                                         ),
                                         Align(
                                           alignment: Alignment.centerLeft,
@@ -255,7 +286,12 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                         TextField(
                                           cursorColor: Colors.black,
                                           keyboardType: TextInputType.text,
+                                          controller: _text2,
+                                          obscureText: true,
                                           decoration: InputDecoration(
+                                            errorText: _validate
+                                                ? 'Value Can\'t Be Empty'
+                                                : null,
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 0,
@@ -274,14 +310,67 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                   color: Color(0xffB58FE7),
                                                   width: 1.5),
                                             ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.red[100],
+                                                  width: 1.5),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.red[100],
+                                                  width: 1.5),
+                                            ),
                                           ),
                                           style: TextStyle(fontSize: 16),
-                                          // onChanged: (String str) {
-                                          // setState(() {});
-                                          // },
+                                          onChanged: (String str) {
+                                            setState(() {
+                                              password = str;
+                                            });
+                                          },
                                         ),
                                         GestureDetector(
-                                          onTap: () {},
+                                          onTap: () async {
+                                            setState(() {
+                                              _text.text.isEmpty ||
+                                                      _text2.text.isEmpty
+                                                  ? _validate = true
+                                                  : _validate = false;
+                                            });
+                                            if (email == null ||
+                                                password == null) {
+                                            } else {
+                                              try {
+                                                final user = await _auth
+                                                    .signInWithEmailAndPassword(
+                                                        email: email,
+                                                        password: password);
+                                                if (user != null) {
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return Wallet();
+                                                  }));
+                                                } else {
+                                                  showAlertDialog(
+                                                      context,
+                                                      'Error',
+                                                      "Check your email or password and try again.");
+                                                }
+                                              } catch (e) {
+                                                print(e);
+                                                showAlertDialog(
+                                                    context,
+                                                    'Error',
+                                                    "Check your email or password and try again.");
+                                              }
+                                            }
+                                          },
                                           child: Container(
                                             margin: EdgeInsets.only(
                                                 top: _screenHeight * 0.03),
@@ -318,11 +407,24 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             ),
                                           ),
                                         ),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: FlatButton(
+                                              onPressed: () {
+                                                forgotPasswordBox(context);
+                                              },
+                                              child: Text(
+                                                "Forgot password?",
+                                                style: TextStyle(
+                                                    color: Color(0xff8C35B1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                        ),
                                         GestureDetector(
                                           onTap: () {},
                                           child: Container(
-                                            margin: EdgeInsets.only(
-                                                top: _screenHeight * 0.05),
                                             width: double.infinity,
                                             height: _screenHeight * 0.07,
                                             decoration: BoxDecoration(
@@ -446,224 +548,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 child: AnimatedOpacity(
                                   opacity: signUp,
                                   duration: Duration(milliseconds: 500),
-                                  child: Container(
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0, bottom: 3),
-                                            child: Text(
-                                              "Username",
-                                              style: TextStyle(
-                                                  color: Color(0xff8C35B1),
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ),
-                                        TextField(
-                                          cursorColor: Colors.black,
-                                          keyboardType: TextInputType.text,
-                                          decoration: InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 0,
-                                                    horizontal: 10),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffB58FE7),
-                                                  width: 1.5),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffB58FE7),
-                                                  width: 1.5),
-                                            ),
-                                          ),
-                                          style: TextStyle(fontSize: 16),
-                                          // onChanged: (String str) {
-                                          // setState(() {});
-                                          // },
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0,
-                                                bottom: 3.0,
-                                                top: 10.0),
-                                            child: Text(
-                                              "Email",
-                                              style: TextStyle(
-                                                  color: Color(0xff8C35B1),
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ),
-                                        TextField(
-                                          cursorColor: Colors.black,
-                                          keyboardType: TextInputType.text,
-                                          decoration: InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 0,
-                                                    horizontal: 10),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffB58FE7),
-                                                  width: 1.5),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffB58FE7),
-                                                  width: 1.5),
-                                            ),
-                                          ),
-                                          style: TextStyle(fontSize: 16),
-                                          // onChanged: (String str) {
-                                          // setState(() {});
-                                          // },
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0,
-                                                bottom: 3.0,
-                                                top: 10.0),
-                                            child: Text(
-                                              "Password",
-                                              style: TextStyle(
-                                                  color: Color(0xffAE73CA),
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ),
-                                        TextField(
-                                          cursorColor: Colors.black,
-                                          keyboardType: TextInputType.text,
-                                          decoration: InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 0,
-                                                    horizontal: 10),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffB58FE7),
-                                                  width: 1.5),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffB58FE7),
-                                                  width: 1.5),
-                                            ),
-                                          ),
-                                          style: TextStyle(fontSize: 16),
-                                          // onChanged: (String str) {
-                                          // setState(() {});
-                                          // },
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0,
-                                                bottom: 3.0,
-                                                top: 10.0),
-                                            child: Text(
-                                              "Confirm Password",
-                                              style: TextStyle(
-                                                  color: Color(0xffC98FC6),
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ),
-                                        TextField(
-                                          cursorColor: Colors.black,
-                                          keyboardType: TextInputType.text,
-                                          decoration: InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 0,
-                                                    horizontal: 10),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffC88EC5),
-                                                  width: 1.5),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xffC88EC5),
-                                                  width: 1.5),
-                                            ),
-                                          ),
-                                          style: TextStyle(fontSize: 16),
-                                          // onChanged: (String str) {
-                                          // setState(() {});
-                                          // },
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                                top: _screenHeight * 0.03),
-                                            width: double.infinity,
-                                            height: _screenHeight * 0.075,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                color: Color(0xffDB8EA7)),
-                                            child: Stack(
-                                              children: [
-                                                Center(
-                                                    child: Text(
-                                                  "Create Account",
-                                                  style:
-                                                      TextStyle(fontSize: 16),
-                                                )),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 26.0),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Icon(
-                                                      Icons
-                                                          .arrow_forward_rounded,
-                                                      size: 30,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  child: SignUp(),
                                 ),
                               ),
                             )
@@ -680,4 +565,92 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context, titleText, contentText) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          titleText,
+          style: TextStyle(color: Color(0xff8C35B1)),
+        ),
+        content: Text(contentText),
+        actions: [
+          FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK', style: TextStyle(color: Color(0xffB58FE7))))
+        ],
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32))),
+      );
+    },
+  );
+}
+
+forgotPasswordBox(BuildContext context) {
+  String email;
+  final _auth = FirebaseAuth.instance;
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          "Forgot password?",
+          style: TextStyle(color: Color(0xff8C35B1)),
+        ),
+        content: Text("Enter email for reset your password"),
+        actions: [
+          Center(
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                    ),
+                    labelText: 'Email Address',
+                  ),
+                  onChanged: (String str) {
+                    email = str;
+                  },
+                )),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel',
+                        style: TextStyle(color: Color(0xffB58FE7)))),
+                FlatButton(
+                    onPressed: () async {
+                      try {
+                        await _auth.sendPasswordResetEmail(email: email);
+                      } catch (e) {
+                        print(e);
+                      }
+                      Navigator.of(context).pop();
+                      showAlertDialog(context, "Email has been sent",
+                          "check your email to reset password.");
+                    },
+                    child: Text('Send Email',
+                        style: TextStyle(color: Color(0xffB58FE7))))
+              ],
+            ),
+          )
+        ],
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32))),
+      );
+    },
+  );
 }
