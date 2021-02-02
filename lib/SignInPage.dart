@@ -5,6 +5,7 @@ import 'package:goodwallet_app/Login_popup.dart';
 import 'package:goodwallet_app/Wallet.dart';
 import 'package:goodwallet_app/components/SignUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class SignIn extends StatefulWidget {
   final popUpSignIn;
@@ -474,11 +475,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return Wallet();
-                                            }));
+                                            loginWithFacebook(context);
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
@@ -564,6 +561,25 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future loginWithFacebook(BuildContext context) async {
+    FacebookLogin facebookLogin = FacebookLogin();
+    FacebookLoginResult result =
+        await facebookLogin.logIn(['email', "public_profile"]);
+
+    String token = result.accessToken.token;
+    print("Access token = $token");
+    var user = await _auth
+        .signInWithCredential(FacebookAuthProvider.credential(token));
+    if (user != null) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return Wallet();
+      }));
+    } else {
+      showAlertDialog(
+          context, 'Error', "Check your email or password and try again.");
+    } // after success, navigate to home.
   }
 }
 

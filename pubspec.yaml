@@ -39,6 +39,7 @@ dependencies:
   table_calendar: ^2.3.3
   flutter_page_transition: ^0.1.6
   menu_button: ^1.2.1
+  flutter_facebook_login: ^3.0.0
 
 dev_dependencies:
   flutter_test:
