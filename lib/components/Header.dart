@@ -24,38 +24,13 @@ class Header extends StatelessWidget {
               size: 28 / (360 * 760) * (screenHeight * screenWidth),
             ),
           ),
-          SizedBox(
-            width: 50 / 360 * screenWidth,
-          ),
           Text(
             "WALLET",
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 25, letterSpacing: 0.66),
           ),
-          Container(
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => {},
-                  icon: Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                    size: 40 / (360 * 760) * (screenHeight * screenWidth),
-                  ),
-                ),
-                // SizedBox(
-                //   width: 15 / 360 * screenWidth,
-                // ),
-                IconButton(
-                  onPressed: () => {},
-                  icon: Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                    size: 40 / (360 * 760) * (screenHeight * screenWidth),
-                  ),
-                ),
-              ],
-            ),
+          SizedBox(
+            width: 30 / 360 * screenWidth,
           ),
         ],
       ),

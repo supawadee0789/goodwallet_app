@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Voice_Input.dart';
+import 'package:flutter_page_transition/flutter_page_transition.dart';
 
 class BottomBar extends StatelessWidget {
   final index;
@@ -34,12 +35,9 @@ class BottomBar extends StatelessWidget {
             width: MediaQuery.of(context).size.height * 0.079,
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          VoiceInput(index, firebaseInstance)),
-                );
+                Navigator.of(context).push(PageTransition(
+                    type: PageTransitionType.fadeIn,
+                    child: VoiceInput(index, firebaseInstance)));
               },
               child: Container(
                 decoration: BoxDecoration(

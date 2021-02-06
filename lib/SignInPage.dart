@@ -95,9 +95,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.only(
-                        left: _screenWidth * 0.1,
-                        right: _screenWidth * 0.1,
-                        bottom: _screenHeight * 0.05),
+                      left: _screenWidth * 0.1,
+                      right: _screenWidth * 0.1,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(71),
@@ -424,7 +424,13 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                               )),
                                         ),
                                         GestureDetector(
-                                          onTap: () {},
+                                          onTap: () {
+                                            Navigator.pushReplacement(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return Wallet();
+                                            }));
+                                          },
                                           child: Container(
                                             width: double.infinity,
                                             height: _screenHeight * 0.07,
@@ -479,7 +485,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
-                                                top: _screenHeight * 0.02),
+                                                top: _screenHeight * 0.02,
+                                                bottom: _screenHeight * 0.02),
                                             width: double.infinity,
                                             height: _screenHeight * 0.07,
                                             decoration: BoxDecoration(
@@ -565,6 +572,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
 
   Future loginWithFacebook(BuildContext context) async {
     FacebookLogin facebookLogin = FacebookLogin();
+    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
     FacebookLoginResult result =
         await facebookLogin.logIn(['email', "public_profile"]);
 
