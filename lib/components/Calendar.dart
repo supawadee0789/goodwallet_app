@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/components/IconSelector.dart';
+import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 
 class Calendar extends StatefulWidget {
   final index;
@@ -50,6 +51,7 @@ class _CalendarState extends State<Calendar> {
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
 
+  int _selectedItemPosition = 0;
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -267,7 +269,33 @@ class _CalendarState extends State<Calendar> {
                         );
                       });
                 }),
-          ))
+          )),
+          SnakeNavigationBar.color(
+            height: 41,
+            behaviour: SnakeBarBehaviour.floating,
+            padding: EdgeInsets.all(50),
+            snakeViewColor: Colors.pink,
+            snakeShape: SnakeShape.rectangle,
+            showUnselectedLabels: true,
+            showSelectedLabels: true,
+            selectedLabelStyle: TextStyle(fontSize: 10, color: Colors.white),
+            unselectedLabelStyle: TextStyle(fontSize: 10, color: Colors.red),
+            selectedItemColor: Colors.white,
+            currentIndex: _selectedItemPosition,
+            onTap: (index) => setState(() => _selectedItemPosition = index),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: 'tickets',
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications), label: 'calendar'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications), label: 'home'),
+            ],
+          ),
         ],
       ),
     );

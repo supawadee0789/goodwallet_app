@@ -10,14 +10,16 @@ class _BudgetState extends State<Budget> {
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
-    return Container(
-      width: _screenWidth * 0.85,
-      height: _screenHeight * 0.5,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
-        color: Colors.red,
+    return Center(
+      child: Container(
+        width: _screenWidth * 0.85,
+        height: _screenHeight * 0.5,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          color: Colors.red,
+        ),
+        child: Center(child: Text("This is Budget. \nfor test transition")),
       ),
-      child: Center(child: Text("This is Budget. \nfor test transition")),
     );
   }
 }
