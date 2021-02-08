@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/components/IconSelector.dart';
-import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 
 class Calendar extends StatefulWidget {
   final index;
@@ -48,6 +48,7 @@ class _CalendarState extends State<Calendar> {
   var expense;
   String _dateString = '';
   final wallets = FirebaseFirestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
 
@@ -109,6 +110,8 @@ class _CalendarState extends State<Calendar> {
               child: Container(
             child: StreamBuilder<QuerySnapshot>(
                 stream: wallets
+                    .collection('users')
+                    .doc(uid)
                     .collection('wallet')
                     .document(index)
                     .collection('transaction')
@@ -263,39 +266,28 @@ class _CalendarState extends State<Calendar> {
                               icon: Icons.delete,
                               foregroundColor: Colors.white,
                               color: Color(0x000000),
-                              onTap: () {},
+                              onTap: () {
+                                CollectionReference wallet = FirebaseFirestore
+                                    .instance
+                                    .collection('users')
+                                    .doc(uid)
+                                    .collection('wallet');
+                                wallet
+                                    .doc(walletID.toString())
+                                    .update({
+                                      'money':
+                                          FieldValue.increment(-trans['cost'])
+                                    })
+                                    .then((value) => print("Wallet Updated"))
+                                    .catchError((error) => print(
+                                        "Failed to update wallet: $error"));
+                              },
                             ),
                           ],
                         );
                       });
                 }),
           )),
-          SnakeNavigationBar.color(
-            height: 41,
-            behaviour: SnakeBarBehaviour.floating,
-            padding: EdgeInsets.all(50),
-            snakeViewColor: Colors.pink,
-            snakeShape: SnakeShape.rectangle,
-            showUnselectedLabels: true,
-            showSelectedLabels: true,
-            selectedLabelStyle: TextStyle(fontSize: 10, color: Colors.white),
-            unselectedLabelStyle: TextStyle(fontSize: 10, color: Colors.red),
-            selectedItemColor: Colors.white,
-            currentIndex: _selectedItemPosition,
-            onTap: (index) => setState(() => _selectedItemPosition = index),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'tickets',
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications), label: 'calendar'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications), label: 'home'),
-            ],
-          ),
         ],
       ),
     );

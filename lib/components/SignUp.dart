@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwallet_app/Wallet.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -186,6 +187,9 @@ class _SignUpState extends State<SignUp> {
                   final newUser = await _auth.createUserWithEmailAndPassword(
                       email: email, password: password);
                   if (newUser != null) {
+                    final _fireStore = Firestore.instance;
+                    var uid = _auth.currentUser.uid;
+                    _fireStore.collection('users').doc(uid).set({"uid": uid});
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => Wallet()));
                   }

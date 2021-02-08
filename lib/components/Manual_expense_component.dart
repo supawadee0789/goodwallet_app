@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:goodwallet_app/Wallet.dart';
 
 Widget expenseClass(type, title) {
   return Column(
@@ -31,6 +33,7 @@ class ExpenseComponent extends StatefulWidget {
 
 class _ExpenseComponentState extends State<ExpenseComponent> {
   final _fireStore = Firestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   int _class;
   final _walletID;
   double amount = 0;
@@ -235,6 +238,8 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
         GestureDetector(
           onTap: () {
             _fireStore
+                .collection('users')
+                .doc(uid)
                 .collection('wallet')
                 .document(_walletID)
                 .collection('transaction')

@@ -339,7 +339,7 @@ class TotalCard extends StatelessWidget {
   // string format for money (comma)
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
-
+  final _auth = FirebaseAuth.instance;
   double money = 0;
   getTotal() {
     return fetchTotal().then((value) {
@@ -350,8 +350,12 @@ class TotalCard extends StatelessWidget {
 
   Future<double> fetchTotal() async {
     double money = 0;
-    await for (var snapshot
-        in Firestore.instance.collection('wallet').snapshots()) {
+    final uid = _auth.currentUser.uid;
+    await for (var snapshot in Firestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('wallet')
+        .snapshots()) {
       for (var wallet in snapshot.documents) {
         final cost = wallet.get('money');
         money = money + cost;
@@ -435,7 +439,10 @@ class WalletList extends StatelessWidget {
   Function mathFunc = (Match match) => '${match[1]},';
 
   Widget build(BuildContext context) {
-    dynamic firebaseInstance = FirebaseInstance();
+    final _auth = FirebaseAuth.instance;
+    final uid = _auth.currentUser.uid;
+    dynamic firebaseInstance = FirebaseInstance(uid);
+    firebaseInstance.fetchWallet();
     return Container(
       child: StreamBuilder<QuerySnapshot>(
         stream: firebaseInstance.wallets.snapshots(),
@@ -525,10 +532,20 @@ class WalletList extends StatelessWidget {
 }
 
 class FirebaseInstance {
+  var uid;
+  var wallets;
+
+  FirebaseInstance(this.uid);
+
   // WalletInstance(this.wallets);
-  Query wallets = FirebaseFirestore.instance
-      .collection('wallet')
-      .orderBy('createdOn', descending: false);
   var walletIndex;
   var walletID;
+
+  void fetchWallet() {
+    this.wallets = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('wallet')
+        .orderBy('createdOn', descending: false);
+  }
 }

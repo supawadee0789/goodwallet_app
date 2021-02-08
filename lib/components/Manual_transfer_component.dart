@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:menu_button/menu_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TransferComponent extends StatefulWidget {
   final _walletID;
@@ -159,6 +160,7 @@ class WalletSelector extends StatefulWidget {
 
 class _WalletSelectorState extends State<WalletSelector> {
   final wallets = Firestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   var selectedItem = '';
   void initState() {
     super.initState();
@@ -168,6 +170,8 @@ class _WalletSelectorState extends State<WalletSelector> {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
         stream: wallets
+            .collection('users')
+            .doc(uid)
             .collection('wallet')
             .orderBy('createdOn', descending: false)
             .snapshots(),

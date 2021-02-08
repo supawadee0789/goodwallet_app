@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:goodwallet_app/components/Graph_day.dart';
 
 class Graph extends StatefulWidget {
   @override
@@ -18,48 +19,50 @@ class _GraphState extends State<Graph> {
       Center(
         child: Container(
           width: _screenWidth * 0.85,
-          height: _screenHeight * 0.5,
+          height: _screenHeight * 0.53,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(32),
             color: Colors.white,
           ),
+          child: GraphDay(),
         ),
       ),
       SnakeNavigationBar.color(
-        height: 41,
+        height: 30,
         behaviour: SnakeBarBehaviour.floating,
         padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
         snakeViewColor: Color(0xff8C35B1),
         snakeShape: SnakeShape.rectangle,
-        // showUnselectedLabels: false,
-        // showSelectedLabels: true,
-        // selectedLabelStyle: TextStyle(color: Color(0xff8C35B1), fontSize: 8),
-        // selectedItemColor: Colors.white,
-        // unselectedLabelStyle: TextStyle(color: Color(0xff8C35B1), fontSize: 14),
-        // unselectedItemColor: Color(0xff8C35B1),
         currentIndex: _selectedItemPosition,
         onTap: (index) => setState(() => _selectedItemPosition = index),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         items: [
           BottomNavigationBarItem(
-              icon: Text("Day",
-                  style: TextStyle(
-                      color: _selectedItemPosition == 0
-                          ? Colors.white
-                          : Color(0xff8C35B1)))),
+              icon: Text(
+            "Day",
+            style: TextStyle(
+              color:
+                  _selectedItemPosition == 0 ? Colors.white : Color(0xff8C35B1),
+              fontSize: 16,
+            ),
+          )),
           BottomNavigationBarItem(
             icon: Text("Month",
                 style: TextStyle(
-                    color: _selectedItemPosition == 1
-                        ? Colors.white
-                        : Color(0xff8C35B1))),
+                  color: _selectedItemPosition == 1
+                      ? Colors.white
+                      : Color(0xff8C35B1),
+                  fontSize: 16,
+                )),
           ),
           BottomNavigationBarItem(
               icon: Text("Year",
                   style: TextStyle(
-                      color: _selectedItemPosition == 2
-                          ? Colors.white
-                          : Color(0xff8C35B1)))),
+                    color: _selectedItemPosition == 2
+                        ? Colors.white
+                        : Color(0xff8C35B1),
+                    fontSize: 16,
+                  ))),
         ],
       ),
     ]);

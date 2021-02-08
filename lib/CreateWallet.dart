@@ -70,7 +70,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
   AnimationController _walletController;
   AnimationController _graphController;
   AnimationController _budgetController;
-  var bottomClick = "Wallet";
+  var bottomClick = "Graph";
   bool bud = false;
   @override
   void initState() {
@@ -126,7 +126,6 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
             children: [
               Header(),
               WalletCard(widget.name, widget.money),
-              SizedBox(height: 8),
               Stack(
                 children: [
                   SlideTransition(
@@ -144,7 +143,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                         child: Center(
                           child: Container(
                             width: _screenWidth * 0.85,
-                            height: _screenHeight * 0.5,
+                            height: _screenHeight * 0.53,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(32),
                                 color: Color.fromRGBO(255, 255, 255, 0.66)),

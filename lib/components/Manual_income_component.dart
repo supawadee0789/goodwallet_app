@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class IncomeComponent extends StatefulWidget {
   final _walletID;
@@ -10,6 +11,7 @@ class IncomeComponent extends StatefulWidget {
 
 class _IncomeComponentState extends State<IncomeComponent> {
   final _fireStore = Firestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   final _walletID;
   _IncomeComponentState(this._walletID);
   double amount = 0;
@@ -77,6 +79,8 @@ class _IncomeComponentState extends State<IncomeComponent> {
           GestureDetector(
             onTap: () {
               _fireStore
+                  .collection('users')
+                  .doc(uid)
                   .collection('wallet')
                   .document(_walletID)
                   .collection('transaction')
