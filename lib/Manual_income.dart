@@ -20,6 +20,7 @@ class _ManualIncomeState extends State<ManualIncome> {
   var expenseOpacity = 0.0;
   var transferOpacity = 0.0;
   final _walletID;
+
   _ManualIncomeState(this._walletID);
   @override
   Widget build(BuildContext context) {

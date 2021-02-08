@@ -11,6 +11,7 @@ import 'package:flutter_page_transition/flutter_page_transition.dart';
 import 'components/WalletSlider.dart';
 import 'package:goodwallet_app/components/Header.dart';
 import 'Manual_income.dart';
+import 'SpeechConfirmation.dart';
 import "dart:async";
 
 class VoiceInput extends StatefulWidget {

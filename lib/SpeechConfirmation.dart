@@ -14,6 +14,8 @@ import "dart:async";
 import 'package:goodwallet_app/ConfirmedPage.dart';
 import 'package:goodwallet_app/Voice_Input.dart';
 import 'components/Header.dart';
+import 'components/walletSelector.dart';
+import 'package:goodwallet_app/classes/classes.dart';
 
 class ConfirmationMainPage extends StatelessWidget {
   final String text;
@@ -66,6 +68,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   String _screenType = '';
   var carouselAbsorb = false;
   var iconOpacity = 1.0;
+  var transferOpacity = 0.0;
   _ConfirmationPageState(
       {Key key, @required this.resultText, this.index, this.firebaseInstance});
 
@@ -80,6 +83,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     _currentIndex = 0;
     // print(currentTransaction.tokens);
     print(index);
+    currentTransaction = new Transactions();
   }
 
   // ignore: non_constant_identifier_names
@@ -90,8 +94,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       print("Response status: ${response.body}");
       var parsedJson = utf8.jsonDecode(response.body);
       print(parsedJson);
-      currentTransaction =
-          new Transaction(parsedJson['tokens'], parsedJson['types']);
+      currentTransaction.setTokens(parsedJson['tokens'], parsedJson['types']);
+      // currentTransaction =
+      //     new Transaction(parsedJson['tokens'], parsedJson['types']);
       print(currentTransaction.tokens);
       await currentTransaction.setAllVariables();
       setState(() {
@@ -105,6 +110,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         } else if (_screenType == 'Transfer') {
           carouselAbsorb = true;
           iconOpacity = 0;
+          transferOpacity = 1;
           buttonCarouselController.animateToPage(8,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         }
@@ -138,46 +144,58 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   style: BorderStyle.solid),
               borderRadius: BorderRadius.all(Radius.circular(21.0)),
             ),
-            child: AbsorbPointer(
-              absorbing: carouselAbsorb,
-              child: Column(
-                children: [
-                  Container(
-                      child: Text(
-                    _screenType ?? 'none',
-                    style: TextStyle(fontSize: 28),
-                  )),
-                  Container(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      child: Stack(
-                    children: [
-                      ClassSlider(buttonCarouselController, _screenType),
-                      Positioned(
-                          left: 5,
-                          top: 45,
-                          child: Opacity(
-                            opacity: iconOpacity,
-                            child: Icon(
-                              Icons.keyboard_arrow_left_rounded,
-                              color: Colors.white,
-                              size: 40,
-                            ),
-                          )),
-                      Positioned(
-                          right: 5,
-                          top: 45,
-                          child: Opacity(
-                            opacity: iconOpacity,
-                            child: Icon(
-                              Icons.keyboard_arrow_right_rounded,
-                              color: Colors.white,
-                              size: 40,
-                            ),
-                          )),
-                    ],
-                  ))
-                ],
-              ),
+            child: Column(
+              children: [
+                Container(
+                    child: Text(
+                  _screenType ?? 'none',
+                  style: TextStyle(fontSize: 28),
+                )),
+                Container(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    child: Stack(
+                  children: [
+                    AbsorbPointer(
+                        absorbing: carouselAbsorb,
+                        child:
+                            ClassSlider(buttonCarouselController, _screenType)),
+                    Positioned(
+                        left: 5,
+                        top: 45,
+                        child: Opacity(
+                          opacity: iconOpacity,
+                          child: Icon(
+                            Icons.keyboard_arrow_left_rounded,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        )),
+                    Positioned(
+                        right: 5,
+                        top: 45,
+                        child: Opacity(
+                          opacity: iconOpacity,
+                          child: Icon(
+                            Icons.keyboard_arrow_right_rounded,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        )),
+                    Positioned(
+                        left: 25,
+                        bottom: 5,
+                        child: Opacity(
+                          opacity: transferOpacity,
+                          child: Row(
+                            children: [
+                              Text('To : '),
+                              WalletSelector(currentTransaction)
+                            ],
+                          ),
+                        ))
+                  ],
+                ))
+              ],
             ),
           ),
           SizedBox(
@@ -205,6 +223,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     child: Listener(
                       onPointerDown: (detail) {
                         print('cancel');
+                        print(currentTransaction.targetWallet);
                         print(classCarousel(_currentIndex));
                         Navigator.pop(context); // cancel confirmation
                       },
@@ -241,6 +260,36 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           'type':
                               currentTransaction.type.toLowerCase() ?? 'null'
                         });
+                        //transfer target
+                        if (currentTransaction.type.toLowerCase() ==
+                            'transfer') {
+                          _fireStore
+                              .collection('wallet')
+                              // ignore: deprecated_member_use
+                              .document(
+                                  currentTransaction.targetWalletID.toString())
+                              .collection('transaction')
+                              .add({
+                            'class': classCarousel(_currentIndex),
+                            'cost': -currentTransaction.cost ?? 0,
+                            'createdOn': FieldValue.serverTimestamp(),
+                            'name': currentTransaction.name,
+                            'type':
+                                currentTransaction.type.toLowerCase() ?? 'null'
+                          });
+
+                          CollectionReference wallet =
+                              FirebaseFirestore.instance.collection('wallet');
+                          wallet
+                              .doc(currentTransaction.targetWalletID.toString())
+                              .update({
+                                'money': FieldValue.increment(
+                                    -currentTransaction.cost)
+                              })
+                              .then((value) => print("Wallet Updated"))
+                              .catchError((error) =>
+                                  print("Failed to update wallet: $error"));
+                        }
 
                         CollectionReference wallet = FirebaseFirestore.instance
                             .collection('users')
@@ -378,104 +427,6 @@ class ClassItem extends StatelessWidget {
       ]),
     );
   }
-}
-
-class Transaction {
-  var tokens;
-  var textType;
-  String type; // type of transaction eg. income expense transfer
-  String _class; // class of transaction eg. health food
-  String name; // name of transaction eg. ซื้อข้าวกระเพรา
-  var cost; // cost of transaction
-  String targetWallet; // target wallet to transfer money
-
-  Transaction(this.tokens, this.textType);
-
-  void setAllVariables() async {
-    print('tokens = ');
-    print(this.tokens);
-    await this.deleteSpace();
-    this.checkType();
-    this.checkCost();
-    this.checkName();
-  }
-
-  void deleteSpace() {
-    for (var index = 0; index < this.tokens.length; index++) {
-      if (this.textType[index] == 3) {
-        this.tokens.removeAt(index);
-        this.textType.removeAt(index);
-      }
-    }
-    print(tokens);
-  }
-
-  void checkType() {
-    var input = this.tokens;
-    String _type;
-    var income = ['ได้เงิน', 'ได้', 'ได้รับ'];
-    var expense = ['ซื้อ', 'จ่าย'];
-    var transfer = ['โอน'];
-
-    if (income.any((e) => input.contains(e))) {
-      _type = 'Income';
-    } else if (expense.any((e) => input.contains(e))) {
-      _type = 'Expense';
-    } else if (transfer.any((e) => input.contains(e))) {
-      _type = 'Transfer';
-    } else {
-      _type = 'none';
-    }
-    this.type = _type;
-  }
-
-  void checkCost() async {
-    var array = this.tokens;
-    var costLoc = -1;
-    for (var loc = array.length - 1; loc >= 0; loc--) {
-      print(array[loc]);
-      if (this.textType[loc] == 2) {
-        costLoc = loc;
-        print('number found!');
-        break;
-      }
-    }
-    print(array[costLoc]);
-    var localCost = array[costLoc].replaceAll(',', '');
-    print(localCost);
-    this.cost = double.parse(localCost);
-    if (this.type == 'Expense') {
-      this.cost = -this.cost;
-    }
-  }
-
-  void checkName() {
-    var array = this.tokens;
-    if (this.type == 'Expense') {
-      array.removeAt(0);
-    }
-    print(array);
-    for (var i = 0; i < 2; i++) {
-      array.removeLast();
-      print(array);
-    }
-
-    var name = StringBuffer();
-
-    array.forEach((item) {
-      name.write(item);
-    });
-    this.name = name.toString();
-    print(this.name);
-    print(this.type);
-  }
-}
-
-bool _isNumeric(String str) {
-  if (str == null) {
-    return false;
-  }
-  return double.tryParse(str) != null;
 }
 
 classCarousel(_index) {

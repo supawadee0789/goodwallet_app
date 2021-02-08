@@ -65,6 +65,14 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
         child: SafeArea(
           child: Stack(
             children: [
+              HeaderWallet(),
+              TotalCard(),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: WalletList(this),
+                  width: MediaQuery.of(context).size.width * 0.83,
+                ),
               Column(
                 children: [
                   Padding(
@@ -433,6 +441,8 @@ class TotalCard extends StatelessWidget {
 
 // ignore: must_be_immutable
 class WalletList extends StatelessWidget {
+  _WalletState parent;
+  WalletList(this.parent);
   @override
   // string format for money (comma)
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
@@ -515,6 +525,8 @@ class WalletList extends StatelessWidget {
                     color: Color(0x00000000),
                     onTap: () async {
                       await wallet.reference.delete();
+                      parent.setState(() {});
+                      // Navigator.pop(context);
                       // Navigator.push(context,
                       //     MaterialPageRoute(builder: (context) {
                       //   return new Wallet();

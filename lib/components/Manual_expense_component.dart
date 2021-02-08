@@ -250,6 +250,15 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
               'name': note,
               'type': 'expense'
             });
+
+            CollectionReference wallet =
+                FirebaseFirestore.instance.collection('wallet');
+            wallet
+                .doc(_walletID)
+                .update({'money': FieldValue.increment((amount * (-1)) ?? 0)})
+                .then((value) => print("Wallet Updated"))
+                .catchError(
+                    (error) => print("Failed to update wallet: $error"));
             var counter = 0;
             Navigator.popUntil(context, (route) {
               return counter++ == 2;

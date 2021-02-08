@@ -17,8 +17,8 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  final index;
-  _CalendarState(this.index);
+  final walletID;
+  _CalendarState(this.walletID);
   CalendarController _calendarController;
 
   @override
@@ -113,7 +113,7 @@ class _CalendarState extends State<Calendar> {
                     .collection('users')
                     .doc(uid)
                     .collection('wallet')
-                    .document(index)
+                    .document(walletID)
                     .collection('transaction')
                     .orderBy('createdOn', descending: false)
                     .startAt([_start]).endAt([_end]).snapshots(),
@@ -266,6 +266,7 @@ class _CalendarState extends State<Calendar> {
                               icon: Icons.delete,
                               foregroundColor: Colors.white,
                               color: Color(0x000000),
+
                               onTap: () {
                                 CollectionReference wallet = FirebaseFirestore
                                     .instance

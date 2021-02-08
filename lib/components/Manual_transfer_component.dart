@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:menu_button/menu_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:goodwallet_app/components/walletSelector.dart';
+import 'package:goodwallet_app/classes/classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class TransferComponent extends StatefulWidget {
@@ -15,7 +17,19 @@ class _TransferComponentState extends State<TransferComponent> {
   final _walletID;
   String note;
   double amount;
+  final _fireStore = Firestore.instance;
+  var initialWallet;
+  var targetWallet;
   _TransferComponentState(this._walletID);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initialWallet = new Transactions();
+    targetWallet = new Transactions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +45,7 @@ class _TransferComponentState extends State<TransferComponent> {
                       "From",
                       style: TextStyle(color: Color(0xffA890FE), fontSize: 16),
                     ),
-                    WalletSelector(),
+                    WalletSelector(initialWallet),
                   ],
                 ),
               ),
@@ -50,7 +64,7 @@ class _TransferComponentState extends State<TransferComponent> {
                       "To",
                       style: TextStyle(color: Color(0xffA890FE), fontSize: 16),
                     ),
-                    WalletSelector(),
+                    WalletSelector(targetWallet),
                   ],
                 ),
               ),
@@ -114,17 +128,50 @@ class _TransferComponentState extends State<TransferComponent> {
           SizedBox(height: 40),
           GestureDetector(
             onTap: () {
-              // _fireStore
-              //     .collection('wallet')
-              //     .document(_walletID)
-              //     .collection('transaction')
-              //     .add({
-              //   'class': 'income',
-              //   'cost': amount ?? 0,
-              //   'createdOn': FieldValue.serverTimestamp(),
-              //   'name': note,
-              //   'type': 'income'
-              // });
+              //initial wallet
+              _fireStore
+                  .collection('wallet')
+                  .document(initialWallet.targetWalletID)
+                  .collection('transaction')
+                  .add({
+                'class': 'transfer',
+                'cost': -amount ?? 0,
+                'createdOn': FieldValue.serverTimestamp(),
+                'name': note,
+                'type': 'transfer'
+              });
+
+              //target wallet
+              _fireStore
+                  .collection('wallet')
+                  .document(targetWallet.targetWalletID)
+                  .collection('transaction')
+                  .add({
+                'class': 'transfer',
+                'cost': amount ?? 0,
+                'createdOn': FieldValue.serverTimestamp(),
+                'name': note,
+                'type': 'transfer'
+              });
+
+              //update wallet
+              CollectionReference wallet =
+                  FirebaseFirestore.instance.collection('wallet');
+              wallet
+                  .doc(initialWallet.targetWalletID.toString())
+                  .update({'money': FieldValue.increment(-amount)})
+                  .then((value) => print("Wallet Updated"))
+                  .catchError(
+                      (error) => print("Failed to update wallet: $error"));
+
+              wallet
+                  .doc(targetWallet.targetWalletID.toString())
+                  .update({'money': FieldValue.increment(amount)})
+                  .then((value) => print("Wallet Updated"))
+                  .catchError(
+                      (error) => print("Failed to update wallet: $error"));
+
+              // navigate back
               var counter = 0;
               Navigator.popUntil(context, (route) {
                 return counter++ == 2;
