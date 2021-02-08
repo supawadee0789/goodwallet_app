@@ -65,14 +65,6 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
         child: SafeArea(
           child: Stack(
             children: [
-              HeaderWallet(),
-              TotalCard(),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: WalletList(this),
-                  width: MediaQuery.of(context).size.width * 0.83,
-                ),
               Column(
                 children: [
                   Padding(
@@ -114,7 +106,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(top: 30),
-                      child: WalletList(),
+                      child: WalletList(this),
                       width: MediaQuery.of(context).size.width * 0.83,
                     ),
                   ),
