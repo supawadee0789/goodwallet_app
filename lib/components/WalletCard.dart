@@ -13,6 +13,7 @@ class WalletCard extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Container(
+        margin: EdgeInsets.only(bottom: 5 / 760 * screenHeight),
         width: 309 / 360 * screenWidth,
         height: 147 / 760 * screenHeight,
         decoration: BoxDecoration(

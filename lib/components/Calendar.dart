@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,9 +48,11 @@ class _CalendarState extends State<Calendar> {
   var expense;
   String _dateString = '';
   final wallets = FirebaseFirestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
 
+  int _selectedItemPosition = 0;
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -107,6 +110,8 @@ class _CalendarState extends State<Calendar> {
               child: Container(
             child: StreamBuilder<QuerySnapshot>(
                 stream: wallets
+                    .collection('users')
+                    .doc(uid)
                     .collection('wallet')
                     .document(walletID)
                     .collection('transaction')
@@ -261,10 +266,12 @@ class _CalendarState extends State<Calendar> {
                               icon: Icons.delete,
                               foregroundColor: Colors.white,
                               color: Color(0x000000),
-                              onTap: () async {
-                                await trans.reference.delete();
+
+                              onTap: () {
                                 CollectionReference wallet = FirebaseFirestore
                                     .instance
+                                    .collection('users')
+                                    .doc(uid)
                                     .collection('wallet');
                                 wallet
                                     .doc(walletID.toString())
@@ -281,7 +288,7 @@ class _CalendarState extends State<Calendar> {
                         );
                       });
                 }),
-          ))
+          )),
         ],
       ),
     );

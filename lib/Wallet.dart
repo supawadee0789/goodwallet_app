@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/AddWallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'CreateWallet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_page_transition/flutter_page_transition.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'Voice_Input.dart';
 
 class Wallet extends StatefulWidget {
@@ -13,7 +17,37 @@ class Wallet extends StatefulWidget {
   _WalletState createState() => _WalletState();
 }
 
-class _WalletState extends State<Wallet> {
+class _WalletState extends State<Wallet> with TickerProviderStateMixin {
+  AnimationController _controller;
+  double openNav = 0.0;
+  final _auth = FirebaseAuth.instance;
+  var name;
+  var email;
+  var pic;
+  bool _notification = false;
+  Future userHandler() async {
+    try {
+      name = await _auth.currentUser.displayName;
+      email = await _auth.currentUser.email;
+      pic = await _auth.currentUser.photoURL;
+      print(pic);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      _controller = AnimationController(
+        duration: const Duration(milliseconds: 200),
+        vsync: this,
+      );
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -29,7 +63,7 @@ class _WalletState extends State<Wallet> {
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
               HeaderWallet(),
               TotalCard(),
@@ -39,27 +73,262 @@ class _WalletState extends State<Wallet> {
                   child: WalletList(this),
                   width: MediaQuery.of(context).size.width * 0.83,
                 ),
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        26 / 360 * screenWidth,
+                        17 / 760 * screenHeight,
+                        22.5 / 360 * screenWidth,
+                        60 / 760 * screenHeight),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _controller.reverse();
+                              openNav = 1.0;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.account_circle_rounded,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                        Text(
+                          "WALLET",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                              letterSpacing: 0.66),
+                        ),
+                        SizedBox(
+                          width: 30 / 360 * screenWidth,
+                        ),
+                      ],
+                    ),
+                  ),
+                  TotalCard(),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 30),
+                      child: WalletList(),
+                      width: MediaQuery.of(context).size.width * 0.83,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return AddWallet();
+                      }));
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.078,
+                      decoration: BoxDecoration(
+                          color: Color(0xffE5A9B6),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(23),
+                              topRight: Radius.circular(23))),
+                      child: Center(
+                        child: Text(
+                          "Add new wallet",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return AddWallet();
-                  }));
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.078,
-                  decoration: BoxDecoration(
-                      color: Color(0xffE5A9B6),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(23),
-                          topRight: Radius.circular(23))),
-                  child: Center(
-                    child: Text(
-                      "Add new wallet",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+              Positioned(
+                child: SlideTransition(
+                  position:
+                      Tween<Offset>(begin: Offset(0, 0), end: Offset(-1.5, 0))
+                          .animate(CurvedAnimation(
+                    parent: _controller,
+                    curve: Curves.easeIn,
+                  )),
+                  child: IgnorePointer(
+                    ignoring: openNav == 0 ? true : false,
+                    child: AnimatedOpacity(
+                      opacity: openNav,
+                      duration: Duration(milliseconds: 400),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _controller.forward();
+                            openNav = 0.0;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(
+                              screenHeight * 0.05,
+                              screenHeight * 0.05,
+                              screenWidth * 0.02,
+                              screenHeight * 0.05),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30)),
+                            color: Colors.white,
+                          ),
+                          height: screenHeight,
+                          width: screenWidth * 0.6,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FutureBuilder(
+                                    future: userHandler(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot snapshot) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          pic != null
+                                              ? CircleAvatar(
+                                                  backgroundImage:
+                                                      NetworkImage(pic),
+                                                )
+                                              : SvgPicture.asset(
+                                                  'images/account.svg',
+                                                  width: 35,
+                                                  color: Color(0xffC88EC5),
+                                                ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8),
+                                            child: Text(
+                                              name == null ? 'Guest' : name,
+                                              style: TextStyle(
+                                                  color: Color(0xff706D6D),
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Text(
+                                            email == null
+                                                ? 'guest@mail.com'
+                                                : email,
+                                            style: TextStyle(
+                                                color: Color(0xffA1A1A1),
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w100),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(height: screenHeight * 0.1),
+                                  Text(
+                                    'Other',
+                                    style: TextStyle(
+                                        color: Color(0xff706D6D), fontSize: 14),
+                                  ),
+                                  ListTile(
+                                    onTap: () {},
+                                    leading: Icon(
+                                      Icons.receipt_long,
+                                      color: Color(0xffC88EC5),
+                                    ),
+                                    title: Text(
+                                      'Monthly Transactions',
+                                      style: TextStyle(
+                                          color: Color(0xffA1A1A1),
+                                          fontSize: 11),
+                                    ),
+                                    horizontalTitleGap: 0.5,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 0),
+                                  ),
+                                  ListTile(
+                                    leading: Icon(
+                                      Icons.notifications_active_rounded,
+                                      color: Color(0xffC88EC5),
+                                    ),
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Notification',
+                                          style: TextStyle(
+                                              color: Color(0xffA1A1A1),
+                                              fontSize: 11),
+                                        ),
+                                        CupertinoSwitch(
+                                          value: _notification,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              _notification = value;
+                                            });
+                                          },
+                                          activeColor: Color(0xffEA8D8D),
+                                        )
+                                      ],
+                                    ),
+                                    horizontalTitleGap: 0.5,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 0),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  ListTile(
+                                    onTap: () {},
+                                    leading: Icon(
+                                      Icons.settings,
+                                      color: Color(0xffC88EC5),
+                                    ),
+                                    title: Text(
+                                      'Setting',
+                                      style: TextStyle(
+                                          color: Color(0xff706D6D),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    horizontalTitleGap: 0.5,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 0),
+                                  ),
+                                  ListTile(
+                                    onTap: () async {
+                                      try {
+                                        await _auth.signOut();
+                                      } catch (e) {
+                                        print(e);
+                                      }
+                                      Navigator.pop(context);
+                                    },
+                                    leading: Icon(
+                                      Icons.logout,
+                                      color: Color(0xffC88EC5),
+                                    ),
+                                    title: Text(
+                                      'Log out',
+                                      style: TextStyle(
+                                          color: Color(0xff706D6D),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    horizontalTitleGap: 0.5,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 0),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -73,73 +342,12 @@ class _WalletState extends State<Wallet> {
   }
 }
 
-class HeaderWallet extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
-    var screenHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-          26 / 360 * screenWidth,
-          17 / 760 * screenHeight,
-          22.5 / 360 * screenWidth,
-          60 / 760 * screenHeight),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: () => {},
-            icon: Icon(
-              Icons.account_circle_rounded,
-              color: Colors.white,
-              size: 40,
-            ),
-          ),
-          SizedBox(
-            width: 15 / 360 * screenWidth,
-          ),
-          Text(
-            "WALLET",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 25, letterSpacing: 0.66),
-          ),
-          Container(
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => {},
-                  icon: Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-                SizedBox(
-                  width: 15 / 360 * screenWidth,
-                ),
-                IconButton(
-                  onPressed: () => {},
-                  icon: Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class TotalCard extends StatelessWidget {
   @override
   // string format for money (comma)
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
-
+  final _auth = FirebaseAuth.instance;
   double money = 0;
   getTotal() {
     return fetchTotal().then((value) {
@@ -150,8 +358,12 @@ class TotalCard extends StatelessWidget {
 
   Future<double> fetchTotal() async {
     double money = 0;
-    await for (var snapshot
-        in Firestore.instance.collection('wallet').snapshots()) {
+    final uid = _auth.currentUser.uid;
+    await for (var snapshot in Firestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('wallet')
+        .snapshots()) {
       for (var wallet in snapshot.documents) {
         final cost = wallet.get('money');
         money = money + cost;
@@ -237,7 +449,10 @@ class WalletList extends StatelessWidget {
   Function mathFunc = (Match match) => '${match[1]},';
 
   Widget build(BuildContext context) {
-    dynamic firebaseInstance = FirebaseInstance();
+    final _auth = FirebaseAuth.instance;
+    final uid = _auth.currentUser.uid;
+    dynamic firebaseInstance = FirebaseInstance(uid);
+    firebaseInstance.fetchWallet();
     return Container(
       child: StreamBuilder<QuerySnapshot>(
         stream: firebaseInstance.wallets.snapshots(),
@@ -260,12 +475,12 @@ class WalletList extends StatelessWidget {
                 actionExtentRatio: 0.25,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      firebaseInstance.walletIndex = index;
-                      firebaseInstance.walletID = wallet.id;
-                      return new CreateWallet(firebaseInstance);
-                    }));
+                    firebaseInstance.walletIndex = index;
+                    firebaseInstance.walletID = wallet.id;
+                    Navigator.of(context).push(PageTransition(
+                        type: PageTransitionType.fadeIn,
+                        duration: Duration(milliseconds: 100),
+                        child: new CreateWallet(firebaseInstance)));
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.096,
@@ -329,10 +544,20 @@ class WalletList extends StatelessWidget {
 }
 
 class FirebaseInstance {
+  var uid;
+  var wallets;
+
+  FirebaseInstance(this.uid);
+
   // WalletInstance(this.wallets);
-  Query wallets = FirebaseFirestore.instance
-      .collection('wallet')
-      .orderBy('createdOn', descending: false);
   var walletIndex;
   var walletID;
+
+  void fetchWallet() {
+    this.wallets = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('wallet')
+        .orderBy('createdOn', descending: false);
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
   // ignore: deprecated_member_use
   final _fireStore = Firestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   var currentTransaction;
   @override
   void initState() {
@@ -244,6 +246,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         // print(checkName(tokens, checkCost(tokens)));
                         // print(checkCost(tokens));
                         _fireStore
+                            .collection('users')
+                            .doc(uid)
                             .collection('wallet')
                             // ignore: deprecated_member_use
                             .document(firebaseInstance.walletID.toString())
@@ -287,8 +291,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                   print("Failed to update wallet: $error"));
                         }
 
-                        CollectionReference wallet =
-                            FirebaseFirestore.instance.collection('wallet');
+                        CollectionReference wallet = FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(uid)
+                            .collection('wallet');
                         wallet
                             .doc(firebaseInstance.walletID.toString())
                             .update({

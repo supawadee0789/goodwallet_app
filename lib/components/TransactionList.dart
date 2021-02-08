@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,7 @@ class _TransListState extends State<TransList> {
   final firebaseInstance;
   _TransListState(this.index, this.firebaseInstance);
   final wallets = FirebaseFirestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
   String name;
@@ -49,6 +51,8 @@ class _TransListState extends State<TransList> {
     return Container(
       child: StreamBuilder<QuerySnapshot>(
           stream: wallets
+              .collection('users')
+              .doc(uid)
               .collection('wallet')
               .document(firebaseInstance.walletID.toString())
               .collection('transaction')

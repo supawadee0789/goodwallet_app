@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:goodwallet_app/components/Header.dart';
@@ -11,6 +12,7 @@ class AddWallet extends StatefulWidget {
 
 class _AddWalletState extends State<AddWallet> {
   final _fireStore = Firestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   String name = "";
   double money = 0;
   @override
@@ -90,7 +92,11 @@ class _AddWalletState extends State<AddWallet> {
               ),
               GestureDetector(
                 onTap: () {
-                  _fireStore.collection('wallet').add({
+                  _fireStore
+                      .collection('users')
+                      .doc(uid)
+                      .collection('wallet')
+                      .add({
                     'name': name,
                     'money': money,
                     'createdOn': Timestamp.now(),
