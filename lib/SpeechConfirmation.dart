@@ -264,6 +264,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         if (currentTransaction.type.toLowerCase() ==
                             'transfer') {
                           _fireStore
+                              .collection('users')
+                              .doc(uid)
                               .collection('wallet')
                               // ignore: deprecated_member_use
                               .document(
@@ -278,8 +280,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 currentTransaction.type.toLowerCase() ?? 'null'
                           });
 
-                          CollectionReference wallet =
-                              FirebaseFirestore.instance.collection('wallet');
+                          CollectionReference wallet = FirebaseFirestore
+                              .instance
+                              .collection('users')
+                              .doc(uid)
+                              .collection('wallet');
                           wallet
                               .doc(currentTransaction.targetWalletID.toString())
                               .update({
