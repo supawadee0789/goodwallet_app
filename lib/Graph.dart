@@ -139,7 +139,7 @@ class Card extends StatelessWidget {
           double expenseNumber = 0;
           for (var i = 0; i < len; i++) {
             DocumentSnapshot trans = snapshot.data.documents[i];
-            if (trans['type'] == 'income') {
+            if (trans['cost'] > 0) {
               incomeNumber += trans['cost'];
             } else {
               expenseNumber += trans['cost'];
