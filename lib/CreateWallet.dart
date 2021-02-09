@@ -204,7 +204,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                       child: AnimatedOpacity(
                         opacity: bottomClick == 'Graph' ? 1 : 0,
                         duration: Duration(milliseconds: 400),
-                        child: Graph(),
+                        child: Graph(firebaseInstance),
                       ),
                     ),
                   ),

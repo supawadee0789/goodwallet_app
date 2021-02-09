@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -575,11 +576,17 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
     facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
     FacebookLoginResult result =
         await facebookLogin.logIn(['email', "public_profile"]);
-
+    final _fireStore = Firestore.instance;
     String token = result.accessToken.token;
     print("Access token = $token");
     var user = await _auth
         .signInWithCredential(FacebookAuthProvider.credential(token));
+    final email = _auth.currentUser.email;
+    final uid = _auth.currentUser.uid;
+    final id = _fireStore.collection('users').doc(uid).get();
+    if (id != null) {
+      _fireStore.collection('users').doc(uid).set({"uid": uid, 'email': email});
+    }
     if (user != null) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return Wallet();

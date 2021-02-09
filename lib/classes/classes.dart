@@ -43,7 +43,7 @@ class Transactions {
   void checkType() {
     var input = this.tokens;
     String _type;
-    var income = ['ได้เงิน', 'ได้', 'ได้รับ'];
+    var income = ['ได้เงิน', 'ได้', 'ได้รับ', 'ให้เงิน'];
     var expense = ['ซื้อ', 'จ่าย'];
     var transfer = ['โอน'];
 

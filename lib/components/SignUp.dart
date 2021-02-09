@@ -189,7 +189,10 @@ class _SignUpState extends State<SignUp> {
                   if (newUser != null) {
                     final _fireStore = Firestore.instance;
                     var uid = _auth.currentUser.uid;
-                    _fireStore.collection('users').doc(uid).set({"uid": uid});
+                    _fireStore
+                        .collection('users')
+                        .doc(uid)
+                        .set({"uid": uid, "email": email});
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => Wallet()));
                   }
