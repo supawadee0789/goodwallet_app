@@ -81,7 +81,7 @@ class _AddWalletState extends State<AddWallet> {
                     ),
                     Container(
                       margin: EdgeInsets.only(bottom: 25),
-                      child: Text("BATH",
+                      child: Text("BAHT",
                           style: TextStyle(
                             color: Color(0xffB58FE7),
                             fontSize: 16,

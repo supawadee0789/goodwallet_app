@@ -92,8 +92,10 @@ class _IncomeComponentState extends State<IncomeComponent> {
                 'type': 'income'
               });
 
-              CollectionReference wallet =
-                  FirebaseFirestore.instance.collection('wallet');
+              CollectionReference wallet = FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(uid)
+                  .collection('wallet');
               wallet
                   .doc(_walletID)
                   .update({'money': FieldValue.increment(amount)})

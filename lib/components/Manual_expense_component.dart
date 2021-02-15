@@ -251,8 +251,10 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
               'type': 'expense'
             });
 
-            CollectionReference wallet =
-                FirebaseFirestore.instance.collection('wallet');
+            CollectionReference wallet = FirebaseFirestore.instance
+                .collection('users')
+                .doc(uid)
+                .collection('wallet');
             wallet
                 .doc(_walletID)
                 .update({'money': FieldValue.increment((amount * (-1)) ?? 0)})

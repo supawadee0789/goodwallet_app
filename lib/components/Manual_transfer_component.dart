@@ -18,6 +18,7 @@ class _TransferComponentState extends State<TransferComponent> {
   String note;
   double amount;
   final _fireStore = Firestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
   var initialWallet;
   var targetWallet;
   _TransferComponentState(this._walletID);
@@ -131,6 +132,8 @@ class _TransferComponentState extends State<TransferComponent> {
             onTap: () {
               //initial wallet
               _fireStore
+                  .collection('users')
+                  .doc(uid)
                   .collection('wallet')
                   .document(initialWallet.targetWalletID)
                   .collection('transaction')
@@ -144,6 +147,8 @@ class _TransferComponentState extends State<TransferComponent> {
 
               //target wallet
               _fireStore
+                  .collection('users')
+                  .doc(uid)
                   .collection('wallet')
                   .document(targetWallet.targetWalletID)
                   .collection('transaction')
@@ -156,8 +161,10 @@ class _TransferComponentState extends State<TransferComponent> {
               });
 
               //update wallet
-              CollectionReference wallet =
-                  FirebaseFirestore.instance.collection('wallet');
+              CollectionReference wallet = FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(uid)
+                  .collection('wallet');
               wallet
                   .doc(initialWallet.targetWalletID.toString())
                   .update({'money': FieldValue.increment(-amount)})

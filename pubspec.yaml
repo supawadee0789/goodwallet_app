@@ -42,6 +42,7 @@ dependencies:
   flutter_facebook_login: ^3.0.0
   flutter_snake_navigationbar: ^0.4.4
   date_util: ^0.1.4
+  fl_chart: ^0.12.2
 
 dev_dependencies:
   flutter_test:
