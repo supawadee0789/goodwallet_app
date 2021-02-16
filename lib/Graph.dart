@@ -297,263 +297,256 @@ class _GraphComponentState extends State<GraphComponent>
                             .replaceAllMapped(reg, mathFunc),
                 style: TextStyle(color: Color(0xffA1A1A1), fontSize: 11),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(8.0),
-                    height: MediaQuery.of(context).size.height * 0.23,
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    child: PieChart(
-                      PieChartData(
-                        pieTouchData:
-                            PieTouchData(touchCallback: (pieTouchResponse) {
-                          setState(() {
-                            if (pieTouchResponse.touchInput is FlLongPressEnd ||
-                                pieTouchResponse.touchInput is FlPanEnd) {
-                              touchedIndex = -1;
-                            } else {
-                              touchedIndex =
-                                  pieTouchResponse.touchedSectionIndex;
-                            }
-                          });
-                        }),
-                        sections: showingSections(),
-                        borderData: FlBorderData(show: false),
-                        sectionsSpace: 0,
-                        centerSpaceRadius: 20,
-                      ),
+              incomeNumber == 0 && expenseNumber == 0
+                  ? noTransaction()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(8.0),
+                          height: MediaQuery.of(context).size.height * 0.23,
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          child: PieChart(
+                            PieChartData(
+                              pieTouchData: PieTouchData(
+                                  touchCallback: (pieTouchResponse) {
+                                setState(() {
+                                  if (pieTouchResponse.touchInput
+                                          is FlLongPressEnd ||
+                                      pieTouchResponse.touchInput is FlPanEnd) {
+                                    touchedIndex = -1;
+                                  } else {
+                                    touchedIndex =
+                                        pieTouchResponse.touchedSectionIndex;
+                                  }
+                                });
+                              }),
+                              sections: showingSections(),
+                              borderData: FlBorderData(show: false),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 20,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AnimatedContainer(
+                              curve: Curves.easeInOut,
+                              height: touchedIndex == 7 ? 50 : 20,
+                              duration: Duration(seconds: 2),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 7;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Income',
+                                    Color(0xffFFC9BE),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 7 ? true : false,
+                                    incomeNumber,
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                            AnimatedContainer(
+                              curve: Curves.fastOutSlowIn,
+                              height: touchedIndex == 2 ? 50 : 20,
+                              duration: Duration(seconds: 2),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 2;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Entertainment',
+                                    Color(0xff672C76),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 2 ? true : false,
+                                    expenseClassNumber[2],
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                            AnimatedContainer(
+                              height: touchedIndex == 3 ? 50 : 20,
+                              curve: Curves.fastOutSlowIn,
+                              duration: Duration(seconds: 3),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 3;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Residence',
+                                    Color(0xff8E6299),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 3 ? true : false,
+                                    expenseClassNumber[3],
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                            AnimatedContainer(
+                              height: touchedIndex == 4 ? 50 : 20,
+                              curve: Curves.fastOutSlowIn,
+                              duration: Duration(seconds: 3),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 4;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Household',
+                                    Color(0xffBBA4C1),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 4 ? true : false,
+                                    expenseClassNumber[4],
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                            AnimatedContainer(
+                              height: touchedIndex == 5 ? 50 : 20,
+                              curve: Curves.fastOutSlowIn,
+                              duration: Duration(seconds: 3),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 5;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Travel',
+                                    Color(0xffE4C1D0),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 5 ? true : false,
+                                    expenseClassNumber[5],
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                            AnimatedContainer(
+                              height: touchedIndex == 6 ? 50 : 20,
+                              curve: Curves.fastOutSlowIn,
+                              duration: Duration(seconds: 3),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 6;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Health',
+                                    Color(0xffDAA2B9),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 6 ? true : false,
+                                    expenseClassNumber[6],
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                            AnimatedContainer(
+                              height: touchedIndex == 0 ? 50 : 20,
+                              curve: Curves.fastOutSlowIn,
+                              duration: Duration(seconds: 3),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 0;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Food',
+                                    Color(0xffc57c9b),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 0 ? true : false,
+                                    expenseClassNumber[0],
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                            AnimatedContainer(
+                              height: touchedIndex == 1 ? 50 : 20,
+                              curve: Curves.fastOutSlowIn,
+                              duration: Duration(seconds: 3),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    touchedIndex = 1;
+                                  });
+                                },
+                                child: Indicator(
+                                    'Shopping',
+                                    Color(0xff98365f),
+                                    Color(0xff706D6D),
+                                    touchedIndex == 1 ? true : false,
+                                    expenseClassNumber[1],
+                                    incomeNumber - expenseNumber),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                  SizedBox(width: 5),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AnimatedContainer(
-                        curve: Curves.easeInOut,
-                        height: touchedIndex == 7 ? 50 : 20,
-                        duration: Duration(seconds: 2),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 7;
-                            });
-                          },
-                          child: Indicator(
-                              'Income',
-                              Color(0xffFFC9BE),
-                              Color(0xff706D6D),
-                              touchedIndex == 7 ? true : false,
-                              incomeNumber,
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        curve: Curves.fastOutSlowIn,
-                        height: touchedIndex == 2 ? 50 : 20,
-                        duration: Duration(seconds: 2),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 2;
-                            });
-                          },
-                          child: Indicator(
-                              'Entertainment',
-                              Color(0xff672C76),
-                              Color(0xff706D6D),
-                              touchedIndex == 2 ? true : false,
-                              expenseClassNumber[2],
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        height: touchedIndex == 3 ? 50 : 20,
-                        curve: Curves.fastOutSlowIn,
-                        duration: Duration(seconds: 3),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 3;
-                            });
-                          },
-                          child: Indicator(
-                              'Residence',
-                              Color(0xff8E6299),
-                              Color(0xff706D6D),
-                              touchedIndex == 3 ? true : false,
-                              expenseClassNumber[3],
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        height: touchedIndex == 4 ? 50 : 20,
-                        curve: Curves.fastOutSlowIn,
-                        duration: Duration(seconds: 3),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 4;
-                            });
-                          },
-                          child: Indicator(
-                              'Household',
-                              Color(0xffBBA4C1),
-                              Color(0xff706D6D),
-                              touchedIndex == 4 ? true : false,
-                              expenseClassNumber[4],
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        height: touchedIndex == 5 ? 50 : 20,
-                        curve: Curves.fastOutSlowIn,
-                        duration: Duration(seconds: 3),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 5;
-                            });
-                          },
-                          child: Indicator(
-                              'Travel',
-                              Color(0xffE4C1D0),
-                              Color(0xff706D6D),
-                              touchedIndex == 5 ? true : false,
-                              expenseClassNumber[5],
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        height: touchedIndex == 6 ? 50 : 20,
-                        curve: Curves.fastOutSlowIn,
-                        duration: Duration(seconds: 3),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 6;
-                            });
-                          },
-                          child: Indicator(
-                              'Health',
-                              Color(0xffDAA2B9),
-                              Color(0xff706D6D),
-                              touchedIndex == 6 ? true : false,
-                              expenseClassNumber[6],
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        height: touchedIndex == 0 ? 50 : 20,
-                        curve: Curves.fastOutSlowIn,
-                        duration: Duration(seconds: 3),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 0;
-                            });
-                          },
-                          child: Indicator(
-                              'Food',
-                              Color(0xffc57c9b),
-                              Color(0xff706D6D),
-                              touchedIndex == 0 ? true : false,
-                              expenseClassNumber[0],
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        height: touchedIndex == 1 ? 50 : 20,
-                        curve: Curves.fastOutSlowIn,
-                        duration: Duration(seconds: 3),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              touchedIndex = 1;
-                            });
-                          },
-                          child: Indicator(
-                              'Shopping',
-                              Color(0xff98365f),
-                              Color(0xff706D6D),
-                              touchedIndex == 1 ? true : false,
-                              expenseClassNumber[1],
-                              incomeNumber - expenseNumber),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
             ],
           );
         });
   }
 
   List<PieChartSectionData> showingSections() {
+    double total = incomeNumber - expenseNumber;
+    if (total < 0) {
+      total = total * (-1);
+    }
     return List.generate(8, (i) {
       final isTouched = i == touchedIndex;
       final double radius = isTouched ? 65 : 55;
       switch (i) {
         case 0:
           return pieChartSectionData(
-              value: expenseClassNumber[0] *
-                  (100 / incomeNumber - expenseNumber) *
-                  (-1),
+              value: expenseClassNumber[0] * (100 / total) * (-1),
               color: Color(0xffc57c9b),
               radius: radius,
               title: '');
         case 1:
           return pieChartSectionData(
-              value: expenseClassNumber[1] *
-                  (100 / incomeNumber - expenseNumber) *
-                  (-1),
+              value: expenseClassNumber[1] * (100 / total) * (-1),
               color: Color(0xff98365f),
               radius: radius,
               title: '');
         case 2:
           return pieChartSectionData(
-              value: expenseClassNumber[2] *
-                  (100 / incomeNumber - expenseNumber) *
-                  (-1),
+              value: expenseClassNumber[2] * (100 / total) * (-1),
               color: Color(0xff672C76),
               radius: radius,
               title: '');
         case 3:
           return pieChartSectionData(
-              value: expenseClassNumber[3] *
-                  (100 / incomeNumber - expenseNumber) *
-                  (-1),
+              value: expenseClassNumber[3] * (100 / total) * (-1),
               color: Color(0xff8E6299),
               radius: radius,
               title: '');
         case 4:
           return pieChartSectionData(
-              value: expenseClassNumber[4] *
-                  (100 / incomeNumber - expenseNumber) *
-                  (-1),
+              value: expenseClassNumber[4] * (100 / total) * (-1),
               color: Color(0xffBBA4C1),
               radius: radius,
               title: '');
         case 5:
           return pieChartSectionData(
-              value: expenseClassNumber[5] *
-                  (100 / incomeNumber - expenseNumber) *
-                  (-1),
+              value: expenseClassNumber[5] * (100 / total) * (-1),
               color: Color(0xffE4C1D0),
               radius: radius,
               title: '');
         case 6:
           return pieChartSectionData(
-              value: expenseClassNumber[6] *
-                  (100 / incomeNumber - expenseNumber) *
-                  (-1),
+              value: expenseClassNumber[6] * (100 / total) * (-1),
               color: Color(0xffDAA2B9),
               radius: radius,
               title: '');
         case 7:
           return pieChartSectionData(
-              value: incomeNumber * (100 / incomeNumber - expenseNumber),
+              value: incomeNumber * (100 / total),
               color: Color(0xffFFC9BE),
               radius: radius,
               title: '');
@@ -597,20 +590,28 @@ class Indicator extends StatelessWidget {
           ),
           Visibility(
             visible: _open,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  number < 0
-                      ? (number * (-100 / total)).toStringAsFixed(2) + '%'
-                      : (number * (100 / total)).toStringAsFixed(2) + '%',
-                  style: TextStyle(
-                      fontSize: 16, color: Color(0xff706D6D), height: 1.2),
-                ),
-                Text(
-                  number.toStringAsFixed(2).replaceAllMapped(reg, mathFunc),
-                  style: TextStyle(
-                      fontSize: 12, color: Color(0xffF75454), height: 1.2),
+                SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      number < 0
+                          ? (number * (-100 / total)).toStringAsFixed(2) + '%'
+                          : (number * (100 / total)).toStringAsFixed(2) + '%',
+                      style: TextStyle(
+                          fontSize: 16, color: Color(0xff706D6D), height: 1.2),
+                    ),
+                    Text(
+                      number
+                              .toStringAsFixed(2)
+                              .replaceAllMapped(reg, mathFunc) +
+                          ' THB',
+                      style: TextStyle(
+                          fontSize: 12, color: Color(0xffF75454), height: 1.2),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -629,4 +630,26 @@ pieChartSectionData({Color color, double value, double radius, String title}) {
       title: title,
       titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       titlePositionPercentageOffset: 0.7);
+}
+
+Widget noTransaction() {
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 30),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.receipt_long, color: Color(0xff706D6D), size: 50),
+        Text("No transactions yet",
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff706D6D))),
+        Text(
+          "After you add first transaction today \nyou will be able to view it here.",
+          style: TextStyle(fontSize: 9, color: Color(0xffA1A1A1)),
+          textAlign: TextAlign.center,
+        )
+      ],
+    ),
+  );
 }

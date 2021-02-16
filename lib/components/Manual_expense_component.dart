@@ -187,6 +187,7 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
               textAlign: TextAlign.left),
         ),
         TextField(
+          maxLength: 7,
           cursorColor: Colors.black,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(

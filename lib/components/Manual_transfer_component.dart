@@ -80,6 +80,7 @@ class _TransferComponentState extends State<TransferComponent> {
                 textAlign: TextAlign.left),
           ),
           TextField(
+            maxLength: 7,
             cursorColor: Colors.black,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(

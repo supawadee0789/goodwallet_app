@@ -15,6 +15,32 @@ class _AddWalletState extends State<AddWallet> {
   final uid = FirebaseAuth.instance.currentUser.uid;
   String name = "";
   double money = 0;
+  FocusNode focusNode = FocusNode();
+  FocusNode focusName = FocusNode();
+  String hintNumber = '0';
+  String hintText = 'wallet name';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    focusName.addListener(() {
+      if (focusName.hasFocus) {
+        hintText = '';
+      } else {
+        hintText = 'wallet name';
+      }
+      setState(() {});
+    });
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        hintNumber = '';
+      } else {
+        hintNumber = '0';
+      }
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,8 +69,9 @@ class _AddWalletState extends State<AddWallet> {
                     Container(
                       width: 214,
                       child: TextField(
+                        focusNode: focusName,
                         decoration: new InputDecoration(
-                            hintText: "wallet name",
+                            hintText: hintText,
                             hintStyle: TextStyle(
                                 color: Color(0xffA1A1A1), fontSize: 22)),
                         textAlign: TextAlign.center,
@@ -58,9 +85,11 @@ class _AddWalletState extends State<AddWallet> {
                       ),
                     ),
                     TextField(
+                      maxLength: 7,
                       cursorColor: Colors.black,
                       keyboardType: TextInputType.number,
                       decoration: new InputDecoration(
+                          counterText: "",
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -68,9 +97,10 @@ class _AddWalletState extends State<AddWallet> {
                           disabledBorder: InputBorder.none,
                           contentPadding: EdgeInsets.only(
                               left: 15, bottom: 11, top: 11, right: 15),
-                          hintText: "0",
+                          hintText: hintNumber,
                           hintStyle: TextStyle(
                               color: Color(0xffB58FE7), fontSize: 50)),
+                      focusNode: focusNode,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Color(0xffB58FE7), fontSize: 50),
                       onChanged: (String n) {
@@ -97,7 +127,7 @@ class _AddWalletState extends State<AddWallet> {
                       .doc(uid)
                       .collection('wallet')
                       .add({
-                    'name': name,
+                    'name': name == "" ? 'wallet' : name,
                     'money': money,
                     'createdOn': Timestamp.now(),
                   });
