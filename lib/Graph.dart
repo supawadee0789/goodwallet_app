@@ -326,6 +326,7 @@ class _GraphComponentState extends State<GraphComponent>
                               sectionsSpace: 0,
                               centerSpaceRadius: 20,
                             ),
+                            swapAnimationDuration: Duration(milliseconds: 300),
                           ),
                         ),
                         SizedBox(width: 5),

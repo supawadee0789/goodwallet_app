@@ -70,7 +70,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
   AnimationController _walletController;
   AnimationController _graphController;
   AnimationController _budgetController;
-  var bottomClick = "Graph";
+  var bottomClick = "Wallet";
   bool bud = false;
   @override
   void initState() {
@@ -285,53 +285,124 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  bud = false;
-                                  _walletController.reverse();
-                                  _graphController.forward();
-                                  _budgetController.forward();
-                                  bottomClick = 'Wallet';
-                                });
-                              },
-                              child: IconList(
-                                  "Wallet",
-                                  Icons.account_balance_wallet_outlined,
-                                  Icons.account_balance_wallet),
-                            ),
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  setState(() {
+                                    bud = false;
+                                    _walletController.reverse();
+                                    _graphController.forward();
+                                    _budgetController.forward();
+                                    bottomClick = 'Wallet';
+                                  });
+                                },
+                                child: Container(
+                                  width: 90,
+                                  child: Column(
+                                    children: [
+                                      AnimatedOpacity(
+                                        duration: Duration(milliseconds: 300),
+                                        opacity:
+                                            bottomClick == 'Wallet' ? 1 : 0,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(bottom: 0.2),
+                                          child: Text(
+                                            'Transactions',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        bottomClick == 'Wallet'
+                                            ? Icons.account_balance_wallet
+                                            : Icons
+                                                .account_balance_wallet_outlined,
+                                        color: Colors.white,
+                                        size: 26,
+                                      ),
+                                    ],
+                                  ),
+                                )),
                             GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _graphController.reverse();
-                                  _walletController.forward();
-                                  _budgetController.forward();
-
-                                  bottomClick = 'Graph';
-                                });
-                              },
-                              child: IconList(
-                                  "Graph",
-                                  Icons.leaderboard_outlined,
-                                  Icons.leaderboard),
-                            ),
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  setState(() {
+                                    _graphController.reverse();
+                                    _walletController.forward();
+                                    _budgetController.forward();
+                                    bottomClick = 'Graph';
+                                  });
+                                },
+                                child: Container(
+                                  width: 90,
+                                  child: Column(
+                                    children: [
+                                      AnimatedOpacity(
+                                        duration: Duration(milliseconds: 300),
+                                        opacity: bottomClick == 'Graph' ? 1 : 0,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(bottom: 0.2),
+                                          child: Text(
+                                            "Graph",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        bottomClick == 'Graph'
+                                            ? Icons.leaderboard_rounded
+                                            : Icons.leaderboard_outlined,
+                                        color: Colors.white,
+                                        size: 26,
+                                      ),
+                                    ],
+                                  ),
+                                )),
                             GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  bud = true;
-                                  _budgetController.reverse();
-                                  _walletController.forward();
-                                  _graphController.forward();
-                                  bottomClick = 'Budget';
-                                });
-                              },
-                              child: IconList(
-                                  "Budget",
-                                  Icons.monetization_on_outlined,
-                                  Icons.monetization_on_rounded),
-                            ),
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  setState(() {
+                                    bud = true;
+                                    _budgetController.reverse();
+                                    _walletController.forward();
+                                    _graphController.forward();
+                                    bottomClick = 'Budget';
+                                  });
+                                },
+                                child: Container(
+                                  width: 90,
+                                  child: Column(
+                                    children: [
+                                      AnimatedOpacity(
+                                        duration: Duration(milliseconds: 300),
+                                        opacity:
+                                            bottomClick == 'Budget' ? 1 : 0,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(bottom: 0.2),
+                                          child: Text(
+                                            "Budget",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        bottomClick == 'Budget'
+                                            ? Icons.monetization_on_rounded
+                                            : Icons.monetization_on_outlined,
+                                        color: Colors.white,
+                                        size: 26,
+                                      ),
+                                    ],
+                                  ),
+                                )),
                           ],
                         ),
                       ),
@@ -342,44 +413,6 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class IconList extends StatefulWidget {
-  final activeIcon;
-  final inactiveIcon;
-  final title;
-  IconList(this.title, this.inactiveIcon, this.activeIcon);
-  @override
-  _IconListState createState() =>
-      _IconListState(title, inactiveIcon, activeIcon);
-}
-
-class _IconListState extends State<IconList> {
-  final activeIcon;
-  final inactiveIcon;
-  final title;
-  _IconListState(this.title, this.inactiveIcon, this.activeIcon);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 0.2),
-            child: Text(
-              title,
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          ),
-          Icon(
-            activeIcon,
-            color: Colors.white,
-            size: 26,
-          ),
-        ],
       ),
     );
   }
