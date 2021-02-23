@@ -6,11 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/AddWallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:goodwallet_app/main.dart';
 import 'CreateWallet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_page_transition/flutter_page_transition.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'Voice_Input.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -294,12 +296,19 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                   ),
                                   ListTile(
                                     onTap: () async {
+                                      final SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      prefs.setStringList('user', null);
+                                      prefs.setString('token', null);
                                       try {
                                         await _auth.signOut();
                                       } catch (e) {
                                         print(e);
                                       }
-                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return MyApp();
+                                      }));
                                     },
                                     leading: Icon(
                                       Icons.logout,

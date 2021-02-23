@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwallet_app/Wallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -189,6 +190,9 @@ class _SignUpState extends State<SignUp> {
                   if (newUser != null) {
                     final _fireStore = Firestore.instance;
                     var uid = _auth.currentUser.uid;
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setStringList('user', [email, password]);
                     _fireStore
                         .collection('users')
                         .doc(uid)

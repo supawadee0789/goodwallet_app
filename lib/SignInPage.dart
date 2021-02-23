@@ -7,6 +7,7 @@ import 'package:goodwallet_app/Wallet.dart';
 import 'package:goodwallet_app/components/SignUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   final popUpSignIn;
@@ -351,6 +352,11 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                     .signInWithEmailAndPassword(
                                                         email: email,
                                                         password: password);
+                                                final SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.setStringList(
+                                                    'user', [email, password]);
                                                 if (user != null) {
                                                   Navigator.pushReplacement(
                                                       context,
@@ -588,6 +594,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
       _fireStore.collection('users').doc(uid).set({"uid": uid, 'email': email});
     }
     if (user != null) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', token);
+      print(prefs.get('token'));
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return Wallet();
       }));
