@@ -4,21 +4,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/Wallet.dart';
 
-Widget expenseClass(type, title) {
+Widget expenseClass(type, title, {color = 0xff8C35B1}) {
   return Column(
     children: [
       Container(
         height: 33,
         child: SvgPicture.asset(
           './images/$type.svg',
-          color: Color(0xff8C35B1),
+          color: Color(color),
           fit: BoxFit.scaleDown,
         ),
       ),
       SizedBox(height: 3),
       Text(
         title,
-        style: TextStyle(color: Color(0xff8C35B1), fontSize: 6.5),
+        style: TextStyle(color: Color(color), fontSize: 6.5),
       )
     ],
   );

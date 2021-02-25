@@ -73,8 +73,8 @@ class _WalletSelectorState extends State<WalletSelector> {
             ), // Widget displayed as the button
             items: listWallet, // List of your items,
             topDivider: true,
-            popupHeight:
-                180, // This popupHeight is optional. The default height is the size of items
+            // popupHeight:
+            //     180, // This popupHeight is optional. The default height is the size of items
             scrollPhysics:
                 AlwaysScrollableScrollPhysics(), // Change the physics of opened menu (example: you can remove or add scroll to menu)
             itemBuilder: (value) => Container(
@@ -109,7 +109,7 @@ class _WalletSelectorState extends State<WalletSelector> {
                           child: FittedBox(
                               fit: BoxFit.fill,
                               child: Icon(
-                                Icons.arrow_drop_down,
+                                Icons.arrow_drop_down_rounded,
                                 color: Colors.grey,
                               ))),
                     ],

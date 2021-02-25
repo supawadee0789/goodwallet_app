@@ -107,11 +107,21 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _walletController.dispose();
+    _budgetController.dispose();
+    _graphController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
     final _screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
