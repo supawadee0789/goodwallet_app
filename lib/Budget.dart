@@ -1,23 +1,36 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/components/BudgetComponent.dart';
 import 'package:goodwallet_app/components/Manual_expense_component.dart';
 import 'package:menu_button/menu_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:goodwallet_app/classes/SearchClassForBudget.dart';
 
 class Budget extends StatefulWidget {
+  final firebaseInstance;
+  Budget(this.firebaseInstance);
   @override
-  _BudgetState createState() => _BudgetState();
+  _BudgetState createState() => _BudgetState(firebaseInstance);
 }
 
 class _BudgetState extends State<Budget> {
+  final firebaseInstance;
+  _BudgetState(this.firebaseInstance);
   var _height;
+  final _fireStore = FirebaseFirestore.instance;
+  final uid = FirebaseAuth.instance.currentUser.uid;
+  var _screenHeight;
+  var _screenWidth;
+
   @override
   Widget build(BuildContext context) {
-    final _screenHeight = MediaQuery.of(context).size.height;
-    final _screenWidth = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
+    _screenWidth = MediaQuery.of(context).size.width;
     _height = _screenHeight;
     return Center(
       child: Container(
@@ -35,46 +48,79 @@ class _BudgetState extends State<Budget> {
                 ),
               ],
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    BudgetComponent(),
-                    BudgetComponent(),
-                    BudgetComponent(),
-                    GestureDetector(
-                      onTap: budgetDialog,
-                      child: Container(
-                        height: _screenHeight * 0.1,
-                        width: double.infinity,
-                        padding: EdgeInsets.all(_screenWidth * 0.05),
-                        margin: EdgeInsets.symmetric(vertical: 6),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(13)),
-                            color: Colors.white),
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Icon(
-                                Icons.add_box_outlined,
-                                color: Color(0xffEA8D8D),
-                              ),
+            new Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _fireStore
+                    .collection('users')
+                    .doc(uid)
+                    .collection('wallet')
+                    .doc(firebaseInstance.walletID.toString())
+                    .collection('budget')
+                    .orderBy('CreatedOn', descending: false)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: Text("Loading..."));
+                  }
+                  var len = snapshot.data.documents.length;
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: len,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot budget =
+                                  snapshot.data.documents[index];
+                              return ConstrainedBox(
+                                constraints: BoxConstraints(
+                                    minHeight: _screenHeight * 66 / 760),
+                                child:
+                                    BudgetComponent(budget, firebaseInstance),
+                              );
+                            }),
+                        GestureDetector(
+                          onTap: budgetDialog,
+                          child: Container(
+                            height: _screenHeight * 0.1,
+                            width: double.infinity,
+                            padding: EdgeInsets.all(_screenWidth * 0.05),
+                            margin: EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(13)),
+                                color: Colors.white),
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Icon(
+                                    Icons.add_box_outlined,
+                                    color: Color(0xffEA8D8D),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    "Add New Budget",
+                                    style: TextStyle(
+                                        color: Color(0xffEA8D8D), fontSize: 20),
+                                  ),
+                                )
+                              ],
                             ),
-                            Center(
-                              child: Text(
-                                "Add New Budget",
-                                style: TextStyle(
-                                    color: Color(0xffEA8D8D), fontSize: 20),
-                              ),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
@@ -124,7 +170,7 @@ class _BudgetState extends State<Budget> {
                   ),
                 ]),
                 SizedBox(height: 20),
-                AddNewBudget()
+                AddNewBudget(firebaseInstance)
               ]),
             ),
           );
@@ -133,12 +179,29 @@ class _BudgetState extends State<Budget> {
 }
 
 class AddNewBudget extends StatefulWidget {
+  final firebaseInstance;
+  AddNewBudget(this.firebaseInstance);
   @override
-  _AddNewBudgetState createState() => _AddNewBudgetState();
+  _AddNewBudgetState createState() => _AddNewBudgetState(firebaseInstance);
 }
 
 class _AddNewBudgetState extends State<AddNewBudget> {
+  final firebaseInstance;
+  _AddNewBudgetState(this.firebaseInstance);
+  final uid = FirebaseAuth.instance.currentUser.uid;
+  final _fireStore = FirebaseFirestore.instance;
   var recurrence = 'Once';
+  String budgetName = '';
+  double amount = 0.0;
+  Map<String, bool> classSelected = {
+    'entertainment': false,
+    'residence': false,
+    'household': false,
+    'travel': false,
+    'health': false,
+    'food': false,
+    'shopping': false
+  };
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -161,6 +224,7 @@ class _AddNewBudgetState extends State<AddNewBudget> {
             style: TextStyle(fontSize: 12, color: Color(0xffEA8D8D)),
             onChanged: (String str) {
               setState(() {
+                budgetName = str;
                 print(str);
               });
             },
@@ -183,6 +247,7 @@ class _AddNewBudgetState extends State<AddNewBudget> {
             style: TextStyle(fontSize: 12, color: Color(0xffEA8D8D)),
             onChanged: (String str) {
               setState(() {
+                amount = double.parse(str);
                 print(str);
               });
             },
@@ -200,7 +265,120 @@ class _AddNewBudgetState extends State<AddNewBudget> {
               ),
             ),
           ),
-          SelectClass(),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        classSelected['entertainment'] =
+                            !classSelected['entertainment'];
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: classSelected['entertainment'] ? 1 : 0.5,
+                      child: expenseClass('Entertainment', 'Entertainment',
+                          color: 0xffEA8D8D),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        classSelected['residence'] =
+                            !classSelected['residence'];
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: classSelected['residence'] ? 1 : 0.5,
+                      child: expenseClass('Residence', 'Residence',
+                          color: 0xffEA8D8D),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        classSelected['household'] =
+                            !classSelected['household'];
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: classSelected['household'] ? 1 : 0.5,
+                      child: expenseClass('Household', 'Household',
+                          color: 0xffEA8D8D),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        classSelected['travel'] = !classSelected['travel'];
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: classSelected['travel'] ? 1 : 0.5,
+                      child:
+                          expenseClass('Travel', 'Travel', color: 0xffEA8D8D),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        classSelected['health'] = !classSelected['health'];
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: classSelected['health'] ? 1 : 0.5,
+                      child:
+                          expenseClass('Health', 'Health', color: 0xffEA8D8D),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        classSelected['food'] = !classSelected['food'];
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: classSelected['food'] ? 1 : 0.5,
+                      child: expenseClass('Food', 'Food', color: 0xffEA8D8D),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        classSelected['shopping'] = !classSelected['shopping'];
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: classSelected['shopping'] ? 1 : 0.5,
+                      child: expenseClass('Shopping', 'Shopping',
+                          color: 0xffEA8D8D),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Align(
             alignment: Alignment.centerLeft,
             child: Container(
@@ -264,7 +442,28 @@ class _AddNewBudgetState extends State<AddNewBudget> {
           ),
           SizedBox(height: 50),
           GestureDetector(
-            onTap: null,
+            onTap: () {
+              print(budgetName + ' ' + amount.toString() + recurrence);
+              print(classSelected.keys
+                  .where((element) => classSelected[element] == true));
+              var budgetClass = classSelected.keys
+                  .where((element) => classSelected[element] == true)
+                  .toList();
+              _fireStore
+                  .collection('users')
+                  .doc(uid)
+                  .collection('wallet')
+                  .doc(firebaseInstance.walletID.toString())
+                  .collection('budget')
+                  .add({
+                'BudgetName': budgetName,
+                'Amount': amount,
+                'BudgetClass': budgetClass,
+                'CreatedOn': FieldValue.serverTimestamp(),
+                'Recurrence': recurrence,
+              });
+              Navigator.pop(context);
+            },
             child: Container(
               height: 40,
               decoration: BoxDecoration(
@@ -275,125 +474,6 @@ class _AddNewBudgetState extends State<AddNewBudget> {
                       style: TextStyle(fontSize: 16))),
             ),
           )
-        ],
-      ),
-    );
-  }
-}
-
-class SelectClass extends StatefulWidget {
-  @override
-  _SelectClassState createState() => _SelectClassState();
-}
-
-class _SelectClassState extends State<SelectClass> {
-  List<bool> isSelected = List.generate(7, (_) => false);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSelected[0] = !isSelected[0];
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 100),
-                opacity: isSelected[0] ? 1 : 0.5,
-                child: expenseClass('Entertainment', 'Entertainment',
-                    color: 0xffEA8D8D),
-              ),
-            ),
-          ),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSelected[1] = !isSelected[1];
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 100),
-                opacity: isSelected[1] ? 1 : 0.5,
-                child: expenseClass('Housing', 'Residence', color: 0xffEA8D8D),
-              ),
-            ),
-          ),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSelected[2] = !isSelected[2];
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 100),
-                opacity: isSelected[2] ? 1 : 0.5,
-                child:
-                    expenseClass('Household', 'Household', color: 0xffEA8D8D),
-              ),
-            ),
-          ),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSelected[3] = !isSelected[3];
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 100),
-                opacity: isSelected[3] ? 1 : 0.5,
-                child: expenseClass('Travel', 'Travel', color: 0xffEA8D8D),
-              ),
-            ),
-          ),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSelected[4] = !isSelected[4];
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 100),
-                opacity: isSelected[4] ? 1 : 0.5,
-                child: expenseClass('Health', 'Health', color: 0xffEA8D8D),
-              ),
-            ),
-          ),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSelected[5] = !isSelected[5];
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 100),
-                opacity: isSelected[5] ? 1 : 0.5,
-                child: expenseClass('Food', 'Food', color: 0xffEA8D8D),
-              ),
-            ),
-          ),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSelected[6] = !isSelected[6];
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 100),
-                opacity: isSelected[6] ? 1 : 0.5,
-                child: expenseClass('Shopping', 'Shopping', color: 0xffEA8D8D),
-              ),
-            ),
-          ),
         ],
       ),
     );

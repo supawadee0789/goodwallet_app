@@ -355,7 +355,7 @@ class _ClassSliderState extends State<ClassSlider> {
     ClassItem('Travel'),
     ClassItem('Health'),
     ClassItem('Entertainment'),
-    ClassItem('Housing'),
+    ClassItem('Residence'),
     ClassItem('Income'),
     ClassItem('Transfer')
   ];
@@ -470,7 +470,7 @@ classCarousel(_index) {
       break;
     case 6:
       {
-        className = 'housing';
+        className = 'residence';
       }
       break;
     case 7:

@@ -23,7 +23,7 @@ String select(String _classItem) {
       break;
     case "residence":
       {
-        img = "images/Housing.svg";
+        img = "images/Residence.svg";
       }
       break;
     case "household":

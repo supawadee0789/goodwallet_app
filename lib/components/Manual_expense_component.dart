@@ -102,7 +102,7 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
                   child: AnimatedOpacity(
                     duration: Duration(milliseconds: 100),
                     opacity: _class == 2 ? 1 : 0.5,
-                    child: expenseClass('Housing', 'Residence'),
+                    child: expenseClass('Residence', 'Residence'),
                   ),
                 ),
               ),

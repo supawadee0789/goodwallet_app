@@ -37,7 +37,7 @@ class _CreateWalletState extends State<CreateWallet> {
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading");
+              return Text("Loading...");
             }
             DocumentSnapshot wallet =
                 snapshot.data.docs[firebaseInstance.walletIndex];
@@ -233,7 +233,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                       child: AnimatedOpacity(
                         opacity: bottomClick == 'Budget' ? 1 : 0,
                         duration: Duration(milliseconds: 400),
-                        child: Budget(),
+                        child: Budget(firebaseInstance),
                       ),
                     ),
                   )

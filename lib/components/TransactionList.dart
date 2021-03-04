@@ -67,7 +67,7 @@ class _TransListState extends State<TransList> {
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading");
+              return Text("Loading...");
             }
             return snapshot.data.documents.length == 0
                 ? noTransaction()
