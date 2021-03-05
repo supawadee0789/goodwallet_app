@@ -59,7 +59,9 @@ class _BudgetComponentState extends State<BudgetComponent> {
     // TODO: implement initState
 
     sumExpClass(firebaseInstance, budget).then((value) {
-      exp = value;
+      setState(() {
+        exp = value;
+      });
     });
     for (var element in budget['BudgetClass']) {
       var str = element[0].toUpperCase() + element.substring(1).toLowerCase();

@@ -10,6 +10,7 @@ import 'package:goodwallet_app/components/Manual_expense_component.dart';
 import 'package:menu_button/menu_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:goodwallet_app/classes/SearchClassForBudget.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Budget extends StatefulWidget {
   final firebaseInstance;
@@ -79,11 +80,28 @@ class _BudgetState extends State<Budget> {
                             itemBuilder: (context, index) {
                               DocumentSnapshot budget =
                                   snapshot.data.documents[index];
-                              return ConstrainedBox(
-                                constraints: BoxConstraints(
-                                    minHeight: _screenHeight * 66 / 760),
-                                child:
-                                    BudgetComponent(budget, firebaseInstance),
+                              return Slidable(
+                                actionPane: SlidableScrollActionPane(),
+                                actionExtentRatio: 0.25,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      minHeight: _screenHeight * 66 / 760),
+                                  child:
+                                      BudgetComponent(budget, firebaseInstance),
+                                ),
+                                secondaryActions: [
+                                  IconSlideAction(
+                                    caption: 'Delete',
+                                    icon: Icons.delete,
+                                    foregroundColor: Colors.white,
+                                    color: Color(0x000000),
+                                    onTap: () {
+                                      budget.reference.delete();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    },
+                                  ),
+                                ],
                               );
                             }),
                         GestureDetector(
@@ -128,6 +146,14 @@ class _BudgetState extends State<Budget> {
       ),
     );
   }
+
+  final snackBar = SnackBar(
+    content: Center(
+        child: Text(
+      'Budget has been deleted.',
+      style: TextStyle(fontSize: 12),
+    )),
+  );
 
   budgetDialog() {
     showDialog(
@@ -190,7 +216,7 @@ class _AddNewBudgetState extends State<AddNewBudget> {
   _AddNewBudgetState(this.firebaseInstance);
   final uid = FirebaseAuth.instance.currentUser.uid;
   final _fireStore = FirebaseFirestore.instance;
-  var recurrence = 'Once';
+  var recurrence = 'Daily';
   String budgetName = '';
   double amount = 0.0;
   Map<String, bool> classSelected = {
@@ -407,7 +433,7 @@ class _AddNewBudgetState extends State<AddNewBudget> {
                 recurrence = value;
               });
             },
-            items: ["Once", "Daily", "Weekly", "Monthly", "Yearly"],
+            items: ["Daily", "Weekly", "Monthly", "Yearly"],
             itemBuilder: (value) => Container(
                 width: double.infinity,
                 height: 35,
