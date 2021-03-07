@@ -38,15 +38,17 @@ class _BudgetComponentState extends State<BudgetComponent> {
   calPie(Map exp, expClass) {
     Map<String, double> trans = {};
     double total = 0;
-    exp.forEach((key, value) {
-      total += value;
-    });
-    if (exp[expClass] != null) {
-      trans['pie'] = (exp[expClass] * (-1) * 100) / total;
-      trans['total'] = total;
-      return trans;
-    } else {
-      trans.addAll({'pie': 0.0, 'total': 0});
+    if (exp != null) {
+      exp.forEach((key, value) {
+        total += value;
+      });
+      if (exp[expClass] != null) {
+        trans['pie'] = (exp[expClass] * (-1) * 100) / total;
+        trans['total'] = total;
+        return trans;
+      } else {
+        trans.addAll({'pie': 0.0, 'total': 0});
+      }
     }
 
     return trans;
@@ -83,12 +85,15 @@ class _BudgetComponentState extends State<BudgetComponent> {
     for (var element in budget['BudgetClass']) {
       var str = element[0].toUpperCase() + element.substring(1).toLowerCase();
       var cal = calPie(exp, element);
-      double pie = cal['pie'];
-      total = cal['total'];
-      indicatorList.add(indicator(
-          str, graphColor[i], pie.toStringAsFixed(1) + '%', exp[element]));
+      double pie = cal['pie'] ?? 0;
+      total = cal['total'] ?? 0;
+      indicatorList.add(indicator(str, graphColor[i],
+          (pie.toStringAsFixed(1)) + '%', exp == null ? 0 : exp[element]));
       sectionPie.add(PieChartSectionData(
-          value: pie, color: graphColor[i], radius: 50, showTitle: false));
+          value: pie == 0 ? 100 : pie,
+          color: graphColor[i],
+          radius: 50,
+          showTitle: false));
       i++;
     }
 
