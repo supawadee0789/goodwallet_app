@@ -497,7 +497,8 @@ class WalletList extends StatelessWidget {
                             style: TextStyle(
                                 color: Color(0xffA1A1A1),
                                 fontSize: 20,
-                                decoration: TextDecoration.none),
+                                decoration: TextDecoration.none,
+                                fontFamily: 'Knit'),
                           ),
                           Text(
                             wallet['money']

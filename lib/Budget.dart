@@ -148,11 +148,10 @@ class _BudgetState extends State<Budget> {
   }
 
   final snackBar = SnackBar(
-    content: Center(
-        child: Text(
+    content: Text(
       'Budget has been deleted.',
       style: TextStyle(fontSize: 12),
-    )),
+    ),
   );
 
   budgetDialog() {

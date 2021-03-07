@@ -261,7 +261,8 @@ class VoiceExample extends StatelessWidget {
             margin: EdgeInsets.only(left: 10),
             child: Text(
               text,
-              style: TextStyle(color: Color(this.color), fontSize: 16),
+              style: TextStyle(
+                  color: Color(this.color), fontSize: 16, fontFamily: 'Knit'),
             ),
           )
         ],

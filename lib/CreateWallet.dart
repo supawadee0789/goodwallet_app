@@ -70,7 +70,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
   AnimationController _walletController;
   AnimationController _graphController;
   AnimationController _budgetController;
-  var bottomClick = "Budget";
+  var bottomClick = 'Wallet';
   bool bud = false;
   @override
   void initState() {

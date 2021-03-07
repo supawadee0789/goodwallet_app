@@ -43,7 +43,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
         total += value;
       });
       if (exp[expClass] != null) {
-        trans['pie'] = (exp[expClass] * (-1) * 100) / total;
+        trans['pie'] = (exp[expClass] * 100) / total;
         trans['total'] = total;
         return trans;
       } else {
@@ -87,10 +87,13 @@ class _BudgetComponentState extends State<BudgetComponent> {
       var cal = calPie(exp, element);
       double pie = cal['pie'] ?? 0;
       total = cal['total'] ?? 0;
-      indicatorList.add(indicator(str, graphColor[i],
-          (pie.toStringAsFixed(1)) + '%', exp == null ? 0 : exp[element]));
+      indicatorList.add(indicator(
+          str,
+          graphColor[i],
+          (pie.isNaN || pie <= 0 ? '0' : (pie.toStringAsFixed(1))) + '%',
+          exp == null ? 0 : exp[element]));
       sectionPie.add(PieChartSectionData(
-          value: pie == 0 ? 100 : pie,
+          value: (pie == 0) || pie.isNaN ? 100 : pie,
           color: graphColor[i],
           radius: 50,
           showTitle: false));
@@ -132,6 +135,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
                             color: Color(0xffEA8D8D),
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Knit',
                             height: 1.0),
                       ),
                       Row(
@@ -246,7 +250,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
                                         height: 1.0),
                                   ),
                                   Text(
-                                    'Spent  ' + total.toString() + 'THB',
+                                    'Spent  ' + total.toString() + ' THB',
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xffE80404),

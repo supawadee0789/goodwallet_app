@@ -432,62 +432,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushReplacement(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return Wallet();
-                                            }));
-                                          },
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: _screenHeight * 0.07,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                color: Color(0xffC88EC5)),
-                                            child: Stack(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15.0),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: SvgPicture.asset(
-                                                      'images/google.svg',
-                                                      width: 30,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Center(
-                                                    child: Text(
-                                                  "Continue with Google",
-                                                  style:
-                                                      TextStyle(fontSize: 16),
-                                                )),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 26.0),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Icon(
-                                                      Icons
-                                                          .arrow_forward_rounded,
-                                                      size: 30,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
                                             loginWithFacebook(context);
                                           },
                                           child: Container(
@@ -540,7 +484,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                               ],
                                             ),
                                           ),
-                                        )
+                                        ),
+                                        SizedBox(height: 50)
                                       ],
                                     ),
                                   ),
