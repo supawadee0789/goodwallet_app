@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/AddWallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:goodwallet_app/components/Notification.dart';
 import 'package:goodwallet_app/main.dart';
 import 'CreateWallet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -264,6 +265,11 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                             setState(() {
                                               _notification = value;
                                             });
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return notifyPage();
+                                            }));
                                           },
                                           activeColor: Color(0xffEA8D8D),
                                         )

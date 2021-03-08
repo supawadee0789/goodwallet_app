@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/src/flutter_local_notifications_plugin.dart';
 import 'package:goodwallet_app/ConfirmedPage.dart';
 import 'package:goodwallet_app/SpeechConfirmation.dart';
 import 'Homepage.dart';
 import 'Voice_Input.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'components/Notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {

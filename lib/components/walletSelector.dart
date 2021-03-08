@@ -43,6 +43,7 @@ class _WalletSelectorState extends State<WalletSelector> {
             listWalletID.add(n.id);
           }
           return MenuButton(
+            menuButtonBackgroundColor: Color(0),
             child: SizedBox(
               width: 110,
               height: 40,

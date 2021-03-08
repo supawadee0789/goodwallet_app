@@ -21,11 +21,11 @@ class Transactions {
     this.targetWalletID = targetID;
   }
 
-  void setAllVariables() async {
+  void setAllVariables(manualType) async {
     print('tokens = ');
     print(this.tokens);
     await this.deleteSpace();
-    this.checkType();
+    this.checkType(manualType);
     this.checkCost();
     this.checkName();
   }
@@ -40,23 +40,27 @@ class Transactions {
     print(tokens);
   }
 
-  void checkType() {
+  void checkType(manualType) {
     var input = this.tokens;
     String _type;
     var income = ['ได้เงิน', 'ได้', 'ได้รับ', 'ให้เงิน'];
     var expense = ['ซื้อ', 'จ่าย'];
     var transfer = ['โอน'];
 
-    if (income.any((e) => input.contains(e))) {
-      _type = 'Income';
-    } else if (expense.any((e) => input.contains(e))) {
-      _type = 'Expense';
-    } else if (transfer.any((e) => input.contains(e))) {
-      _type = 'Transfer';
+    if (manualType != null) {
+      this.type = manualType;
     } else {
-      _type = 'none';
+      if (income.any((e) => input.contains(e))) {
+        _type = 'Income';
+      } else if (expense.any((e) => input.contains(e))) {
+        _type = 'Expense';
+      } else if (transfer.any((e) => input.contains(e))) {
+        _type = 'Transfer';
+      } else {
+        _type = 'none';
+      }
+      this.type = _type;
     }
-    this.type = _type;
   }
 
   void checkCost() async {

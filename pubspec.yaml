@@ -45,6 +45,7 @@ dependencies:
   fl_chart: ^0.12.2
   shared_preferences: ^0.5.12+4
   percent_indicator: ^2.1.9+1
+  flutter_local_notifications: ^1.4.4+2
 
 dev_dependencies:
   flutter_test:

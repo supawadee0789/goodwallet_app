@@ -76,6 +76,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   final _fireStore = Firestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
   var currentTransaction;
+  var manualType;
   @override
   void initState() {
     super.initState();
@@ -98,13 +99,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       // currentTransaction =
       //     new Transaction(parsedJson['tokens'], parsedJson['types']);
       print(currentTransaction.tokens);
-      await currentTransaction.setAllVariables();
+      await currentTransaction.setAllVariables(manualType);
       setState(() {
-        _screenType = currentTransaction.type;
+        if (manualType != null) {
+          currentTransaction.type = manualType;
+        } else {
+          _screenType = currentTransaction.type;
+        }
+
         if (_screenType == 'Income') {
           carouselAbsorb = true;
           iconOpacity = 0;
-
           buttonCarouselController.animateToPage(7,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         } else if (_screenType == 'Transfer') {
@@ -138,19 +143,131 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             width: 211,
             decoration: BoxDecoration(
               color: Color(0xff9967B2),
-              border: Border.all(
-                  color: Color(0xff9967B2),
-                  width: 5.0,
-                  style: BorderStyle.solid),
               borderRadius: BorderRadius.all(Radius.circular(21.0)),
             ),
             child: Column(
               children: [
-                Container(
-                    child: Text(
-                  _screenType ?? 'none',
-                  style: TextStyle(fontSize: 28),
-                )),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xff6A2388),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _screenType = 'Expense';
+                                manualType = 'Expense';
+
+                                print(manualType);
+
+                                carouselAbsorb = false;
+                                iconOpacity = 1;
+                                transferOpacity = 0;
+                                buttonCarouselController.animateToPage(0,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.linear);
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15.0)),
+                                  color: _screenType == 'Expense'
+                                      ? Colors.white
+                                      : Color(0)),
+                              child: Text(
+                                'Expense',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: _screenType == 'Expense'
+                                        ? Color(0xff6A2388)
+                                        : Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _screenType = 'Income';
+                                manualType = 'Income';
+                                print(manualType);
+                                carouselAbsorb = true;
+                                iconOpacity = 0;
+                                transferOpacity = 0;
+                                buttonCarouselController.animateToPage(7,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.linear);
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15.0)),
+                                  color: _screenType == 'Income'
+                                      ? Colors.white
+                                      : Color(0)),
+                              child: Text(
+                                'Income',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: _screenType == 'Income'
+                                        ? Color(0xff6A2388)
+                                        : Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _screenType = 'Transfer';
+                                manualType = 'Transfer';
+                                print(manualType);
+                                carouselAbsorb = true;
+                                iconOpacity = 0;
+                                transferOpacity = 1;
+                                buttonCarouselController.animateToPage(8,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.linear);
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15.0)),
+                                  color: _screenType == 'Transfer'
+                                      ? Colors.white
+                                      : Color(0)),
+                              child: Text(
+                                'Transfer',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: _screenType == 'Transfer'
+                                        ? Color(0xff6A2388)
+                                        : Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
                     // mainAxisAlignment: MainAxisAlignment.center,
                     child: Stack(
@@ -241,10 +358,27 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     alignment: Alignment.centerRight,
                     child: Listener(
                       onPointerDown: (detail) async {
-                        await WordSegmentation(resultText);
+                        // await WordSegmentation(resultText);
                         print('confirm');
+                        print(_screenType);
+                        print(currentTransaction.type);
                         // print(checkName(tokens, checkCost(tokens)));
                         // print(checkCost(tokens));
+                        var cost = currentTransaction.cost;
+                        var type = currentTransaction.type;
+                        if (manualType != null) {
+                          if (manualType == 'Expense' ||
+                              manualType == 'Transfer') {
+                            if (cost > 0) {
+                              cost = -cost;
+                            }
+                          } else {
+                            if (cost < 0) {
+                              cost = -cost;
+                            }
+                          }
+                          type = manualType;
+                        }
                         _fireStore
                             .collection('users')
                             .doc(uid)
@@ -254,15 +388,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             .collection('transaction')
                             .add({
                           'class': classCarousel(_currentIndex),
-                          'cost': currentTransaction.cost ?? 0,
+                          'cost': cost ?? 0,
                           'createdOn': FieldValue.serverTimestamp(),
                           'name': currentTransaction.name,
-                          'type':
-                              currentTransaction.type.toLowerCase() ?? 'null'
+                          'type': type.toLowerCase() ?? 'null'
                         });
                         //transfer target
-                        if (currentTransaction.type.toLowerCase() ==
-                            'transfer') {
+
+                        if (type.toLowerCase() == 'transfer') {
                           _fireStore
                               .collection('users')
                               .doc(uid)
@@ -276,8 +409,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             'cost': -currentTransaction.cost ?? 0,
                             'createdOn': FieldValue.serverTimestamp(),
                             'name': currentTransaction.name,
-                            'type':
-                                currentTransaction.type.toLowerCase() ?? 'null'
+                            'type': 'transfer'
                           });
 
                           CollectionReference wallet = FirebaseFirestore

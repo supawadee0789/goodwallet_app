@@ -418,6 +418,7 @@ class _AddNewBudgetState extends State<AddNewBudget> {
             ),
           ),
           MenuButton(
+            menuButtonBackgroundColor: Color(0),
             child: SizedBox(
               height: 40,
               width: double.infinity,
