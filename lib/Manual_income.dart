@@ -5,11 +5,15 @@ import 'package:goodwallet_app/components/Manual_income_component.dart';
 import 'package:goodwallet_app/components/Manual_expense_component.dart';
 import 'package:goodwallet_app/components/Manual_transfer_component.dart';
 
+import 'components/WalletSlider.dart';
+
 class ManualIncome extends StatefulWidget {
   final _walletID;
-  ManualIncome(this._walletID);
+  final firebaseInstance;
+  ManualIncome(this._walletID, this.firebaseInstance);
   @override
-  _ManualIncomeState createState() => _ManualIncomeState(_walletID);
+  _ManualIncomeState createState() =>
+      _ManualIncomeState(_walletID, firebaseInstance);
 }
 
 class _ManualIncomeState extends State<ManualIncome> {
@@ -20,8 +24,8 @@ class _ManualIncomeState extends State<ManualIncome> {
   var expenseOpacity = 0.0;
   var transferOpacity = 0.0;
   final _walletID;
-
-  _ManualIncomeState(this._walletID);
+  final firebaseInstance;
+  _ManualIncomeState(this._walletID, this.firebaseInstance);
   @override
   Widget build(BuildContext context) {
     double _screenWidth = MediaQuery.of(context).size.width;
@@ -42,6 +46,7 @@ class _ManualIncomeState extends State<ManualIncome> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Header(),
+                WalletSlider(firebaseInstance),
                 Container(
                   padding: EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.height * 0.05,
@@ -171,7 +176,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                           IgnorePointer(
                             ignoring: !income,
                             child: AnimatedOpacity(
-                              child: IncomeComponent(_walletID),
+                              child: IncomeComponent(this.firebaseInstance),
                               opacity: incomeOpacity,
                               duration: Duration(milliseconds: 200),
                               curve: Curves.linear,
@@ -180,7 +185,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                           IgnorePointer(
                             ignoring: !expense,
                             child: AnimatedOpacity(
-                              child: ExpenseComponent(_walletID),
+                              child: ExpenseComponent(this.firebaseInstance),
                               opacity: expenseOpacity,
                               duration: Duration(milliseconds: 200),
                               curve: Curves.linear,
@@ -189,7 +194,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                           IgnorePointer(
                             ignoring: !transfer,
                             child: AnimatedOpacity(
-                              child: TransferComponent(_walletID),
+                              child: TransferComponent(this.firebaseInstance),
                               opacity: transferOpacity,
                               duration: Duration(milliseconds: 200),
                               curve: Curves.linear,

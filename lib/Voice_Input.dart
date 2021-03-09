@@ -192,7 +192,7 @@ class _VoiceInputState extends State<VoiceInput> {
                     onTap: () {
                       Navigator.of(context).push(PageTransition(
                           type: PageTransitionType.rippleRightUp,
-                          child: ManualIncome(_walletIndex)));
+                          child: ManualIncome(_walletIndex, firebaseInstance)));
                     },
                     child: Container(
                       height: _screenHeight * 0.07,

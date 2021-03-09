@@ -7,21 +7,23 @@ import 'package:goodwallet_app/classes/classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class TransferComponent extends StatefulWidget {
-  final _walletID;
-  TransferComponent(this._walletID);
+  final firebaseInstance;
+  TransferComponent(this.firebaseInstance);
   @override
-  _TransferComponentState createState() => _TransferComponentState(_walletID);
+  _TransferComponentState createState() =>
+      _TransferComponentState(firebaseInstance);
 }
 
 class _TransferComponentState extends State<TransferComponent> {
-  final _walletID;
+  // final _walletID;
+  final firebaseInstance;
   String note;
   double amount;
   final _fireStore = Firestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
   var initialWallet;
   var targetWallet;
-  _TransferComponentState(this._walletID);
+  _TransferComponentState(this.firebaseInstance);
 
   @override
   void initState() {
@@ -136,7 +138,7 @@ class _TransferComponentState extends State<TransferComponent> {
                   .collection('users')
                   .doc(uid)
                   .collection('wallet')
-                  .document(initialWallet.targetWalletID)
+                  .document(firebaseInstance.walletID.toString())
                   .collection('transaction')
                   .add({
                 'class': 'transfer',
@@ -167,7 +169,7 @@ class _TransferComponentState extends State<TransferComponent> {
                   .doc(uid)
                   .collection('wallet');
               wallet
-                  .doc(initialWallet.targetWalletID.toString())
+                  .doc(firebaseInstance.walletID.toString())
                   .update({'money': FieldValue.increment(-amount)})
                   .then((value) => print("Wallet Updated"))
                   .catchError(

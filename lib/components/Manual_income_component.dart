@@ -3,17 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class IncomeComponent extends StatefulWidget {
-  final _walletID;
-  IncomeComponent(this._walletID);
+  final firebaseInstance;
+  IncomeComponent(this.firebaseInstance);
   @override
-  _IncomeComponentState createState() => _IncomeComponentState(_walletID);
+  _IncomeComponentState createState() =>
+      _IncomeComponentState(firebaseInstance);
 }
 
 class _IncomeComponentState extends State<IncomeComponent> {
   final _fireStore = Firestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
-  final _walletID;
-  _IncomeComponentState(this._walletID);
+  // final _walletID;
+  final firebaseInstance;
+  _IncomeComponentState(this.firebaseInstance);
   double amount = 0;
   String note = '';
   @override
@@ -83,7 +85,7 @@ class _IncomeComponentState extends State<IncomeComponent> {
                   .collection('users')
                   .doc(uid)
                   .collection('wallet')
-                  .document(_walletID)
+                  .document(firebaseInstance.walletID.toString())
                   .collection('transaction')
                   .add({
                 'class': 'income',
@@ -98,7 +100,7 @@ class _IncomeComponentState extends State<IncomeComponent> {
                   .doc(uid)
                   .collection('wallet');
               wallet
-                  .doc(_walletID)
+                  .doc(firebaseInstance.walletID.toString())
                   .update({'money': FieldValue.increment(amount)})
                   .then((value) => print("Wallet Updated"))
                   .catchError(

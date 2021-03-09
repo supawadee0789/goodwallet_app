@@ -25,20 +25,24 @@ Widget expenseClass(type, title, {color = 0xff8C35B1}) {
 }
 
 class ExpenseComponent extends StatefulWidget {
-  final _walletID;
-  ExpenseComponent(this._walletID);
+  // final _walletID;
+  final firebaseInstance;
+  ExpenseComponent(this.firebaseInstance);
   @override
-  _ExpenseComponentState createState() => _ExpenseComponentState(_walletID);
+  _ExpenseComponentState createState() =>
+      _ExpenseComponentState(firebaseInstance);
 }
 
 class _ExpenseComponentState extends State<ExpenseComponent> {
   final _fireStore = Firestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
+  final firebaseInstance;
   int _class;
-  final _walletID;
   double amount = 0;
   String note = '';
-  _ExpenseComponentState(this._walletID);
+  _ExpenseComponentState(this.firebaseInstance);
+  // var _walletID = ;
+
   String checkClass(x) {
     String result;
     switch (x) {
@@ -242,7 +246,7 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
                 .collection('users')
                 .doc(uid)
                 .collection('wallet')
-                .document(_walletID)
+                .document(firebaseInstance.walletID.toString())
                 .collection('transaction')
                 .add({
               'class': checkClass(_class),
@@ -257,7 +261,7 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
                 .doc(uid)
                 .collection('wallet');
             wallet
-                .doc(_walletID)
+                .doc(firebaseInstance.walletID.toString())
                 .update({'money': FieldValue.increment((amount * (-1)) ?? 0)})
                 .then((value) => print("Wallet Updated"))
                 .catchError(
