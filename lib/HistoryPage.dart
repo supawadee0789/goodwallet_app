@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goodwallet_app/components/Calendar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class History extends StatefulWidget {
   final index;
@@ -35,12 +36,12 @@ class _HistoryState extends State<History> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 25, top: 19),
+                      padding: EdgeInsets.only(left: 25.w, top: 19.h),
                       child: Text(
                         "HISTORY",
                         style: TextStyle(
                             letterSpacing: 0.9,
-                            fontSize: 22,
+                            fontSize: 22.sp,
                             fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -49,11 +50,11 @@ class _HistoryState extends State<History> {
                         Navigator.pop(context);
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 25.0, top: 19),
+                        padding: EdgeInsets.only(right: 25.0.w, top: 19.h),
                         child: Text(
                           "See less",
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               decoration: TextDecoration.underline),
                         ),
                       ),

@@ -7,6 +7,7 @@ import 'Homepage.dart';
 import 'Voice_Input.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'components/Notification.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,32 +39,36 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: TextTheme(
-          body1: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
-            color: Colors.white,
-          ),
-          button: TextStyle(
-            fontFamily: "HinSiliguri",
-            fontSize: 20.0,
-          ),
-        ),
-      ),
-      home: Scaffold(
-        body: Container(
-          //Background Gradient Color
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
+    return ScreenUtilInit(
+      designSize: Size(360, 760),
+      allowFontScaling: false,
+      builder: () => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme: TextTheme(
+            body1: TextStyle(
+              fontFamily: "HinSiliguri",
+              fontSize: 20.0.sp,
+              color: Colors.white,
+            ),
+            button: TextStyle(
+              fontFamily: "HinSiliguri",
+              fontSize: 20.0.sp,
             ),
           ),
-          child: HomePage(),
+        ),
+        home: Scaffold(
+          body: Container(
+            //Background Gradient Color
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xffAE90F4), Color(0xffDF8D9F)],
+              ),
+            ),
+            child: HomePage(),
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwallet_app/Wallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -41,12 +42,12 @@ class _SignUpState extends State<SignUp> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding:
-                  const EdgeInsets.only(left: 14.0, bottom: 3.0, top: 10.0),
+                  EdgeInsets.only(left: 14.0.w, bottom: 3.0.h, top: 10.0.h),
               child: Text(
                 "Email",
                 style: TextStyle(
                     color: Color(0xff8C35B1),
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w700),
               ),
             ),
@@ -56,25 +57,26 @@ class _SignUpState extends State<SignUp> {
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               errorText: _validate ? 'Value Can\'t Be Empty' : null,
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 0, horizontal: 10.w),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5.w),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5.w),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Colors.red[100], width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Colors.red[100], width: 1.5.w),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Colors.red[100], width: 1.5),
+                borderSide: BorderSide(color: Colors.red[100], width: 1.5.w),
               ),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16.sp),
             onChanged: (String str) {
               setState(() {
                 email = str;
@@ -85,12 +87,12 @@ class _SignUpState extends State<SignUp> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding:
-                  const EdgeInsets.only(left: 14.0, bottom: 3.0, top: 10.0),
+                  EdgeInsets.only(left: 14.0.w, bottom: 3.0.h, top: 10.0.h),
               child: Text(
                 "Password",
                 style: TextStyle(
                     color: Color(0xffAE73CA),
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w700),
               ),
             ),
@@ -101,25 +103,26 @@ class _SignUpState extends State<SignUp> {
             obscureText: true,
             decoration: InputDecoration(
               errorText: _validate ? 'Value Can\'t Be Empty' : null,
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 0, horizontal: 10.w),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5.w),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.r)),
+                borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5.w),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Colors.red[100], width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Colors.red[100], width: 1.5.w),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Colors.red[100], width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Colors.red[100], width: 1.5.w),
               ),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16.sp),
             onChanged: (String str) {
               setState(() {
                 password = str;
@@ -130,12 +133,12 @@ class _SignUpState extends State<SignUp> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding:
-                  const EdgeInsets.only(left: 14.0, bottom: 3.0, top: 10.0),
+                  EdgeInsets.only(left: 14.0.w, bottom: 3.0.h, top: 10.0.h),
               child: Text(
                 "Confirm Password",
                 style: TextStyle(
                     color: Color(0xffC98FC6),
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w700),
               ),
             ),
@@ -146,25 +149,26 @@ class _SignUpState extends State<SignUp> {
             obscureText: true,
             decoration: InputDecoration(
               errorText: _validate ? 'Value Can\'t Be Empty' : null,
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 0, horizontal: 10.w),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5.w),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5.w),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Colors.red[100], width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Colors.red[100], width: 1.5.w),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                borderSide: BorderSide(color: Colors.red[100], width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+                borderSide: BorderSide(color: Colors.red[100], width: 1.5.w),
               ),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16.sp),
             onChanged: (String str) {
               setState(() {
                 confirm = str;
@@ -211,26 +215,26 @@ class _SignUpState extends State<SignUp> {
               }
             },
             child: Container(
-              margin: EdgeInsets.only(top: _screenHeight * 0.03),
+              margin: EdgeInsets.only(top: 0.03.sh),
               width: double.infinity,
-              height: _screenHeight * 0.075,
+              height: 0.075.sh,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
+                  borderRadius: BorderRadius.circular(50.r),
                   color: Color(0xffDB8EA7)),
               child: Stack(
                 children: [
                   Center(
                       child: Text(
                     "Create Account",
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16.sp),
                   )),
                   Padding(
-                    padding: const EdgeInsets.only(right: 26.0),
+                    padding: EdgeInsets.only(right: 26.0.w),
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Icon(
                         Icons.arrow_forward_rounded,
-                        size: 30,
+                        size: 30.w,
                         color: Colors.white,
                       ),
                     ),
@@ -263,7 +267,7 @@ showAlertDialog(BuildContext context, titleText, contentText) {
               child: Text('OK', style: TextStyle(color: Color(0xffB58FE7))))
         ],
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32))),
+            borderRadius: BorderRadius.all(Radius.circular(32.r))),
       );
     },
   );

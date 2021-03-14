@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_util/date_util.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
 Function mathFunc = (Match match) => '${match[1]},';
@@ -81,16 +82,16 @@ class _GraphState extends State<Graph> {
     return Stack(children: [
       Center(
         child: Container(
-          width: _screenWidth * 0.85,
-          height: _screenHeight * 0.53,
+          width: 0.85.sw,
+          height: 0.53.sh,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(32.r),
             color: Colors.white,
           ),
           child: Stack(
             children: [
               Container(
-                margin: EdgeInsets.only(top: 65),
+                margin: EdgeInsets.only(top: 65.h),
                 child: GraphComponent(firebaseInstance, this),
               ),
             ],
@@ -98,16 +99,17 @@ class _GraphState extends State<Graph> {
         ),
       ),
       SnakeNavigationBar.color(
-        height: 30,
+        height: 30.h,
         behaviour: SnakeBarBehaviour.floating,
-        padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+        padding: EdgeInsets.fromLTRB(50.w, 20.h, 50.w, 20.h),
         snakeViewColor: Color(0xff8C35B1),
         snakeShape: SnakeShape.rectangle,
         currentIndex: _selectedItemPosition,
         onTap: (index) => setState(() {
           _selectedItemPosition = index;
         }),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
         items: [
           BottomNavigationBarItem(
               icon: Text(
@@ -115,7 +117,7 @@ class _GraphState extends State<Graph> {
             style: TextStyle(
               color:
                   _selectedItemPosition == 0 ? Colors.white : Color(0xff8C35B1),
-              fontSize: 16,
+              fontSize: 16.sp,
             ),
           )),
           BottomNavigationBarItem(
@@ -124,7 +126,7 @@ class _GraphState extends State<Graph> {
                   color: _selectedItemPosition == 1
                       ? Colors.white
                       : Color(0xff8C35B1),
-                  fontSize: 16,
+                  fontSize: 16.sp,
                 )),
           ),
           BottomNavigationBarItem(
@@ -133,7 +135,7 @@ class _GraphState extends State<Graph> {
                     color: _selectedItemPosition == 2
                         ? Colors.white
                         : Color(0xff8C35B1),
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ))),
         ],
       ),
@@ -216,17 +218,17 @@ class _GraphComponentState extends State<GraphComponent>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(2),
-                    height: 48,
-                    width: 110,
+                    padding: EdgeInsets.all(2.h),
+                    height: 48.h,
+                    width: 110.w,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderRadius: BorderRadius.all(Radius.circular(12.r)),
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
                           color: Color.fromRGBO(0, 0, 0, 0.16),
-                          spreadRadius: 1.0,
-                          blurRadius: 3.5,
+                          spreadRadius: 1.0.r,
+                          blurRadius: 3.5.r,
                           offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
@@ -235,32 +237,32 @@ class _GraphComponentState extends State<GraphComponent>
                       children: [
                         Text(
                           "Income",
-                          style:
-                              TextStyle(color: Color(0xff3FD371), fontSize: 11),
+                          style: TextStyle(
+                              color: Color(0xff3FD371), fontSize: 11.sp),
                         ),
                         Text(
                           incomeNumber
                               .toStringAsFixed(2)
                               .replaceAllMapped(reg, mathFunc),
-                          style:
-                              TextStyle(color: Color(0xff3FD371), fontSize: 11),
+                          style: TextStyle(
+                              color: Color(0xff3FD371), fontSize: 11.sp),
                         )
                       ],
                     ),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10.w),
                   Container(
-                    padding: EdgeInsets.all(2),
-                    height: 48,
-                    width: 110,
+                    padding: EdgeInsets.all(2.w),
+                    height: 48.h,
+                    width: 110.w,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderRadius: BorderRadius.all(Radius.circular(12.r)),
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
                           color: Color.fromRGBO(0, 0, 0, 0.16),
-                          spreadRadius: 1.0,
-                          blurRadius: 3.5,
+                          spreadRadius: 1.0.r,
+                          blurRadius: 3.5.r,
                           offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
@@ -269,22 +271,22 @@ class _GraphComponentState extends State<GraphComponent>
                       children: [
                         Text(
                           "Expense",
-                          style:
-                              TextStyle(color: Color(0xffCB3F3F), fontSize: 11),
+                          style: TextStyle(
+                              color: Color(0xffCB3F3F), fontSize: 11.sp),
                         ),
                         Text(
                           expenseNumber
                               .toStringAsFixed(2)
                               .replaceAllMapped(reg, mathFunc),
-                          style:
-                              TextStyle(color: Color(0xffCB3F3F), fontSize: 11),
+                          style: TextStyle(
+                              color: Color(0xffCB3F3F), fontSize: 11.sp),
                         )
                       ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 8.h),
               Text(
                 (incomeNumber + expenseNumber) > 0
                     ? "Change : +" +
@@ -295,7 +297,7 @@ class _GraphComponentState extends State<GraphComponent>
                         (incomeNumber + expenseNumber)
                             .toStringAsFixed(2)
                             .replaceAllMapped(reg, mathFunc),
-                style: TextStyle(color: Color(0xffA1A1A1), fontSize: 11),
+                style: TextStyle(color: Color(0xffA1A1A1), fontSize: 11.sp),
               ),
               incomeNumber == 0 && expenseNumber == 0
                   ? noTransaction()
@@ -303,9 +305,9 @@ class _GraphComponentState extends State<GraphComponent>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.all(8.0),
-                          height: MediaQuery.of(context).size.height * 0.23,
-                          width: MediaQuery.of(context).size.width * 0.45,
+                          margin: EdgeInsets.all(8.0.w),
+                          height: 0.23.sh,
+                          width: 0.45.sw,
                           child: PieChart(
                             PieChartData(
                               pieTouchData: PieTouchData(
@@ -324,18 +326,18 @@ class _GraphComponentState extends State<GraphComponent>
                               sections: showingSections(),
                               borderData: FlBorderData(show: false),
                               sectionsSpace: 0,
-                              centerSpaceRadius: 20,
+                              centerSpaceRadius: 20.r,
                             ),
                             swapAnimationDuration: Duration(milliseconds: 300),
                           ),
                         ),
-                        SizedBox(width: 5),
+                        SizedBox(width: 5.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             AnimatedContainer(
                               curve: Curves.easeInOut,
-                              height: touchedIndex == 7 ? 50 : 20,
+                              height: touchedIndex == 7 ? 50.h : 20.h,
                               duration: Duration(seconds: 2),
                               child: GestureDetector(
                                 onTap: () {
@@ -354,7 +356,7 @@ class _GraphComponentState extends State<GraphComponent>
                             ),
                             AnimatedContainer(
                               curve: Curves.fastOutSlowIn,
-                              height: touchedIndex == 2 ? 50 : 20,
+                              height: touchedIndex == 2 ? 50.h : 20.h,
                               duration: Duration(seconds: 2),
                               child: GestureDetector(
                                 onTap: () {
@@ -372,7 +374,7 @@ class _GraphComponentState extends State<GraphComponent>
                               ),
                             ),
                             AnimatedContainer(
-                              height: touchedIndex == 3 ? 50 : 20,
+                              height: touchedIndex == 3 ? 50.h : 20.h,
                               curve: Curves.fastOutSlowIn,
                               duration: Duration(seconds: 3),
                               child: GestureDetector(
@@ -391,7 +393,7 @@ class _GraphComponentState extends State<GraphComponent>
                               ),
                             ),
                             AnimatedContainer(
-                              height: touchedIndex == 4 ? 50 : 20,
+                              height: touchedIndex == 4 ? 50.h : 20.h,
                               curve: Curves.fastOutSlowIn,
                               duration: Duration(seconds: 3),
                               child: GestureDetector(
@@ -410,7 +412,7 @@ class _GraphComponentState extends State<GraphComponent>
                               ),
                             ),
                             AnimatedContainer(
-                              height: touchedIndex == 5 ? 50 : 20,
+                              height: touchedIndex == 5 ? 50.h : 20.h,
                               curve: Curves.fastOutSlowIn,
                               duration: Duration(seconds: 3),
                               child: GestureDetector(
@@ -429,7 +431,7 @@ class _GraphComponentState extends State<GraphComponent>
                               ),
                             ),
                             AnimatedContainer(
-                              height: touchedIndex == 6 ? 50 : 20,
+                              height: touchedIndex == 6 ? 50.h : 20.h,
                               curve: Curves.fastOutSlowIn,
                               duration: Duration(seconds: 3),
                               child: GestureDetector(
@@ -448,7 +450,7 @@ class _GraphComponentState extends State<GraphComponent>
                               ),
                             ),
                             AnimatedContainer(
-                              height: touchedIndex == 0 ? 50 : 20,
+                              height: touchedIndex == 0 ? 50.h : 20.h,
                               curve: Curves.fastOutSlowIn,
                               duration: Duration(seconds: 3),
                               child: GestureDetector(
@@ -467,7 +469,7 @@ class _GraphComponentState extends State<GraphComponent>
                               ),
                             ),
                             AnimatedContainer(
-                              height: touchedIndex == 1 ? 50 : 20,
+                              height: touchedIndex == 1 ? 50.h : 20.h,
                               curve: Curves.fastOutSlowIn,
                               duration: Duration(seconds: 3),
                               child: GestureDetector(
@@ -501,7 +503,7 @@ class _GraphComponentState extends State<GraphComponent>
     }
     return List.generate(8, (i) {
       final isTouched = i == touchedIndex;
-      final double radius = isTouched ? 65 : 55;
+      final double radius = isTouched ? 65.r : 55.r;
       switch (i) {
         case 0:
           return pieChartSectionData(
@@ -579,13 +581,13 @@ class Indicator extends StatelessWidget {
               Container(
                 decoration:
                     BoxDecoration(shape: BoxShape.circle, color: _color),
-                height: 10,
-                width: 10,
+                height: 10.h,
+                width: 10.w,
               ),
-              SizedBox(width: 5),
+              SizedBox(width: 5.w),
               Text(
                 _title,
-                style: TextStyle(color: _textColor, fontSize: 9),
+                style: TextStyle(color: _textColor, fontSize: 9.sp),
               )
             ],
           ),
@@ -593,7 +595,7 @@ class Indicator extends StatelessWidget {
             visible: _open,
             child: Row(
               children: [
-                SizedBox(width: 15),
+                SizedBox(width: 15.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -602,7 +604,9 @@ class Indicator extends StatelessWidget {
                           ? (number * (-100 / total)).toStringAsFixed(2) + '%'
                           : (number * (100 / total)).toStringAsFixed(2) + '%',
                       style: TextStyle(
-                          fontSize: 16, color: Color(0xff706D6D), height: 1.2),
+                          fontSize: 16.sp,
+                          color: Color(0xff706D6D),
+                          height: 1.2),
                     ),
                     Text(
                       number
@@ -610,7 +614,9 @@ class Indicator extends StatelessWidget {
                               .replaceAllMapped(reg, mathFunc) +
                           ' THB',
                       style: TextStyle(
-                          fontSize: 12, color: Color(0xffF75454), height: 1.2),
+                          fontSize: 12.sp,
+                          color: Color(0xffF75454),
+                          height: 1.2),
                     ),
                   ],
                 ),
@@ -629,25 +635,25 @@ pieChartSectionData({Color color, double value, double radius, String title}) {
       value: value,
       radius: radius,
       title: title,
-      titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      titleStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
       titlePositionPercentageOffset: 0.7);
 }
 
 Widget noTransaction() {
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 30),
+    margin: EdgeInsets.symmetric(vertical: 30.h),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.receipt_long, color: Color(0xff706D6D), size: 50),
+        Icon(Icons.receipt_long, color: Color(0xff706D6D), size: 50.w),
         Text("No transactions yet",
             style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
                 color: Color(0xff706D6D))),
         Text(
           "After you add first transaction today \nyou will be able to view it here.",
-          style: TextStyle(fontSize: 9, color: Color(0xffA1A1A1)),
+          style: TextStyle(fontSize: 9.sp, color: Color(0xffA1A1A1)),
           textAlign: TextAlign.center,
         )
       ],

@@ -3,22 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/Wallet.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget expenseClass(type, title, {color = 0xff8C35B1}) {
   return Column(
     children: [
       Container(
-        height: 33,
+        height: 33.h,
         child: SvgPicture.asset(
           './images/$type.svg',
           color: Color(color),
           fit: BoxFit.scaleDown,
         ),
       ),
-      SizedBox(height: 3),
+      SizedBox(height: 3.h),
       Text(
         title,
-        style: TextStyle(color: Color(color), fontSize: 6.5),
+        style: TextStyle(color: Color(color), fontSize: 6.5.sp),
       )
     ],
   );
@@ -183,11 +184,11 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
             ],
           ),
         ),
-        SizedBox(height: 30),
+        SizedBox(height: 30.h),
         Align(
           alignment: Alignment.centerLeft,
           child: Text("Amount",
-              style: TextStyle(color: Color(0xffB58FE7), fontSize: 16),
+              style: TextStyle(color: Color(0xffB58FE7), fontSize: 16.sp),
               textAlign: TextAlign.left),
         ),
         TextField(
@@ -196,27 +197,27 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(22.0)),
-              borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5),
+              borderRadius: BorderRadius.all(Radius.circular(22.0.r)),
+              borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5.w),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(22.0)),
-              borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5),
+              borderRadius: BorderRadius.all(Radius.circular(22.0.r)),
+              borderSide: BorderSide(color: Color(0xffB58FE7), width: 1.5.w),
             ),
           ),
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(fontSize: 25.sp),
           onChanged: (String str) {
             setState(() {
               amount = double.parse(str);
             });
           },
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 20.h),
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
             "Note",
-            style: TextStyle(color: Color(0xffC88EC5), fontSize: 16),
+            style: TextStyle(color: Color(0xffC88EC5), fontSize: 16.sp),
           ),
         ),
         TextField(
@@ -224,22 +225,22 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(50.0)),
-              borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5),
+              borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+              borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5.w),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(50.0)),
-              borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5),
+              borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
+              borderSide: BorderSide(color: Color(0xffC88EC5), width: 1.5.w),
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 20.sp),
           onChanged: (String str) {
             setState(() {
               note = str;
             });
           },
         ),
-        SizedBox(height: 30),
+        SizedBox(height: 30.h),
         GestureDetector(
           onTap: () {
             _fireStore
@@ -272,17 +273,17 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
             });
           },
           child: Container(
-            height: 50,
+            height: 50.h,
             width: double.infinity,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(50)),
+                borderRadius: BorderRadius.all(Radius.circular(50.r)),
                 color: Color(0xffDB8EA7)),
             child: Center(
               child: Text(
                 "ADD NEW TRANSACTION",
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500),
               ),
             ),

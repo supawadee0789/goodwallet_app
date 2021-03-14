@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:goodwallet_app/components/Header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Wallet.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddWallet extends StatefulWidget {
   @override
@@ -58,25 +59,26 @@ class _AddWalletState extends State<AddWallet> {
             children: [
               Header(),
               Container(
-                height: 252,
-                width: MediaQuery.of(context).size.width * 0.68,
+                height: 252.h,
+                width: 0.68.sw,
+                margin: EdgeInsets.only(top: 0.08.sh),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(34),
+                    borderRadius: BorderRadius.circular(34.r),
                     color: Colors.white),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: 214,
+                      width: 214.w,
                       child: TextField(
                         focusNode: focusName,
                         decoration: new InputDecoration(
                             hintText: hintText,
                             hintStyle: TextStyle(
-                                color: Color(0xffA1A1A1), fontSize: 22)),
+                                color: Color(0xffA1A1A1), fontSize: 22.sp)),
                         textAlign: TextAlign.center,
-                        style:
-                            TextStyle(fontSize: 22, color: Color(0xffA1A1A1)),
+                        style: TextStyle(
+                            fontSize: 22.sp, color: Color(0xffA1A1A1)),
                         onChanged: (String str) {
                           setState(() {
                             name = str;
@@ -96,13 +98,14 @@ class _AddWalletState extends State<AddWallet> {
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
                           contentPadding: EdgeInsets.only(
-                              left: 15, bottom: 11, top: 11, right: 15),
+                              left: 15.w, bottom: 11.h, top: 11.h, right: 15.w),
                           hintText: hintNumber,
                           hintStyle: TextStyle(
-                              color: Color(0xffB58FE7), fontSize: 50)),
+                              color: Color(0xffB58FE7), fontSize: 50.sp)),
                       focusNode: focusNode,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Color(0xffB58FE7), fontSize: 50),
+                      style:
+                          TextStyle(color: Color(0xffB58FE7), fontSize: 50.sp),
                       onChanged: (String n) {
                         setState(() {
                           money = double.parse(n);
@@ -110,11 +113,11 @@ class _AddWalletState extends State<AddWallet> {
                       },
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 25),
+                      margin: EdgeInsets.only(bottom: 25.h),
                       child: Text("BAHT",
                           style: TextStyle(
                             color: Color(0xffB58FE7),
-                            fontSize: 16,
+                            fontSize: 16.sp,
                           )),
                     ),
                   ],
@@ -134,18 +137,18 @@ class _AddWalletState extends State<AddWallet> {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  height: 51,
-                  width: MediaQuery.of(context).size.width * 0.68,
-                  margin: EdgeInsets.symmetric(vertical: 40),
+                  height: 51.h,
+                  width: 0.68.sw,
+                  margin: EdgeInsets.symmetric(vertical: 40.h),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(31),
+                      borderRadius: BorderRadius.circular(31.r),
                       color: Color(0xff6A2388)),
                   child: Center(
                     child: Text(
                       "Add new wallet",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 22.sp,
                           fontWeight: FontWeight.w100),
                     ),
                   ),

@@ -10,6 +10,7 @@ import 'dart:convert' as utf8;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'components/WalletSlider.dart';
 import "dart:async";
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:goodwallet_app/ConfirmedPage.dart';
 import 'package:goodwallet_app/Voice_Input.dart';
@@ -134,26 +135,26 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       child: Column(
         children: [
           Header(),
-          SizedBox(height: 10, width: _screenWidth),
+          SizedBox(height: 10.h, width: _screenWidth),
           Container(
             child: WalletSlider(firebaseInstance),
           ),
           Container(
-            height: 217,
-            width: 211,
+            height: 217.h,
+            width: 211.h,
             decoration: BoxDecoration(
               color: Color(0xff9967B2),
-              borderRadius: BorderRadius.all(Radius.circular(21.0)),
+              borderRadius: BorderRadius.all(Radius.circular(21.0.r)),
             ),
             child: Column(
               children: [
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                      EdgeInsets.only(top: 8.0.h, left: 8.0.w, right: 8.0.w),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Color(0xff6A2388),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
                     ),
                     child: Row(
                       children: [
@@ -177,7 +178,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(15.0)),
+                                      BorderRadius.all(Radius.circular(15.0.r)),
                                   color: _screenType == 'Expense'
                                       ? Colors.white
                                       : Color(0)),
@@ -185,7 +186,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 'Expense',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                     color: _screenType == 'Expense'
                                         ? Color(0xff6A2388)
                                         : Colors.white),
@@ -211,7 +212,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(15.0)),
+                                      BorderRadius.all(Radius.circular(15.0.r)),
                                   color: _screenType == 'Income'
                                       ? Colors.white
                                       : Color(0)),
@@ -219,7 +220,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 'Income',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                     color: _screenType == 'Income'
                                         ? Color(0xff6A2388)
                                         : Colors.white),
@@ -245,7 +246,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(15.0)),
+                                      BorderRadius.all(Radius.circular(15.0.r)),
                                   color: _screenType == 'Transfer'
                                       ? Colors.white
                                       : Color(0)),
@@ -253,7 +254,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 'Transfer',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                     color: _screenType == 'Transfer'
                                         ? Color(0xff6A2388)
                                         : Colors.white),
@@ -266,7 +267,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 10.h,
                 ),
                 Container(
                     // mainAxisAlignment: MainAxisAlignment.center,
@@ -277,25 +278,25 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         child:
                             ClassSlider(buttonCarouselController, _screenType)),
                     Positioned(
-                        left: 5,
-                        top: 45,
+                        left: 5.w,
+                        top: 45.h,
                         child: Opacity(
                           opacity: iconOpacity,
                           child: Icon(
                             Icons.keyboard_arrow_left_rounded,
                             color: Colors.white,
-                            size: 40,
+                            size: 40.w,
                           ),
                         )),
                     Positioned(
-                        right: 5,
-                        top: 45,
+                        right: 5.w,
+                        top: 45.h,
                         child: Opacity(
                           opacity: iconOpacity,
                           child: Icon(
                             Icons.keyboard_arrow_right_rounded,
                             color: Colors.white,
-                            size: 40,
+                            size: 40.w,
                           ),
                         )),
                     Positioned(
@@ -316,21 +317,21 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             ),
           ),
           SizedBox(
-            height: 53,
+            height: 53.h,
           ),
           Container(
-            width: _screenWidth * 0.8,
+            width: 0.8.sw,
             child: Text(
               resultText ?? 'waiting for text',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 28),
+              style: TextStyle(fontSize: 28.sp),
             ),
           ),
           SizedBox(
-            height: 43,
+            height: 43.h,
           ),
           Container(
-            width: _screenWidth * 0.7,
+            width: 0.7.sw,
             child: Row(
               children: [
                 Expanded(
@@ -346,8 +347,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                       },
                       child: SvgPicture.asset(
                         'images/cross-mark-on-a-black-circle-background.svg', // cancel svg
-                        height: 85.0,
-                        width: 85.0,
+                        height: 85.0.h,
+                        width: 85.0.h,
                       ),
                     ),
                   ),
@@ -450,8 +451,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                       },
                       child: SvgPicture.asset(
                         'images/check-mark.svg', // confirm svg
-                        height: 85.0,
-                        width: 85.0,
+                        height: 85.0.h,
+                        width: 85.0.h,
                       ),
                     ),
                   ),
@@ -505,7 +506,7 @@ class _ClassSliderState extends State<ClassSlider> {
     return CarouselSlider(
       carouselController: buttonCarouselController,
       options: CarouselOptions(
-        height: 160.0,
+        height: 160.0.h,
         autoPlay: false,
         // autoPlayInterval: Duration(seconds: 3),
         // autoPlayAnimationDuration: Duration(milliseconds: 800),
@@ -521,8 +522,8 @@ class _ClassSliderState extends State<ClassSlider> {
       items: cardList.map((card) {
         return Builder(builder: (BuildContext context) {
           return Container(
-            height: MediaQuery.of(context).size.height * 0.30,
-            width: MediaQuery.of(context).size.width,
+            height: 0.30.sh,
+            width: 1.sw,
             child: Container(
               color: Color(0xff9967B2),
               child: card,
@@ -542,23 +543,23 @@ class ClassItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 26),
+      margin: EdgeInsets.only(top: 26.h),
       child: Column(children: [
         SvgPicture.asset(
           'images/' + class_name + '.svg',
-          height: 71.0,
-          width: 85.0,
+          height: 71.0.h,
+          width: 85.0.w,
           color: Colors.white,
         ),
         Container(
-          margin: EdgeInsets.only(top: 14),
+          margin: EdgeInsets.only(top: 14.h),
           child: Text(
             class_name == 'Income'
                 ? ''
                 : class_name == 'Transfer'
                     ? ''
                     : class_name,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 18.sp),
           ),
         )
       ]),

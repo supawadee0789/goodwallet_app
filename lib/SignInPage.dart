@@ -8,6 +8,7 @@ import 'package:goodwallet_app/components/SignUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignIn extends StatefulWidget {
   final popUpSignIn;
@@ -82,9 +83,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
-                      top: 50 / 760 * _screenHeight,
-                      bottom: 20 / 360 * _screenWidth),
+                  margin: EdgeInsets.only(top: 50.h, bottom: 20.h),
                   child: Hero(
                     tag: 'pop_up',
                     child: GestureDetector(
@@ -97,13 +96,13 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.only(
-                      left: _screenWidth * 0.1,
-                      right: _screenWidth * 0.1,
+                      left: 0.1.sw,
+                      right: 0.1.sw,
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(71),
-                        topRight: Radius.circular(71),
+                        topLeft: Radius.circular(71.r),
+                        topRight: Radius.circular(71.r),
                       ),
                       color: Color(0xFFF4F6FF),
                     ),
@@ -113,22 +112,22 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                         Hero(
                           tag: 'Login-button',
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
+                            padding: EdgeInsets.only(top: 25.0.h),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 FlatButton(
-                                  height: 47 / 760 * _screenHeight,
-                                  minWidth: 114.5 / 360 * _screenWidth,
+                                  height: 47.h,
+                                  minWidth: 114.5.w,
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
                                         color: Color(0xff8C35B1),
-                                        width: 1.5,
+                                        width: 1.5.w,
                                         style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(24.0),
+                                    borderRadius: BorderRadius.circular(24.0.r),
                                   ),
-                                  padding: EdgeInsets.all(6),
+                                  padding: EdgeInsets.all(6.w),
                                   onPressed: () {
                                     setState(() {
                                       _controller2.forward();
@@ -142,27 +141,24 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                       : Color(0xFFF4F6FF),
                                   child: Text(
                                     "Sign In",
-                                    style: TextStyle(
-                                        fontSize: 14 /
-                                            (360 * 760) *
-                                            (_screenHeight * _screenWidth)),
+                                    style: TextStyle(fontSize: 14.sp),
                                   ),
                                   textColor: signIn == 1
                                       ? Color(0xFFF4F6FF)
                                       : Color(0xff8C35B1),
                                 ),
-                                SizedBox(width: (14 / 360) * _screenWidth),
+                                SizedBox(width: 14.sp),
                                 FlatButton(
-                                  height: 47 / 760 * _screenHeight,
-                                  minWidth: 114.5 / 360 * _screenWidth,
+                                  height: 47.h,
+                                  minWidth: 114.5.w,
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
                                           color: Color(0xffB58FE7),
-                                          width: 1.5,
+                                          width: 1.5.w,
                                           style: BorderStyle.solid),
                                       borderRadius:
-                                          BorderRadius.circular(24.0)),
-                                  padding: EdgeInsets.all(6),
+                                          BorderRadius.circular(24.0.r)),
+                                  padding: EdgeInsets.all(6.w),
                                   onPressed: () {
                                     setState(() {
                                       _controller.forward().orCancel;
@@ -176,10 +172,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                       : Color(0xFFF4F6FF),
                                   child: Text(
                                     "Sign Up",
-                                    style: TextStyle(
-                                        fontSize: 14 /
-                                            (360 * 760) *
-                                            (_screenHeight * _screenWidth)),
+                                    style: TextStyle(fontSize: 14.sp),
                                   ),
                                   textColor: signUp == 1
                                       ? Color(0xFFF4F6FF)
@@ -209,13 +202,13 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0, bottom: 10.0),
+                                            padding: EdgeInsets.only(
+                                                left: 14.0.w, bottom: 10.0.h),
                                             child: Text(
                                               "Email",
                                               style: TextStyle(
                                                   color: Color(0xff8C35B1),
-                                                  fontSize: 16,
+                                                  fontSize: 16.sp,
                                                   fontWeight: FontWeight.w700),
                                             ),
                                           ),
@@ -232,38 +225,38 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 0,
-                                                    horizontal: 10),
+                                                    horizontal: 10.w),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Color(0xffB58FE7),
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                             focusedBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Color(0xffB58FE7),
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                             errorBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Colors.red[100],
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                             focusedErrorBorder:
                                                 OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Colors.red[100],
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                           ),
-                                          style: TextStyle(fontSize: 16),
+                                          style: TextStyle(fontSize: 16.sp),
                                           onChanged: (String str) {
                                             setState(() {
                                               email = str;
@@ -273,15 +266,15 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0,
-                                                bottom: 5.0,
-                                                top: 5),
+                                            padding: EdgeInsets.only(
+                                                left: 14.0.w,
+                                                bottom: 5.0.h,
+                                                top: 5.h),
                                             child: Text(
                                               "Password",
                                               style: TextStyle(
                                                   color: Color(0xff8C35B1),
-                                                  fontSize: 16,
+                                                  fontSize: 16.sp,
                                                   fontWeight: FontWeight.w700),
                                             ),
                                           ),
@@ -298,38 +291,38 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 0,
-                                                    horizontal: 10),
+                                                    horizontal: 10.w),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Color(0xffB58FE7),
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                             focusedBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Color(0xffB58FE7),
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                             errorBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Colors.red[100],
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                             focusedErrorBorder:
                                                 OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.0)),
+                                                  Radius.circular(50.0.r)),
                                               borderSide: BorderSide(
                                                   color: Colors.red[100],
-                                                  width: 1.5),
+                                                  width: 1.5.w),
                                             ),
                                           ),
-                                          style: TextStyle(fontSize: 16),
+                                          style: TextStyle(fontSize: 16.sp),
                                           onChanged: (String str) {
                                             setState(() {
                                               password = str;
@@ -380,33 +373,32 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             }
                                           },
                                           child: Container(
-                                            margin: EdgeInsets.only(
-                                                top: _screenHeight * 0.03),
+                                            margin:
+                                                EdgeInsets.only(top: 0.03.sh),
                                             width: double.infinity,
-                                            height: _screenHeight * 0.075,
+                                            height: 0.075.sh,
                                             decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(50),
+                                                    BorderRadius.circular(50.r),
                                                 color: Color(0xffA890FE)),
                                             child: Stack(
                                               children: [
                                                 Center(
                                                     child: Text(
                                                   "Sign In",
-                                                  style:
-                                                      TextStyle(fontSize: 16),
+                                                  style: TextStyle(
+                                                      fontSize: 16.sp),
                                                 )),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 26.0),
+                                                  padding: EdgeInsets.only(
+                                                      right: 26.0.w),
                                                   child: Align(
                                                     alignment:
                                                         Alignment.centerRight,
                                                     child: Icon(
                                                       Icons
                                                           .arrow_forward_rounded,
-                                                      size: 30,
+                                                      size: 30.w,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -425,7 +417,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                 "Forgot password?",
                                                 style: TextStyle(
                                                     color: Color(0xff8C35B1),
-                                                    fontSize: 14,
+                                                    fontSize: 14.sp,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               )),
@@ -436,26 +428,24 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
-                                                top: _screenHeight * 0.02,
-                                                bottom: _screenHeight * 0.02),
+                                                top: 0.02.sh, bottom: 0.02.sh),
                                             width: double.infinity,
-                                            height: _screenHeight * 0.07,
+                                            height: 0.07.sh,
                                             decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(50),
+                                                    BorderRadius.circular(50.r),
                                                 color: Color(0xffDB8EA7)),
                                             child: Stack(
                                               children: [
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15.0),
+                                                  padding: EdgeInsets.only(
+                                                      left: 15.0.w),
                                                   child: Align(
                                                     alignment:
                                                         Alignment.centerLeft,
                                                     child: SvgPicture.asset(
                                                       'images/facebook.svg',
-                                                      width: 35,
+                                                      width: 35.w,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -463,20 +453,19 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                 Center(
                                                     child: Text(
                                                   "Continue with facebook",
-                                                  style:
-                                                      TextStyle(fontSize: 16),
+                                                  style: TextStyle(
+                                                      fontSize: 16.sp),
                                                 )),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 26.0),
+                                                  padding: EdgeInsets.only(
+                                                      right: 26.0.w),
                                                   child: Align(
                                                     alignment:
                                                         Alignment.centerRight,
                                                     child: Icon(
                                                       Icons
                                                           .arrow_forward_rounded,
-                                                      size: 30,
+                                                      size: 30.w,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -485,7 +474,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 50)
+                                        SizedBox(height: 50.h)
                                       ],
                                     ),
                                   ),
@@ -570,7 +559,7 @@ showAlertDialog(BuildContext context, titleText, contentText) {
               child: Text('OK', style: TextStyle(color: Color(0xffB58FE7))))
         ],
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32))),
+            borderRadius: BorderRadius.all(Radius.circular(32.r))),
       );
     },
   );
@@ -591,12 +580,12 @@ forgotPasswordBox(BuildContext context) {
         actions: [
           Center(
             child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
+                width: 0.7.sw,
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(50.0.r)),
                     ),
                     labelText: 'Email Address',
                   ),
@@ -606,7 +595,7 @@ forgotPasswordBox(BuildContext context) {
                 )),
           ),
           Container(
-            margin: EdgeInsets.only(top: 8.0),
+            margin: EdgeInsets.only(top: 8.0.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -634,7 +623,7 @@ forgotPasswordBox(BuildContext context) {
           )
         ],
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32))),
+            borderRadius: BorderRadius.all(Radius.circular(32.r))),
       );
     },
   );

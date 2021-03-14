@@ -11,6 +11,7 @@ import 'package:goodwallet_app/components/WalletCard.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import './Voice_Input.dart';
 import 'package:flutter_page_transition/flutter_page_transition.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // show wallet list
 class CreateWallet extends StatefulWidget {
@@ -152,21 +153,21 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                         duration: Duration(milliseconds: 400),
                         child: Center(
                           child: Container(
-                            width: _screenWidth * 0.85,
-                            height: _screenHeight * 0.53,
+                            width: 0.85.sw,
+                            height: 0.53.sh,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(32),
+                                borderRadius: BorderRadius.circular(32.r),
                                 color: Color.fromRGBO(255, 255, 255, 0.66)),
                             child: Stack(
                               children: [
                                 Positioned(
-                                  top: 19,
-                                  left: 23,
+                                  top: 19.h,
+                                  left: 23.w,
                                   child: Text(
                                     "Today List",
                                     style: TextStyle(
                                       color: Color(0xff8C35B1),
-                                      fontSize: 20,
+                                      fontSize: 20.sp,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -194,7 +195,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                             color: Color(0xff8C35B1),
                                             decoration:
                                                 TextDecoration.underline,
-                                            fontSize: 11),
+                                            fontSize: 11.sp),
                                       )),
                                 ),
                               ],
@@ -240,26 +241,26 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                 ],
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: 0.1.sh,
                 child: Stack(
                   children: [
                     Positioned(
                       bottom: 0,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.078,
+                        height: 0.078.sh,
                         decoration: BoxDecoration(
                             color: Color(0xffE5A9B6),
                             borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(23),
-                                topRight: Radius.circular(23))),
+                                topLeft: Radius.circular(23.r),
+                                topRight: Radius.circular(23.r))),
                       ),
                     ),
                     Positioned(
                       top: 0,
-                      right: 21,
-                      height: MediaQuery.of(context).size.height * 0.079,
-                      width: MediaQuery.of(context).size.height * 0.079,
+                      right: 21.w,
+                      height: 0.079.sh,
+                      width: 0.079.sh,
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(PageTransition(
@@ -269,11 +270,11 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
-                                blurRadius: 6,
+                                blurRadius: 6.r,
                                 offset:
                                     Offset(0, 3), // changes position of shadow
                               ),
@@ -289,11 +290,9 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                       ),
                     ),
                     Positioned(
-                      bottom:
-                          (MediaQuery.of(context).size.height * 0.079) * 0.2,
-                      // left: (MediaQuery.of(context).size.width * 0.079) * 2,
+                      bottom: 0.079.sh * 0.2,
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: 0.8.sw,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -309,7 +308,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                   });
                                 },
                                 child: Container(
-                                  width: 90,
+                                  width: 90.w,
                                   child: Column(
                                     children: [
                                       AnimatedOpacity(
@@ -322,7 +321,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                             'Transactions',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 12),
+                                                fontSize: 12.sp),
                                           ),
                                         ),
                                       ),
@@ -332,7 +331,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                             : Icons
                                                 .account_balance_wallet_outlined,
                                         color: Colors.white,
-                                        size: 26,
+                                        size: 26.w,
                                       ),
                                     ],
                                   ),
@@ -348,7 +347,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                   });
                                 },
                                 child: Container(
-                                  width: 90,
+                                  width: 90.w,
                                   child: Column(
                                     children: [
                                       AnimatedOpacity(
@@ -360,7 +359,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                             "Graph",
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 12),
+                                                fontSize: 12.sp),
                                           ),
                                         ),
                                       ),
@@ -369,7 +368,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                             ? Icons.leaderboard_rounded
                                             : Icons.leaderboard_outlined,
                                         color: Colors.white,
-                                        size: 26,
+                                        size: 26.w,
                                       ),
                                     ],
                                   ),
@@ -386,7 +385,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                   });
                                 },
                                 child: Container(
-                                  width: 90,
+                                  width: 90.w,
                                   child: Column(
                                     children: [
                                       AnimatedOpacity(
@@ -399,7 +398,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                             "Budget",
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 12),
+                                                fontSize: 12.sp),
                                           ),
                                         ),
                                       ),
@@ -408,7 +407,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                                             ? Icons.monetization_on_rounded
                                             : Icons.monetization_on_outlined,
                                         color: Colors.white,
-                                        size: 26,
+                                        size: 26.w,
                                       ),
                                     ],
                                   ),

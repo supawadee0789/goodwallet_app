@@ -13,6 +13,7 @@ import 'package:goodwallet_app/components/Header.dart';
 import 'Manual_income.dart';
 import 'SpeechConfirmation.dart';
 import "dart:async";
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VoiceInput extends StatefulWidget {
   final index;
@@ -68,39 +69,39 @@ class _VoiceInputState extends State<VoiceInput> {
                   children: [
                     Header(),
                     SizedBox(
-                      height: 10,
+                      height: 10.h,
                     ),
                     WalletSlider(firebaseInstance),
                     AnimatedOpacity(
                       duration: _opacityDuration,
                       opacity: _opacity,
                       child: Container(
-                        height: _screenHeight * 0.4,
+                        height: 0.4.sh,
                         child: Stack(
                           children: [
                             Container(
-                              width: 280,
+                              width: 280.w,
                               child: Text(
                                 'Example',
                                 textAlign: TextAlign.left,
-                                style: TextStyle(fontSize: 22),
+                                style: TextStyle(fontSize: 22.sp),
                               ),
                             ),
                             AnimatedPositioned(
                               duration: _animationDuration,
-                              top: _buttonPressed ? 0 : 18,
+                              top: _buttonPressed ? 0 : 18.h,
                               child: VoiceExample('plus',
                                   'รายรับ: ได้เงินจากแม่ 200 บาท', 0xff379243),
                             ),
                             AnimatedPositioned(
                               duration: _animationDuration,
-                              top: _buttonPressed ? 0 : 102,
+                              top: _buttonPressed ? 0 : 102.h,
                               child: VoiceExample('minus',
                                   'รายจ่าย: ซื้อข้าวกะเพรา 45 บาท', 0xffC3374E),
                             ),
                             AnimatedPositioned(
                               duration: _animationDuration,
-                              top: _buttonPressed ? 0 : 184,
+                              top: _buttonPressed ? 0 : 184.h,
                               child: VoiceExample('transferLogo',
                                   'การโอน: โอนเงิน 80 บาท', 0xffE1B152),
                             ),
@@ -109,20 +110,20 @@ class _VoiceInputState extends State<VoiceInput> {
                       ),
                     ),
                     SizedBox(
-                      height: 60 / 760 * _screenHeight,
+                      height: 60.h,
                       width: _screenWidth,
                     ),
                     Container(
                       child: Text(
                         'Press and hold the button\nto record your word',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16.sp),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 23),
-                      height: 70,
-                      width: 70,
+                      margin: EdgeInsets.only(top: 23.h),
+                      height: 70.h,
+                      width: 70.h,
                       child: Listener(
                           onPointerDown: (details) async {
                             setState(() {
@@ -176,11 +177,11 @@ class _VoiceInputState extends State<VoiceInput> {
                   duration: _opacityDuration,
                   opacity: _textOpacity,
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: _screenWidth * 0.8),
-                    margin: EdgeInsets.only(bottom: 150),
+                    constraints: BoxConstraints(maxWidth: 0.8.sw),
+                    margin: EdgeInsets.only(bottom: 150.h),
                     child: Text(
                       _text,
-                      style: TextStyle(fontSize: 30, color: Colors.white),
+                      style: TextStyle(fontSize: 30.sp, color: Colors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -195,20 +196,18 @@ class _VoiceInputState extends State<VoiceInput> {
                           child: ManualIncome(_walletIndex, firebaseInstance)));
                     },
                     child: Container(
-                      height: _screenHeight * 0.07,
-                      width: _screenHeight * 0.065,
+                      height: 0.07.sh,
+                      width: 0.065.sh,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          bottomLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
+                          topLeft: Radius.circular(60.r),
+                          bottomLeft: Radius.circular(8.r),
+                          topRight: Radius.circular(8.r),
                         ),
                         color: Colors.white,
                       ),
                       padding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.015,
-                          horizontal:
-                              MediaQuery.of(context).size.width * 0.015),
+                          vertical: 0.015.sh, horizontal: 0.015.sw),
                       child: SvgPicture.asset(
                         'images/edit.svg',
                         color: Color(0xffCB80AD),
@@ -237,32 +236,34 @@ class VoiceExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 62,
-      width: 280,
-      margin: EdgeInsets.only(top: 22), //l r 44
-      padding: EdgeInsets.symmetric(horizontal: 11),
+      height: 62.h,
+      width: 280.w,
+      margin: EdgeInsets.only(top: 22.h), //l r 44
+      padding: EdgeInsets.symmetric(horizontal: 11.w),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-            color: Colors.white, width: 5.0, style: BorderStyle.solid),
-        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            color: Colors.white, width: 5.0.w, style: BorderStyle.solid),
+        borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
       ),
       child: Row(
         children: [
           Container(
-            height: 20,
-            width: 20,
+            height: 20.h,
+            width: 20.w,
             child: SvgPicture.asset(
               'images/$svg.svg',
               color: Color(this.color),
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 10),
+            margin: EdgeInsets.only(left: 10.w),
             child: Text(
               text,
               style: TextStyle(
-                  color: Color(this.color), fontSize: 16, fontFamily: 'Knit'),
+                  color: Color(this.color),
+                  fontSize: 16.sp,
+                  fontFamily: 'Knit'),
             ),
           )
         ],
@@ -349,12 +350,12 @@ class _RadialProgressState extends State<RadialProgress>
             border: Border.all(
               color: Colors.white,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(45))),
+            borderRadius: BorderRadius.all(Radius.circular(49.r))),
         child: CustomPaint(
           child: Container(
-            height: 200.0,
-            width: 200.0,
-            padding: EdgeInsets.symmetric(vertical: 40.0),
+            height: 200.0.h,
+            width: 200.0.h,
+            //padding: EdgeInsets.symmetric(vertical: 40.0),
             child: Container(),
           ),
           painter: RadialPainter(progressDegrees),

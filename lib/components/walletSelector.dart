@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:menu_button/menu_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WalletSelector extends StatefulWidget {
   final currentTransaction;
@@ -45,10 +46,10 @@ class _WalletSelectorState extends State<WalletSelector> {
           return MenuButton(
             menuButtonBackgroundColor: Color(0),
             child: SizedBox(
-              width: 110,
-              height: 40,
+              width: 90.w,
+              height: 40.h,
               child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 11),
+                padding: EdgeInsets.only(left: 16.w, right: 11.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -60,8 +61,8 @@ class _WalletSelectorState extends State<WalletSelector> {
                       ),
                     ),
                     SizedBox(
-                        width: 12,
-                        height: 17,
+                        width: 12.w,
+                        height: 17.h,
                         child: FittedBox(
                             fit: BoxFit.fill,
                             child: Icon(
@@ -79,10 +80,10 @@ class _WalletSelectorState extends State<WalletSelector> {
             scrollPhysics:
                 AlwaysScrollableScrollPhysics(), // Change the physics of opened menu (example: you can remove or add scroll to menu)
             itemBuilder: (value) => Container(
-                width: 83,
-                height: 40,
+                width: 83.w,
+                height: 40.h,
                 alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Text(
                   value,
                   style: TextStyle(color: Color(0xffA890FE)),
@@ -90,10 +91,10 @@ class _WalletSelectorState extends State<WalletSelector> {
             toggledChild: Container(
               color: Colors.white,
               child: SizedBox(
-                width: 83,
-                height: 40,
+                width: 83.w,
+                height: 40.h,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 11),
+                  padding: EdgeInsets.only(left: 16.w, right: 11.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -105,8 +106,8 @@ class _WalletSelectorState extends State<WalletSelector> {
                         ),
                       ),
                       SizedBox(
-                          width: 12,
-                          height: 17,
+                          width: 12.w,
+                          height: 17.h,
                           child: FittedBox(
                               fit: BoxFit.fill,
                               child: Icon(
@@ -129,8 +130,8 @@ class _WalletSelectorState extends State<WalletSelector> {
 // Action when new item is selected
             },
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(24)),
-              border: Border.all(color: Color(0xffA890FE), width: 1.5),
+              borderRadius: BorderRadius.all(Radius.circular(24.r)),
+              border: Border.all(color: Color(0xffA890FE), width: 1.5.w),
               color: Colors.white,
             ),
             onMenuButtonToggle: (isToggle) {},

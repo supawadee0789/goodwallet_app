@@ -6,6 +6,7 @@ import 'package:goodwallet_app/Graph.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:goodwallet_app/classes/SearchClassForBudget.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BudgetComponent extends StatefulWidget {
   final budget;
@@ -95,7 +96,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
       sectionPie.add(PieChartSectionData(
           value: (pie == 0) || pie.isNaN ? 100 : pie,
           color: graphColor[i],
-          radius: 50,
+          radius: 50.r,
           showTitle: false));
       i++;
     }
@@ -107,7 +108,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
         });
       },
       child: AnimatedContainer(
-        margin: EdgeInsets.symmetric(vertical: 6),
+        margin: EdgeInsets.symmetric(vertical: 6.h),
         height: selected
             ? (_screenHeight *
                 (budget['BudgetClass'].length >= 5 ? 0.55 : 0.42))
@@ -116,9 +117,9 @@ class _BudgetComponentState extends State<BudgetComponent> {
         curve: Curves.fastOutSlowIn,
         width: double.infinity,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(15)),
+            color: Colors.white, borderRadius: BorderRadius.circular(15.r)),
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 13.0, horizontal: 23.0),
+          margin: EdgeInsets.symmetric(vertical: 13.0.h, horizontal: 23.0.w),
           child: Stack(children: [
             Align(
               alignment: Alignment.topCenter,
@@ -133,7 +134,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
                         budget['BudgetName'],
                         style: TextStyle(
                             color: Color(0xffEA8D8D),
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Knit',
                             height: 1.0),
@@ -145,21 +146,21 @@ class _BudgetComponentState extends State<BudgetComponent> {
                             style: TextStyle(
                                 color: Color(0xff379243),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14),
+                                fontSize: 14.sp),
                           ),
-                          SizedBox(width: 5),
+                          SizedBox(width: 5.w),
                           Text(
                             "left",
                             style: TextStyle(
                                 color: Color(0xffA1A1A1),
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w100),
                           )
                         ],
                       )
                     ],
                   ),
-                  SizedBox(height: 7),
+                  SizedBox(height: 7.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -170,7 +171,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
                       Text(
                         budget['Recurrence'],
                         style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             color: Colors.purple.shade200,
                             fontStyle: FontStyle.italic),
                       )
@@ -178,10 +179,10 @@ class _BudgetComponentState extends State<BudgetComponent> {
                   ),
                   SizedBox(height: 7),
                   LinearPercentIndicator(
-                      width: _screenWidth * 0.72, //width for progress bar
+                      width: 0.72.sw, //width for progress bar
                       animation: true, //animation to show progress at first
                       animationDuration: 1000,
-                      lineHeight: 30.0, //height of progress bar
+                      lineHeight: 30.0.h, //height of progress bar
 
                       percent:
                           ((((-1) * total * 100) / budget['Amount']) / 100) >= 1
@@ -192,7 +193,8 @@ class _BudgetComponentState extends State<BudgetComponent> {
                           (((-1) * total * 100) / budget['Amount'])
                                   .toStringAsFixed(2) +
                               '%',
-                          style: TextStyle(fontSize: 14, color: Colors.white)),
+                          style:
+                              TextStyle(fontSize: 14.sp, color: Colors.white)),
                       linearStrokeCap: LinearStrokeCap
                           .roundAll, //make round cap at start and end both
                       progressColor:
@@ -211,22 +213,21 @@ class _BudgetComponentState extends State<BudgetComponent> {
                 curve: Curves.easeIn,
                 child: OverflowBox(
                   minWidth: 0.0,
-                  maxWidth: 300.0,
+                  maxWidth: 300.0.w,
                   minHeight: 0.0,
-                  maxHeight: _screenHeight * 0.55,
+                  maxHeight: 0.55.sh,
                   child: Column(
                     children: [
-                      SizedBox(height: _screenHeight * 0.182),
+                      SizedBox(height: 0.182.sh),
                       Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              height: _screenHeight * 0.2,
-                              width: _screenHeight * 0.2,
+                              height: 0.2.sh,
+                              width: 0.2.sh,
                               margin: EdgeInsets.symmetric(
-                                  vertical: _screenHeight * 0.05,
-                                  horizontal: 10),
+                                  vertical: 0.05.sh, horizontal: 10.w),
                               child: PieChart(
                                 PieChartData(
                                   sections: sectionPie,
@@ -245,21 +246,18 @@ class _BudgetComponentState extends State<BudgetComponent> {
                                         budget['Amount'].toString() +
                                         ' THB',
                                     style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         color: Color(0xffA1A1A1),
                                         height: 1.0),
                                   ),
                                   Text(
                                     'Spent  ' + total.toString() + ' THB',
                                     style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         color: Color(0xffE80404),
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.005),
+                                  SizedBox(height: 0.005.sh),
                                   Column(
                                     children: indicatorList,
                                   ),
@@ -283,10 +281,10 @@ class _BudgetComponentState extends State<BudgetComponent> {
 
 Widget svgHandle(type) {
   return Container(
-    width: 25,
+    width: 25.w,
     child: SvgPicture.asset(
       './images/$type.svg',
-      width: 15,
+      width: 15.w,
       color: Color(0xffEA8D8D),
     ),
   );
@@ -294,7 +292,7 @@ Widget svgHandle(type) {
 
 Widget indicator(title, color, percentage, amount) {
   return Container(
-    width: 90,
+    width: 90.w,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
@@ -304,13 +302,13 @@ Widget indicator(title, color, percentage, amount) {
           children: [
             Container(
               decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-              height: 10,
-              width: 10,
+              height: 10.h,
+              width: 10.w,
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 10.w),
             Text(
               title,
-              style: TextStyle(fontSize: 11, color: Color(0xff706D6D)),
+              style: TextStyle(fontSize: 11.sp, color: Color(0xff706D6D)),
             )
           ],
         ),
@@ -318,19 +316,19 @@ Widget indicator(title, color, percentage, amount) {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(width: 15),
+            SizedBox(width: 15.w),
             Text(
               percentage,
               style: TextStyle(
-                  fontSize: 9,
+                  fontSize: 9.sp,
                   fontWeight: FontWeight.w700,
                   color: Color(0xff706D6D),
                   height: 1.0),
             ),
             Text(
               amount.toString() + ' THB',
-              style:
-                  TextStyle(fontSize: 9, color: Color(0xffF75454), height: 1.0),
+              style: TextStyle(
+                  fontSize: 9.sp, color: Color(0xffF75454), height: 1.0),
               textAlign: TextAlign.right,
             )
           ],

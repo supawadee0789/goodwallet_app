@@ -6,6 +6,7 @@ import 'package:goodwallet_app/Graph.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/components/IconSelector.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TransList extends StatefulWidget {
   final arg;
@@ -72,8 +73,8 @@ class _TransListState extends State<TransList> {
             return snapshot.data.documents.length == 0
                 ? noTransaction()
                 : Container(
-                    width: screenWidth * 311 / 360,
-                    height: screenHeight * 300 / 760,
+                    width: 311.w,
+                    height: 300.h,
                     child: ListView.builder(
                         itemCount: snapshot.data.documents.length,
                         itemBuilder: (context, index) {
@@ -120,16 +121,12 @@ class _TransListState extends State<TransList> {
                                   trans['createdOn'].toDate().toString()))
                               .split(" ");
                           return Container(
-                              margin: EdgeInsets.fromLTRB(
-                                  15 / 360 * screenWidth,
-                                  5 / 760 * screenHeight,
-                                  15 / 360 * screenWidth,
-                                  5 / 760 * screenHeight),
-                              height: screenHeight * 66 / 760,
-                              width: screenWidth * 281 / 360,
+                              margin: EdgeInsets.fromLTRB(15.w, 5.h, 15.w, 5.h),
+                              height: 66.h,
+                              width: 281.w,
                               decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16)),
+                                  borderRadius: BorderRadius.circular(16.r)),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -139,16 +136,15 @@ class _TransListState extends State<TransList> {
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
-                                              left: 11 / 360 * screenWidth,
-                                              right: 10 / 360 * screenWidth),
+                                              left: 11.w, right: 10.h),
                                           child: Container(
-                                            height: screenHeight * 0.08,
-                                            width: screenWidth * 0.08,
+                                            height: 0.08.sh,
+                                            width: 0.08.sw,
                                             child: SvgPicture.asset(
                                               select(trans['class']),
                                               color: Color(0xffC88EC5),
-                                              height: screenHeight * 0.07,
-                                              width: screenWidth * 0.07,
+                                              height: 0.07.sh,
+                                              width: 0.07.sw,
                                             ),
                                           ),
                                         ),
@@ -166,7 +162,7 @@ class _TransListState extends State<TransList> {
                                                           fontFamily: 'Knit',
                                                           color:
                                                               Color(0xff6A2388),
-                                                          fontSize: 18,
+                                                          fontSize: 18.sp,
                                                           fontWeight:
                                                               FontWeight.w700),
                                                     )
@@ -176,18 +172,17 @@ class _TransListState extends State<TransList> {
                                                           fontFamily: 'Knit',
                                                           color:
                                                               Color(0xff6A2388),
-                                                          fontSize: 18,
+                                                          fontSize: 18.sp,
                                                           fontWeight:
                                                               FontWeight.w700),
                                                     ),
                                             ),
-                                            SizedBox(
-                                                height: 2 / 760 * screenHeight),
+                                            SizedBox(height: 2.h),
                                             Text(
                                               time[3] + " " + time[4],
                                               style: TextStyle(
                                                   color: Color(0xffBCBCBC),
-                                                  fontSize: 11),
+                                                  fontSize: 11.sp),
                                             )
                                           ],
                                         ),
@@ -195,26 +190,20 @@ class _TransListState extends State<TransList> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 8),
+                                    padding: EdgeInsets.only(right: 8.h),
                                     child: isIncome
                                         ? new Text(
                                             "฿ " + income,
                                             style: TextStyle(
                                                 color: Color(0xff6A2388),
-                                                fontSize: 18 /
-                                                    (760 * 360) *
-                                                    (screenHeight *
-                                                        screenWidth),
+                                                fontSize: 18.sp,
                                                 fontWeight: FontWeight.w700),
                                           )
                                         : Text(
                                             "฿ " + expense,
                                             style: TextStyle(
                                                 color: Color(0xff6A2388),
-                                                fontSize: 18 /
-                                                    (760 * 360) *
-                                                    (screenHeight *
-                                                        screenWidth),
+                                                fontSize: 18.sp,
                                                 fontWeight: FontWeight.w700),
                                             textAlign: TextAlign.right,
                                           ),

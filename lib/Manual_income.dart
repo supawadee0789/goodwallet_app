@@ -4,7 +4,7 @@ import 'package:goodwallet_app/components/Header.dart';
 import 'package:goodwallet_app/components/Manual_income_component.dart';
 import 'package:goodwallet_app/components/Manual_expense_component.dart';
 import 'package:goodwallet_app/components/Manual_transfer_component.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'components/WalletSlider.dart';
 
 class ManualIncome extends StatefulWidget {
@@ -49,10 +49,9 @@ class _ManualIncomeState extends State<ManualIncome> {
                 WalletSlider(firebaseInstance),
                 Container(
                   padding: EdgeInsets.symmetric(
-                      vertical: MediaQuery.of(context).size.height * 0.05,
-                      horizontal: MediaQuery.of(context).size.width * 0.08),
+                      vertical: 0.05.sh, horizontal: 0.08.sw),
                   alignment: Alignment.topCenter,
-                  height: _screenHeight * 0.85,
+                  height: 0.85.sh,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.vertical(
@@ -75,12 +74,11 @@ class _ManualIncomeState extends State<ManualIncome> {
                               });
                             },
                             child: Container(
-                              width: MediaQuery.of(context).size.width * 0.23,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.045,
+                              width: 0.23.sw,
+                              height: 0.045.sh,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20.r)),
                                 color:
                                     income ? Color(0xffB58FE7) : Colors.white,
                                 border: Border.all(color: Color(0xffB58FE7)),
@@ -92,7 +90,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                                       color: income
                                           ? Colors.white
                                           : Color(0xffB58FE7),
-                                      fontSize: 16),
+                                      fontSize: 16.sp),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -110,12 +108,11 @@ class _ManualIncomeState extends State<ManualIncome> {
                               });
                             },
                             child: Container(
-                              width: MediaQuery.of(context).size.width * 0.23,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.045,
+                              width: 0.23.sw,
+                              height: 0.045.sh,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20.r)),
                                 color:
                                     expense ? Color(0xffB58FE7) : Colors.white,
                                 border: Border.all(color: Color(0xffB58FE7)),
@@ -127,7 +124,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                                       color: expense
                                           ? Colors.white
                                           : Color(0xffB58FE7),
-                                      fontSize: 16),
+                                      fontSize: 16.sp),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -145,12 +142,11 @@ class _ManualIncomeState extends State<ManualIncome> {
                               });
                             },
                             child: Container(
-                              width: MediaQuery.of(context).size.width * 0.23,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.045,
+                              width: 0.23.sw,
+                              height: 0.045.sh,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20.r)),
                                 color:
                                     transfer ? Color(0xffB58FE7) : Colors.white,
                                 border: Border.all(color: Color(0xffB58FE7)),
@@ -162,7 +158,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                                       color: transfer
                                           ? Colors.white
                                           : Color(0xffB58FE7),
-                                      fontSize: 16),
+                                      fontSize: 16.sp),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -170,7 +166,7 @@ class _ManualIncomeState extends State<ManualIncome> {
                           ),
                         ],
                       ),
-                      SizedBox(height: _screenHeight * 0.05),
+                      SizedBox(height: 0.05.sh),
                       Stack(
                         children: [
                           IgnorePointer(
@@ -213,110 +209,3 @@ class _ManualIncomeState extends State<ManualIncome> {
     );
   }
 }
-
-// class TypeButton extends StatefulWidget {
-//   @override
-//   _TypeButtonState createState() => _TypeButtonState();
-// }
-//
-// class _TypeButtonState extends State<TypeButton> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: [
-//         GestureDetector(
-//           onTap: () {
-//             setState(() {
-//               income = true;
-//               expense = false;
-//               transfer = false;
-//               incomeOpacity = 1.0;
-//               expenseOpacity = 0.0;
-//               transferOpacity = 0.0;
-//             });
-//           },
-//           child: Container(
-//             width: MediaQuery.of(context).size.width * 0.23,
-//             height: MediaQuery.of(context).size.height * 0.045,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.all(Radius.circular(20)),
-//               color: income ? Color(0xffB58FE7) : Colors.white,
-//               border: Border.all(color: Color(0xffB58FE7)),
-//             ),
-//             child: Center(
-//               child: Text(
-//                 'Income',
-//                 style: TextStyle(
-//                     color: income ? Colors.white : Color(0xffB58FE7),
-//                     fontSize: 16),
-//                 textAlign: TextAlign.center,
-//               ),
-//             ),
-//           ),
-//         ),
-//         GestureDetector(
-//           onTap: () {
-//             setState(() {
-//               income = false;
-//               expense = true;
-//               transfer = false;
-//               incomeOpacity = 0.0;
-//               expenseOpacity = 1.0;
-//               transferOpacity = 0.0;
-//             });
-//           },
-//           child: Container(
-//             width: MediaQuery.of(context).size.width * 0.23,
-//             height: MediaQuery.of(context).size.height * 0.045,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.all(Radius.circular(20)),
-//               color: expense ? Color(0xffB58FE7) : Colors.white,
-//               border: Border.all(color: Color(0xffB58FE7)),
-//             ),
-//             child: Center(
-//               child: Text(
-//                 'Expense',
-//                 style: TextStyle(
-//                     color: expense ? Colors.white : Color(0xffB58FE7),
-//                     fontSize: 16),
-//                 textAlign: TextAlign.center,
-//               ),
-//             ),
-//           ),
-//         ),
-//         GestureDetector(
-//           onTap: () {
-//             setState(() {
-//               income = false;
-//               expense = false;
-//               transfer = true;
-//               incomeOpacity = 0.0;
-//               expenseOpacity = 0.0;
-//               transferOpacity = 1.0;
-//             });
-//           },
-//           child: Container(
-//             width: MediaQuery.of(context).size.width * 0.23,
-//             height: MediaQuery.of(context).size.height * 0.045,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.all(Radius.circular(20)),
-//               color: transfer ? Color(0xffB58FE7) : Colors.white,
-//               border: Border.all(color: Color(0xffB58FE7)),
-//             ),
-//             child: Center(
-//               child: Text(
-//                 'Transfer',
-//                 style: TextStyle(
-//                     color: transfer ? Colors.white : Color(0xffB58FE7),
-//                     fontSize: 16),
-//                 textAlign: TextAlign.center,
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

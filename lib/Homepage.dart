@@ -6,6 +6,7 @@ import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwallet_app/Wallet.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,12 +57,12 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: (252.5 / 760) * _screenHeight),
+            padding: EdgeInsets.only(top: 252.5.h),
             child:
                 Hero(tag: 'pop_up', child: SvgPicture.asset('images/Logo.svg')),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: (38 / 760) * _screenHeight),
+            padding: EdgeInsets.only(bottom: 38.h),
             child: GestureDetector(
               onTap: () {
                 if (email == '' && token == '') {
@@ -86,11 +87,6 @@ class _HomePageState extends State<HomePage> {
               },
               child: Column(
                 children: <Widget>[
-                  // Icon(
-                  //   Icons.keyboard_arrow_up_rounded,
-                  //   color: Colors.white,
-                  //   size: 30,
-                  // ),
                   Text(
                     "TOUCH\nTO START",
                     textAlign: TextAlign.center,

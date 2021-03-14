@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:goodwallet_app/Voice_Input.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WalletSlider extends StatefulWidget {
   final firebaseInstance;
@@ -39,11 +40,11 @@ class _WalletSliderState extends State<WalletSlider> {
         }
 
         return Container(
-          height: MediaQuery.of(context).size.height * 0.05, //0.05
-          width: MediaQuery.of(context).size.width * 0.6, //0.45
+          height: 0.05.sh, //0.05
+          width: 0.6.sw, //0.45
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30), color: Colors.white),
-          margin: EdgeInsets.only(bottom: 20),
+              borderRadius: BorderRadius.circular(30.r), color: Colors.white),
+          margin: EdgeInsets.only(bottom: 20.h),
           child: Row(children: [
             GestureDetector(
               onTap: () {
@@ -60,11 +61,11 @@ class _WalletSliderState extends State<WalletSlider> {
             ),
             Expanded(
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
+                height: 0.05.sh,
                 child: CarouselSlider(
                   carouselController: walletButtonCarouselController,
                   options: CarouselOptions(
-                    height: 50.0,
+                    height: 50.0.h,
                     autoPlay: false,
                     initialPage: firebaseInstance.walletIndex,
                     // autoPlayInterval: Duration(seconds: 3),
@@ -84,11 +85,11 @@ class _WalletSliderState extends State<WalletSlider> {
                   items: cardList.map((card) {
                     return Builder(builder: (BuildContext context) {
                       return Container(
-                        margin: EdgeInsets.symmetric(vertical: 5),
+                        margin: EdgeInsets.symmetric(vertical: 5.h),
                         // height: MediaQuery.of(context).size.height * 0.01,
                         width: double.infinity,
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 16),
+                          margin: EdgeInsets.symmetric(horizontal: 16.w),
                           // color: Color(0xff9967B2),
                           child: Center(
                             child: card,
@@ -128,7 +129,7 @@ class WalletItem extends StatelessWidget {
     return Container(
       child: Text(
         walletName,
-        style: TextStyle(color: Color(0xffB58FE7), fontSize: 16),
+        style: TextStyle(color: Color(0xffB58FE7), fontSize: 16.sp),
       ),
     );
   }

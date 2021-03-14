@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/Wallet.dart';
 import 'package:goodwallet_app/SignInPage.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginPopup extends StatefulWidget {
   @override
@@ -43,14 +44,13 @@ class _LoginPopupState extends State<LoginPopup> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(71),
-                  topRight: Radius.circular(71),
+                  topLeft: Radius.circular(71.r),
+                  topRight: Radius.circular(71.r),
                 ),
                 color: Color(0xFFF4F6FF),
               ),
-              height: (370 / 760) * _screenHeight,
-              padding: EdgeInsets.fromLTRB(60 / 360 * _screenWidth, 0,
-                  60 / 360 * _screenWidth, 15 / 760 * _screenHeight),
+              height: 370.h,
+              padding: EdgeInsets.fromLTRB(60.w, 0, 60.w, 15.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -59,7 +59,7 @@ class _LoginPopupState extends State<LoginPopup> {
                       padding: EdgeInsets.all(0),
                       icon: Icon(Icons.horizontal_rule_rounded),
                       color: Color(0xffC78EC8),
-                      iconSize: 60,
+                      iconSize: 60.w,
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -70,18 +70,18 @@ class _LoginPopupState extends State<LoginPopup> {
                     style: TextStyle(
                       color: Color(0xff8C35B1),
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 25.sp,
                       fontFamily: 'HinSiliguri',
                       decoration: TextDecoration.none,
                     ),
                   ),
                   SizedBox(
-                    height: 20 / 760 * _screenHeight,
+                    height: 20.h,
                   ),
                   Text(
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris euismod erat.',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: Color(0xff8C35B1),
                       fontFamily: 'HinSiliguri',
                       fontWeight: FontWeight.normal,
@@ -89,7 +89,7 @@ class _LoginPopupState extends State<LoginPopup> {
                     ),
                   ),
                   SizedBox(
-                    height: 57 / 760 * _screenHeight,
+                    height: 57.h,
                   ),
                   Hero(
                     tag: 'Login-button',
@@ -97,11 +97,11 @@ class _LoginPopupState extends State<LoginPopup> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FlatButton(
-                          height: 47 / 760 * _screenHeight,
-                          minWidth: 114.5 / 360 * _screenWidth,
+                          height: 47.h,
+                          minWidth: 114.5.w,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0)),
-                          padding: EdgeInsets.all(6),
+                              borderRadius: BorderRadius.circular(24.0.r)),
+                          padding: EdgeInsets.all(6.w),
                           onPressed: () {
                             signInButton = 1;
                             Navigator.push(context,
@@ -112,20 +112,17 @@ class _LoginPopupState extends State<LoginPopup> {
                           color: Color(0xff8C35B1),
                           child: Text(
                             "Sign In",
-                            style: TextStyle(
-                                fontSize: 14 /
-                                    (360 * 760) *
-                                    (_screenHeight * _screenWidth)),
+                            style: TextStyle(fontSize: 14.sp),
                           ),
                           textColor: Colors.white,
                         ),
-                        SizedBox(width: (11 / 360) * _screenWidth),
+                        SizedBox(width: 11.w),
                         FlatButton(
-                          height: 47 / 760 * _screenHeight,
-                          minWidth: 114.5 / 360 * _screenWidth,
+                          height: 47.h,
+                          minWidth: 114.5.w,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0)),
-                          padding: EdgeInsets.all(6),
+                              borderRadius: BorderRadius.circular(24.0.r)),
+                          padding: EdgeInsets.all(6.w),
                           onPressed: () {
                             signInButton = 0;
                             Navigator.push(context,
@@ -136,10 +133,7 @@ class _LoginPopupState extends State<LoginPopup> {
                           color: Color(0xffB58FE7),
                           child: Text(
                             "Sign Up",
-                            style: TextStyle(
-                                fontSize: 14 /
-                                    (360 * 760) *
-                                    (_screenHeight * _screenWidth)),
+                            style: TextStyle(fontSize: 14.sp),
                           ),
                           textColor: Colors.white,
                         ),

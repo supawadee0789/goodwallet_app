@@ -14,6 +14,7 @@ import 'package:flutter_page_transition/flutter_page_transition.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'Voice_Input.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -71,36 +72,29 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
               Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        26 / 360 * screenWidth,
-                        17 / 760 * screenHeight,
-                        22.5 / 360 * screenWidth,
-                        60 / 760 * screenHeight),
+                    padding: EdgeInsets.fromLTRB(26.w, 17.h, 22.5.w, 60.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        IconButton(
-                          onPressed: () {
+                        GestureDetector(
+                          onTap: () {
                             setState(() {
                               _controller.reverse();
                               openNav = 1.0;
                             });
                           },
-                          icon: Icon(
-                            Icons.account_circle_rounded,
-                            color: Colors.white,
-                            size: 40,
-                          ),
+                          child: Icon(Icons.account_circle_rounded,
+                              color: Colors.white, size: 35.w),
                         ),
                         Text(
                           "WALLET",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 25,
+                              fontSize: 25.sp,
                               letterSpacing: 0.66),
                         ),
                         SizedBox(
-                          width: 30 / 360 * screenWidth,
+                          width: 30.w,
                         ),
                       ],
                     ),
@@ -108,9 +102,9 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                   TotalCard(),
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.only(top: 30),
+                      margin: EdgeInsets.only(top: 30.h),
                       child: WalletList(this),
-                      width: MediaQuery.of(context).size.width * 0.83,
+                      width: 0.83.sw,
                     ),
                   ),
                   GestureDetector(
@@ -122,18 +116,18 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.078,
+                      height: 0.078.sh,
                       decoration: BoxDecoration(
                           color: Color(0xffE5A9B6),
                           borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(23),
-                              topRight: Radius.circular(23))),
+                              topLeft: Radius.circular(23.r),
+                              topRight: Radius.circular(23.r))),
                       child: Center(
                         child: Text(
                           "Add new wallet",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                           ),
                         ),
                       ),
@@ -163,17 +157,14 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                         },
                         child: Container(
                           padding: EdgeInsets.fromLTRB(
-                              screenHeight * 0.05,
-                              screenHeight * 0.05,
-                              screenWidth * 0.02,
-                              screenHeight * 0.05),
+                              0.05.sw, 0.05.sh, 0.02.sw, 0.05.sh),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30)),
+                                topRight: Radius.circular(30.r)),
                             color: Colors.white,
                           ),
                           height: screenHeight,
-                          width: screenWidth * 0.6,
+                          width: 0.6.sw,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -195,17 +186,16 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                                 )
                                               : SvgPicture.asset(
                                                   'images/account.svg',
-                                                  width: 35,
+                                                  width: 35.w,
                                                   color: Color(0xffC88EC5),
                                                 ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8),
+                                            padding: EdgeInsets.only(top: 8.h),
                                             child: Text(
                                               name == null ? 'Guest' : name,
                                               style: TextStyle(
                                                   color: Color(0xff706D6D),
-                                                  fontSize: 20,
+                                                  fontSize: 20.sp,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ),
@@ -215,18 +205,19 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                                 : email,
                                             style: TextStyle(
                                                 color: Color(0xffA1A1A1),
-                                                fontSize: 11,
+                                                fontSize: 11.sp,
                                                 fontWeight: FontWeight.w100),
                                           ),
                                         ],
                                       );
                                     },
                                   ),
-                                  SizedBox(height: screenHeight * 0.1),
+                                  SizedBox(height: 0.1.sh),
                                   Text(
                                     'Other',
                                     style: TextStyle(
-                                        color: Color(0xff706D6D), fontSize: 14),
+                                        color: Color(0xff706D6D),
+                                        fontSize: 14.sp),
                                   ),
                                   ListTile(
                                     onTap: () {},
@@ -238,9 +229,9 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                       'Monthly Transactions',
                                       style: TextStyle(
                                           color: Color(0xffA1A1A1),
-                                          fontSize: 11),
+                                          fontSize: 11.sp),
                                     ),
-                                    horizontalTitleGap: 0.5,
+                                    horizontalTitleGap: 0.5.w,
                                     contentPadding:
                                         EdgeInsets.symmetric(horizontal: 0),
                                   ),
@@ -257,7 +248,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                           'Notification',
                                           style: TextStyle(
                                               color: Color(0xffA1A1A1),
-                                              fontSize: 11),
+                                              fontSize: 11.sp),
                                         ),
                                         CupertinoSwitch(
                                           value: _notification,
@@ -275,7 +266,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                         )
                                       ],
                                     ),
-                                    horizontalTitleGap: 0.5,
+                                    horizontalTitleGap: 0.5.w,
                                     contentPadding:
                                         EdgeInsets.symmetric(horizontal: 0),
                                   ),
@@ -293,10 +284,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                       'Setting',
                                       style: TextStyle(
                                           color: Color(0xff706D6D),
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    horizontalTitleGap: 0.5,
+                                    horizontalTitleGap: 0.5.w,
                                     contentPadding:
                                         EdgeInsets.symmetric(horizontal: 0),
                                   ),
@@ -324,10 +315,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                       'Log out',
                                       style: TextStyle(
                                           color: Color(0xff706D6D),
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    horizontalTitleGap: 0.5,
+                                    horizontalTitleGap: 0.5.w,
                                     contentPadding:
                                         EdgeInsets.symmetric(horizontal: 0),
                                   ),
@@ -383,20 +374,20 @@ class TotalCard extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      width: 314 / 360 * screenWidth,
-      height: 147 / 760 * screenHeight,
+      width: 314.w,
+      height: 147.h,
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(34)),
+          color: Colors.white, borderRadius: BorderRadius.circular(34.r)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 15 / 760 * screenHeight),
+            padding: EdgeInsets.only(top: 15.h),
             child: Text(
               "TOTAL",
               style: TextStyle(
                   color: Color(0xffA1A1A1),
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
@@ -411,8 +402,8 @@ class TotalCard extends StatelessWidget {
                 return Container(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: 300.0,
-                      maxHeight: 54 / 760 * screenHeight,
+                      maxWidth: 300.0.w,
+                      maxHeight: 54.h,
                     ),
                     child: AutoSizeText(
                       money.toStringAsFixed(2).replaceAllMapped(reg, mathFunc),
@@ -420,7 +411,7 @@ class TotalCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontSize: 41.0,
+                          fontSize: 41.0.sp,
                           color: Color(0xffA890FE),
                           fontWeight: FontWeight.bold),
                     ),
@@ -430,12 +421,12 @@ class TotalCard extends StatelessWidget {
             },
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 7 / 760 * screenHeight),
+            padding: EdgeInsets.only(bottom: 7.h),
             child: Text(
               "BAHT",
               style: TextStyle(
                   color: Color(0xffA890FE),
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   letterSpacing: 0.42,
                   fontWeight: FontWeight.w600),
             ),
@@ -490,11 +481,11 @@ class WalletList extends StatelessWidget {
                         child: new CreateWallet(firebaseInstance)));
                   },
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.096,
+                    height: 0.096.sh,
                     width: double.infinity,
-                    margin: EdgeInsets.symmetric(vertical: 7),
+                    margin: EdgeInsets.symmetric(vertical: 7.h),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -502,7 +493,7 @@ class WalletList extends StatelessWidget {
                             wallet['name'],
                             style: TextStyle(
                                 color: Color(0xffA1A1A1),
-                                fontSize: 20,
+                                fontSize: 20.sp,
                                 decoration: TextDecoration.none,
                                 fontFamily: 'Knit'),
                           ),
@@ -512,7 +503,7 @@ class WalletList extends StatelessWidget {
                                 .replaceAllMapped(reg, mathFunc),
                             style: TextStyle(
                                 color: Color(0xffA890FE),
-                                fontSize: 32,
+                                fontSize: 32.sp,
                                 fontWeight: FontWeight.w600,
                                 decoration: TextDecoration.none),
                           )
@@ -520,7 +511,7 @@ class WalletList extends StatelessWidget {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(34),
+                      borderRadius: BorderRadius.circular(34.r),
                       color: Colors.white,
                     ),
                   ),

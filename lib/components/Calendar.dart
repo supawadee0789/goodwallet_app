@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goodwallet_app/components/IconSelector.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Calendar extends StatefulWidget {
   final index;
@@ -61,15 +62,17 @@ class _CalendarState extends State<Calendar> {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.fromLTRB(18, 10, 18, 10),
+            margin: EdgeInsets.fromLTRB(18.w, 10.h, 18.w, 10.h),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(18.r),
               color: Colors.white,
             ),
             child: TableCalendar(
               calendarController: _calendarController,
               initialCalendarFormat: CalendarFormat.week,
               calendarStyle: CalendarStyle(
+                  selectedStyle: TextStyle(fontSize: 20.sp),
+                  todayStyle: TextStyle(fontSize: 20.sp),
                   selectedColor: Color(0xffB58FE7),
                   todayColor: Color(0xff6A2388),
                   markersColor: Colors.brown[700],
@@ -87,7 +90,7 @@ class _CalendarState extends State<Calendar> {
                   formatButtonTextStyle: TextStyle(color: Colors.white),
                   formatButtonDecoration: BoxDecoration(
                       color: Color(0xffB58FE7),
-                      borderRadius: BorderRadius.circular(25))),
+                      borderRadius: BorderRadius.circular(25.r))),
               availableCalendarFormats: const {
                 CalendarFormat.month: 'Month',
                 CalendarFormat.week: 'Week',
@@ -153,23 +156,17 @@ class _CalendarState extends State<Calendar> {
                           actionPane: SlidableScrollActionPane(),
                           actionExtentRatio: 0.25,
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                                minHeight: screenHeight * 66 / 760),
+                            constraints: BoxConstraints(minHeight: 66.h),
                             child: Container(
-                                margin: EdgeInsets.fromLTRB(
-                                    15 / 360 * screenWidth,
-                                    5 / 760 * screenHeight,
-                                    15 / 360 * screenWidth,
-                                    5 / 760 * screenHeight),
-                                // height: screenHeight * 66 / 760,
-                                // width: screenWidth * 281 / 360,
+                                margin:
+                                    EdgeInsets.fromLTRB(15.w, 5.h, 15.w, 5.h),
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16)),
+                                    borderRadius: BorderRadius.circular(16.r)),
                                 child: Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                      EdgeInsets.symmetric(vertical: 8.0.h),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -179,14 +176,14 @@ class _CalendarState extends State<Calendar> {
                                           children: [
                                             Container(
                                               margin: EdgeInsets.symmetric(
-                                                  horizontal: 15),
-                                              height: screenHeight * 0.08,
-                                              width: screenWidth * 0.08,
+                                                  horizontal: 15.w),
+                                              height: 0.08.sh,
+                                              width: 0.08.sw,
                                               child: SvgPicture.asset(
                                                 select(trans['class']),
                                                 color: Color(0xffC88EC5),
-                                                height: screenHeight * 0.08,
-                                                width: screenWidth * 0.08,
+                                                height: 0.08.sh,
+                                                width: 0.08.sw,
                                               ),
                                             ),
                                             Column(
@@ -197,30 +194,24 @@ class _CalendarState extends State<Calendar> {
                                               children: <Widget>[
                                                 ConstrainedBox(
                                                   constraints: BoxConstraints(
-                                                      maxWidth:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.33),
+                                                      maxWidth: 0.33.sw),
                                                   child: Text(
                                                     trans['name'],
                                                     style: TextStyle(
                                                         fontFamily: 'Knit',
                                                         color:
                                                             Color(0xff6A2388),
-                                                        fontSize: 16,
+                                                        fontSize: 16.sp,
                                                         fontWeight:
                                                             FontWeight.w700),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                    height:
-                                                        2 / 760 * screenHeight),
+                                                SizedBox(height: 2.h),
                                                 Text(
                                                   time[3] + " " + time[4],
                                                   style: TextStyle(
                                                       color: Color(0xffBCBCBC),
-                                                      fontSize: 11),
+                                                      fontSize: 11.sp),
                                                 )
                                               ],
                                             ),
@@ -228,17 +219,13 @@ class _CalendarState extends State<Calendar> {
                                         ),
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8),
+                                        padding: EdgeInsets.only(right: 8.h),
                                         child: isIncome
                                             ? Text(
                                                 "฿ " + income,
                                                 style: TextStyle(
                                                     color: Color(0xff6A2388),
-                                                    fontSize: 14 /
-                                                        (760 * 360) *
-                                                        (screenHeight *
-                                                            screenWidth),
+                                                    fontSize: 14.sp,
                                                     fontWeight:
                                                         FontWeight.w700),
                                                 textAlign: TextAlign.right,
@@ -247,10 +234,7 @@ class _CalendarState extends State<Calendar> {
                                                 "฿ " + expense,
                                                 style: TextStyle(
                                                     color: Color(0xff6A2388),
-                                                    fontSize: 14 /
-                                                        (760 * 360) *
-                                                        (screenHeight *
-                                                            screenWidth),
+                                                    fontSize: 14.sp,
                                                     fontWeight:
                                                         FontWeight.w700),
                                                 textAlign: TextAlign.right,
