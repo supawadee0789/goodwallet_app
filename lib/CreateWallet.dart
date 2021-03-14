@@ -121,7 +121,7 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
     final _screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
