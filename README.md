@@ -1,4 +1,3 @@
-# The lastest branch is : Budget !!!!!!!!
 
 ## goodwallet_app
 
