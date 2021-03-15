@@ -35,7 +35,7 @@ class ExpenseComponent extends StatefulWidget {
 }
 
 class _ExpenseComponentState extends State<ExpenseComponent> {
-  final _fireStore = Firestore.instance;
+  final _fireStore = FirebaseFirestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
   final firebaseInstance;
   int _class;
@@ -247,7 +247,7 @@ class _ExpenseComponentState extends State<ExpenseComponent> {
                 .collection('users')
                 .doc(uid)
                 .collection('wallet')
-                .document(firebaseInstance.walletID.toString())
+                .doc(firebaseInstance.walletID.toString())
                 .collection('transaction')
                 .add({
               'class': checkClass(_class),

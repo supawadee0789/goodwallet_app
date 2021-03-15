@@ -116,7 +116,7 @@ class _CalendarState extends State<Calendar> {
                     .collection('users')
                     .doc(uid)
                     .collection('wallet')
-                    .document(walletID)
+                    .doc(walletID)
                     .collection('transaction')
                     .orderBy('createdOn', descending: false)
                     .startAt([_start]).endAt([_end]).snapshots(),
@@ -131,9 +131,9 @@ class _CalendarState extends State<Calendar> {
                   }
                   return ListView.builder(
                       shrinkWrap: true,
-                      itemCount: snapshot.data.documents.length,
+                      itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
-                        DocumentSnapshot trans = snapshot.data.documents[index];
+                        DocumentSnapshot trans = snapshot.data.docs[index];
                         var time = DateFormat.yMMMd()
                             .add_jm()
                             .format(DateTime.parse(

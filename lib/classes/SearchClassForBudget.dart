@@ -89,7 +89,7 @@ Future<Map> sumExpClass(firebaseInstance, budget) async {
           .where('class', isEqualTo: expClass);
       QuerySnapshot byTime = await snapshot
           .orderBy('createdOn', descending: true)
-          .startAt([_end]).endAt([_start]).getDocuments();
+          .startAt([_end]).endAt([_start]).get();
       for (var i = 0; i < byTime.docs.length; i++) {
         DocumentSnapshot data = byTime.docs[i];
         sum += data['cost'];

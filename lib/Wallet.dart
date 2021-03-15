@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:goodwallet_app/components/Notification.dart';
 import 'package:goodwallet_app/main.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'CreateWallet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_page_transition/flutter_page_transition.dart';
@@ -15,6 +20,13 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'Voice_Input.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class Wallet extends StatefulWidget {
   @override
@@ -22,6 +34,11 @@ class Wallet extends StatefulWidget {
 }
 
 class _WalletState extends State<Wallet> with TickerProviderStateMixin {
+  String message;
+  String channelId = "1000";
+  String channelName = "FLUTTER_NOTIFICATION_CHANNEL";
+  String channelDescription = "FLUTTER_NOTIFICATION_CHANNEL_DETAIL";
+
   AnimationController _controller;
   double openNav = 0.0;
   final _auth = FirebaseAuth.instance;
@@ -29,6 +46,8 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
   var email;
   var pic;
   bool _notification = false;
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  String _message;
   Future userHandler() async {
     try {
       name = await _auth.currentUser.displayName;
@@ -40,16 +59,57 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
     }
   }
 
+  sendNotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails('10000',
+        'FLUTTER_NOTIFICATION_CHANNEL', 'FLUTTER_NOTIFICATION_CHANNEL_DETAIL',
+        importance: Importance.max, priority: Priority.high);
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.showDailyAtTime(
+        111,
+        'Hello, spender.',
+        'This is a your notifications. ',
+        Time(22, 50, 0),
+        platformChannelSpecifics,
+        payload: 'I just haven\'t Met You Yet');
+  }
+
+
   @override
   void initState() {
+
     setState(() {
       _controller = AnimationController(
         duration: const Duration(milliseconds: 200),
         vsync: this,
       );
     });
-    // TODO: implement initState
     super.initState();
+    message = "No message.";
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_launcher');
+
+    var initializationSettingsIOS = IOSInitializationSettings(
+        // ignore: missing_return
+        onDidReceiveLocalNotification: (id, title, body, payload) {
+      print("onDidReceiveLocalNotification called.");
+    });
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        // ignore: missing_return
+        onSelectNotification: (payload) {
+      // when user tap on notification.
+      print("onSelectNotification called.");
+      setState(() {
+        message = payload;
+      });
+    });
   }
 
   @override
@@ -220,22 +280,6 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                         fontSize: 14.sp),
                                   ),
                                   ListTile(
-                                    onTap: () {},
-                                    leading: Icon(
-                                      Icons.receipt_long,
-                                      color: Color(0xffC88EC5),
-                                    ),
-                                    title: Text(
-                                      'Monthly Transactions',
-                                      style: TextStyle(
-                                          color: Color(0xffA1A1A1),
-                                          fontSize: 11.sp),
-                                    ),
-                                    horizontalTitleGap: 0.5.w,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 0),
-                                  ),
-                                  ListTile(
                                     leading: Icon(
                                       Icons.notifications_active_rounded,
                                       color: Color(0xffC88EC5),
@@ -256,11 +300,16 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                             setState(() {
                                               _notification = value;
                                             });
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return notifyPage();
-                                            }));
+                                            if (_notification) {
+                                              sendNotification();
+                                              // sendNotification();
+                                              print("Turned on notification");
+                                            } else {
+                                              flutterLocalNotificationsPlugin
+                                                  .cancelAll();
+                                              print(
+                                                  "All notifications are canceled");
+                                            }
                                           },
                                           activeColor: Color(0xffEA8D8D),
                                         )
@@ -274,23 +323,6 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                               ),
                               Column(
                                 children: [
-                                  ListTile(
-                                    onTap: () {},
-                                    leading: Icon(
-                                      Icons.settings,
-                                      color: Color(0xffC88EC5),
-                                    ),
-                                    title: Text(
-                                      'Setting',
-                                      style: TextStyle(
-                                          color: Color(0xff706D6D),
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    horizontalTitleGap: 0.5.w,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 0),
-                                  ),
                                   ListTile(
                                     onTap: () async {
                                       final SharedPreferences prefs =
@@ -357,12 +389,12 @@ class TotalCard extends StatelessWidget {
   Future<double> fetchTotal() async {
     double money = 0;
     final uid = _auth.currentUser.uid;
-    await for (var snapshot in Firestore.instance
+    await for (var snapshot in FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection('wallet')
         .snapshots()) {
-      for (var wallet in snapshot.documents) {
+      for (var wallet in snapshot.docs) {
         final cost = wallet.get('money');
         money = money + cost;
       }
@@ -464,10 +496,10 @@ class WalletList extends StatelessWidget {
           }
           return ListView.builder(
             // ignore: deprecated_member_use
-            itemCount: snapshot.data.documents.length,
+            itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
               // ignore: deprecated_member_use
-              DocumentSnapshot wallet = snapshot.data.documents[index];
+              DocumentSnapshot wallet = snapshot.data.docs[index];
               return Slidable(
                 actionPane: SlidableDrawerActionPane(),
                 actionExtentRatio: 0.25,

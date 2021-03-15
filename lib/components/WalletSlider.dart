@@ -35,10 +35,11 @@ class _WalletSliderState extends State<WalletSlider> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         List cardList = [];
         // ignore: deprecated_member_use
-        for (var n in snapshot.data.documents) {
-          cardList.add(WalletItem(n['name']));
+        if (snapshot.data != null) {
+          for (var n in snapshot.data.docs) {
+            cardList.add(WalletItem(n['name']));
+          }
         }
-
         return Container(
           height: 0.05.sh, //0.05
           width: 0.6.sw, //0.45
@@ -78,7 +79,7 @@ class _WalletSliderState extends State<WalletSlider> {
                         _currentWalletIndex = index;
                         firebaseInstance.walletIndex = index;
                         firebaseInstance.walletID =
-                            snapshot.data.documents[index].id;
+                            snapshot.data.docs[index].id;
                       });
                     },
                   ),

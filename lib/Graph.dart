@@ -168,7 +168,7 @@ class _GraphComponentState extends State<GraphComponent>
     return StreamBuilder<QuerySnapshot>(
         stream: user
             .collection('wallet')
-            .document(firebaseInstance.walletID.toString())
+            .doc(firebaseInstance.walletID.toString())
             .collection('transaction')
             .orderBy('createdOn', descending: true)
             .startAt([parent._end]).endAt([parent._start]).snapshots(),
@@ -177,12 +177,12 @@ class _GraphComponentState extends State<GraphComponent>
               snapshot.connectionState == ConnectionState.waiting) {
             return Text('');
           }
-          int len = snapshot.data.documents.length;
+          int len = snapshot.data.docs.length;
           incomeNumber = 0;
           expenseNumber = 0;
           expenseClassNumber = List<double>.generate(7, (i) => 0);
           for (var i = 0; i < len; i++) {
-            DocumentSnapshot trans = snapshot.data.documents[i];
+            DocumentSnapshot trans = snapshot.data.docs[i];
             if (trans['cost'] > 0) {
               incomeNumber += trans['cost'];
             } else {

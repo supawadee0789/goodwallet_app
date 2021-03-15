@@ -20,7 +20,7 @@ class _TransferComponentState extends State<TransferComponent> {
   final firebaseInstance;
   String note;
   double amount;
-  final _fireStore = Firestore.instance;
+  final _fireStore = FirebaseFirestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
   var initialWallet;
   var targetWallet;
@@ -141,7 +141,7 @@ class _TransferComponentState extends State<TransferComponent> {
                   .collection('users')
                   .doc(uid)
                   .collection('wallet')
-                  .document(firebaseInstance.walletID.toString())
+                  .doc(firebaseInstance.walletID.toString())
                   .collection('transaction')
                   .add({
                 'class': 'transfer',
@@ -156,7 +156,7 @@ class _TransferComponentState extends State<TransferComponent> {
                   .collection('users')
                   .doc(uid)
                   .collection('wallet')
-                  .document(targetWallet.targetWalletID)
+                  .doc(targetWallet.targetWalletID)
                   .collection('transaction')
                   .add({
                 'class': 'transfer',

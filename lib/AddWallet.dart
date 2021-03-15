@@ -12,7 +12,7 @@ class AddWallet extends StatefulWidget {
 }
 
 class _AddWalletState extends State<AddWallet> {
-  final _fireStore = Firestore.instance;
+  final _fireStore = FirebaseFirestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
   String name = "";
   double money = 0;

@@ -12,7 +12,7 @@ class IncomeComponent extends StatefulWidget {
 }
 
 class _IncomeComponentState extends State<IncomeComponent> {
-  final _fireStore = Firestore.instance;
+  final _fireStore = FirebaseFirestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
   // final _walletID;
   final firebaseInstance;
@@ -86,7 +86,7 @@ class _IncomeComponentState extends State<IncomeComponent> {
                   .collection('users')
                   .doc(uid)
                   .collection('wallet')
-                  .document(firebaseInstance.walletID.toString())
+                  .doc(firebaseInstance.walletID.toString())
                   .collection('transaction')
                   .add({
                 'class': 'income',

@@ -73,7 +73,7 @@ class _BudgetState extends State<Budget> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: Text("Loading..."));
                   }
-                  var len = snapshot.data.documents.length;
+                  var len = snapshot.data.docs.length;
                   return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Column(
@@ -84,7 +84,7 @@ class _BudgetState extends State<Budget> {
                             itemCount: len,
                             itemBuilder: (context, index) {
                               DocumentSnapshot budget =
-                                  snapshot.data.documents[index];
+                                  snapshot.data.docs[index];
                               return Slidable(
                                 actionPane: SlidableScrollActionPane(),
                                 actionExtentRatio: 0.25,

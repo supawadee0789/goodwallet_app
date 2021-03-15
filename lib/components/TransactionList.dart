@@ -56,7 +56,7 @@ class _TransListState extends State<TransList> {
               .collection('users')
               .doc(uid)
               .collection('wallet')
-              .document(firebaseInstance.walletID.toString())
+              .doc(firebaseInstance.walletID.toString())
               .collection('transaction')
               .orderBy('createdOn', descending: true)
               // .startAt([_start]).endAt([_end]).snapshots(),
@@ -70,16 +70,15 @@ class _TransListState extends State<TransList> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text("Loading...");
             }
-            return snapshot.data.documents.length == 0
+            return snapshot.data.docs.length == 0
                 ? noTransaction()
                 : Container(
                     width: 311.w,
                     height: 300.h,
                     child: ListView.builder(
-                        itemCount: snapshot.data.documents.length,
+                        itemCount: snapshot.data.docs.length,
                         itemBuilder: (context, index) {
-                          DocumentSnapshot trans =
-                              snapshot.data.documents[index];
+                          DocumentSnapshot trans = snapshot.data.docs[index];
                           name = trans['name'];
                           if (name.length > 13) {
                             firstHalf = name.substring(0, 11);

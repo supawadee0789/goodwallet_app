@@ -74,7 +74,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       {Key key, @required this.resultText, this.index, this.firebaseInstance});
 
   // ignore: deprecated_member_use
-  final _fireStore = Firestore.instance;
+  final _fireStore = FirebaseFirestore.instance;
   final uid = FirebaseAuth.instance.currentUser.uid;
   var currentTransaction;
   var manualType;
@@ -90,7 +90,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
   // ignore: non_constant_identifier_names
   Future WordSegmentation(_text) async {
-    var url = "https://api.aiforthai.in.th/lextoplus?text=" + _text;
+    // "https://api.aiforthai.in.th/lextoplus?text=" + _text
+    var url = Uri.parse("https://api.aiforthai.in.th/lextoplus?text=" + _text);
     await Http.get(url, headers: {"Apikey": "elHOb4Ksl715HkIu6Leq5ZdcnYX39SPP"})
         .then((response) async {
       print("Response status: ${response.body}");
@@ -385,7 +386,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             .doc(uid)
                             .collection('wallet')
                             // ignore: deprecated_member_use
-                            .document(firebaseInstance.walletID.toString())
+                            .doc(firebaseInstance.walletID.toString())
                             .collection('transaction')
                             .add({
                           'class': classCarousel(_currentIndex),
@@ -402,8 +403,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               .doc(uid)
                               .collection('wallet')
                               // ignore: deprecated_member_use
-                              .document(
-                                  currentTransaction.targetWalletID.toString())
+                              .doc(currentTransaction.targetWalletID.toString())
                               .collection('transaction')
                               .add({
                             'class': classCarousel(_currentIndex),

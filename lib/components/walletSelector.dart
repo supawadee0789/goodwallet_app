@@ -18,7 +18,7 @@ class _WalletSelectorState extends State<WalletSelector> {
   final currentTransaction;
   _WalletSelectorState(this.currentTransaction);
 
-  final wallets = Firestore.instance;
+  final wallets = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
 
   var selectedItem = '';

@@ -516,7 +516,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
     facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
     FacebookLoginResult result =
         await facebookLogin.logIn(['email', "public_profile"]);
-    final _fireStore = Firestore.instance;
+    final _fireStore = FirebaseFirestore.instance;
     String token = result.accessToken.token;
     print("Access token = $token");
     var user = await _auth

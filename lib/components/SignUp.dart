@@ -192,7 +192,7 @@ class _SignUpState extends State<SignUp> {
                   final newUser = await _auth.createUserWithEmailAndPassword(
                       email: email, password: password);
                   if (newUser != null) {
-                    final _fireStore = Firestore.instance;
+                    final _fireStore = FirebaseFirestore.instance;
                     var uid = _auth.currentUser.uid;
                     final SharedPreferences prefs =
                         await SharedPreferences.getInstance();
