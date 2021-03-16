@@ -94,9 +94,13 @@ class Transactions {
       array.removeAt(0);
     }
     print(array);
-    for (var i = 0; i < 2; i++) {
+
+    for (var i = array.length - 1; i > 0; i--) {
       array.removeLast();
       print(array);
+      if (this.textType[i] == 2) {
+        break;
+      }
     }
 
     var name = StringBuffer();

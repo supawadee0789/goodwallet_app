@@ -16,6 +16,14 @@ import "dart:async";
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+final noText = SnackBar(
+  content: Text(
+    'Speech undetected',
+    textAlign: TextAlign.center,
+    style: TextStyle(fontSize: 12.sp),
+  ),
+);
+
 class VoiceInput extends StatefulWidget {
   final index;
   final firebaseInstance;
@@ -56,13 +64,6 @@ class _VoiceInputState extends State<VoiceInput> {
     }
   }
 
-  final noText = SnackBar(
-    content: Text(
-      'Speech undetected',
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 12.sp),
-    ),
-  );
   @override
   Widget build(BuildContext context) {
     var _screenWidth = MediaQuery.of(context).size.width;
