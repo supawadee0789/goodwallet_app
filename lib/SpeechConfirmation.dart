@@ -68,6 +68,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   final firebaseInstance;
   String _screenType = '';
   var carouselAbsorb = false;
+  int carouselDataIndex;
   var iconOpacity = 1.0;
   var transferOpacity = 0.0;
   _ConfirmationPageState(
@@ -78,6 +79,22 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   final uid = FirebaseAuth.instance.currentUser.uid;
   var currentTransaction;
   var manualType;
+
+  final noCost = SnackBar(
+    content: Text(
+      'Transactions cost undetected',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 12.sp),
+    ),
+  );
+
+  final noType = SnackBar(
+    content: Text(
+      'Transactions type(Expense/Income/Transfer) is required',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 12.sp),
+    ),
+  );
   @override
   void initState() {
     super.initState();
@@ -105,16 +122,18 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       setState(() {
         if (manualType != null) {
           currentTransaction.type = manualType;
-        } else {
+        } else if (currentTransaction.type != null) {
           _screenType = currentTransaction.type;
+        } else {
+          _screenType = 'none';
         }
 
-        if (_screenType == 'Income') {
+        if (_screenType.toLowerCase() == 'income') {
           carouselAbsorb = true;
           iconOpacity = 0;
           buttonCarouselController.animateToPage(7,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
-        } else if (_screenType == 'Transfer') {
+        } else if (_screenType.toLowerCase() == 'transfer') {
           carouselAbsorb = true;
           iconOpacity = 0;
           transferOpacity = 1;
@@ -123,6 +142,39 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         }
       });
     });
+    if (currentTransaction.cost == null) {
+      ScaffoldMessenger.of(context).showSnackBar(noCost);
+      Navigator.pop(context);
+    }
+    var query = await _fireStore
+        .collection('users')
+        .doc(uid)
+        .collection('wallet')
+        .doc(firebaseInstance.walletID.toString())
+        .collection('transaction')
+        .where('name', isEqualTo: currentTransaction.name)
+        .snapshots();
+    print('this is query result');
+    query.forEach((element) {
+      if (element.docs.isNotEmpty) {
+        print(element.docs[0]['name']);
+        print(element.docs[0]['class']);
+        var dataType = element.docs[0]['type'];
+
+        setState(() {
+          dataType.replaceFirst(dataType[0], dataType[0].toUpperCase());
+          _screenType = dataType;
+          manualType = dataType;
+          print(_screenType);
+        });
+        carouselDataIndex = classToindex_carousel(element.docs[0]['class']);
+        buttonCarouselController.animateToPage(carouselDataIndex,
+            duration: Duration(milliseconds: 300), curve: Curves.linear);
+      } else {
+        print('data does not exists');
+      }
+    });
+    print('done!');
   }
 
   CarouselController buttonCarouselController = CarouselController();
@@ -171,7 +223,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 carouselAbsorb = false;
                                 iconOpacity = 1;
                                 transferOpacity = 0;
-                                buttonCarouselController.animateToPage(0,
+                                buttonCarouselController.animateToPage(
+                                    carouselDataIndex ?? 0,
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.linear);
                               });
@@ -180,7 +233,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               decoration: BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15.0.r)),
-                                  color: _screenType == 'Expense'
+                                  color: _screenType.toLowerCase() == 'expense'
                                       ? Colors.white
                                       : Color(0)),
                               child: Text(
@@ -188,9 +241,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 15.sp,
-                                    color: _screenType == 'Expense'
-                                        ? Color(0xff6A2388)
-                                        : Colors.white),
+                                    color:
+                                        _screenType.toLowerCase() == 'expense'
+                                            ? Color(0xff6A2388)
+                                            : Colors.white),
                               ),
                             ),
                           ),
@@ -214,7 +268,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               decoration: BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15.0.r)),
-                                  color: _screenType == 'Income'
+                                  color: _screenType.toLowerCase() == 'income'
                                       ? Colors.white
                                       : Color(0)),
                               child: Text(
@@ -222,7 +276,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 15.sp,
-                                    color: _screenType == 'Income'
+                                    color: _screenType.toLowerCase() == 'income'
                                         ? Color(0xff6A2388)
                                         : Colors.white),
                               ),
@@ -248,7 +302,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               decoration: BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15.0.r)),
-                                  color: _screenType == 'Transfer'
+                                  color: _screenType.toLowerCase() == 'transfer'
                                       ? Colors.white
                                       : Color(0)),
                               child: Text(
@@ -256,9 +310,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 15.sp,
-                                    color: _screenType == 'Transfer'
-                                        ? Color(0xff6A2388)
-                                        : Colors.white),
+                                    color:
+                                        _screenType.toLowerCase() == 'transfer'
+                                            ? Color(0xff6A2388)
+                                            : Colors.white),
                               ),
                             ),
                           ),
@@ -360,58 +415,77 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     alignment: Alignment.centerRight,
                     child: Listener(
                       onPointerDown: (detail) async {
-                        // await WordSegmentation(resultText);
-                        print('confirm');
-                        print(_screenType);
-                        print(currentTransaction.type);
-                        // print(checkName(tokens, checkCost(tokens)));
-                        // print(checkCost(tokens));
-                        var cost = currentTransaction.cost;
-                        var type = currentTransaction.type;
-                        if (manualType != null) {
-                          if (manualType == 'Expense' ||
-                              manualType == 'Transfer') {
-                            if (cost > 0) {
-                              cost = -cost;
+                        if (_screenType != null && _screenType != 'none') {
+                          // await WordSegmentation(resultText);
+                          print('confirm');
+                          print(_screenType);
+                          print(currentTransaction.type);
+                          // print(checkName(tokens, checkCost(tokens)));
+                          // print(checkCost(tokens));
+                          var cost = currentTransaction.cost;
+                          var type = currentTransaction.type;
+                          if (manualType != null) {
+                            if (manualType.toLowerCase() == 'expense' ||
+                                manualType.toLowerCase() == 'transfer') {
+                              if (cost > 0) {
+                                cost = -cost;
+                              }
+                            } else {
+                              if (cost < 0) {
+                                cost = -cost;
+                              }
                             }
-                          } else {
-                            if (cost < 0) {
-                              cost = -cost;
-                            }
+                            type = manualType;
                           }
-                          type = manualType;
-                        }
-                        _fireStore
-                            .collection('users')
-                            .doc(uid)
-                            .collection('wallet')
-                            // ignore: deprecated_member_use
-                            .doc(firebaseInstance.walletID.toString())
-                            .collection('transaction')
-                            .add({
-                          'class': classCarousel(_currentIndex),
-                          'cost': cost ?? 0,
-                          'createdOn': FieldValue.serverTimestamp(),
-                          'name': currentTransaction.name,
-                          'type': type.toLowerCase() ?? 'null'
-                        });
-                        //transfer target
-
-                        if (type.toLowerCase() == 'transfer') {
                           _fireStore
                               .collection('users')
                               .doc(uid)
                               .collection('wallet')
                               // ignore: deprecated_member_use
-                              .doc(currentTransaction.targetWalletID.toString())
+                              .doc(firebaseInstance.walletID.toString())
                               .collection('transaction')
                               .add({
                             'class': classCarousel(_currentIndex),
-                            'cost': -currentTransaction.cost ?? 0,
+                            'cost': cost ?? 0,
                             'createdOn': FieldValue.serverTimestamp(),
                             'name': currentTransaction.name,
-                            'type': 'transfer'
+                            'type': type.toLowerCase() ?? 'null'
                           });
+                          //transfer target
+
+                          if (type.toLowerCase() == 'transfer') {
+                            _fireStore
+                                .collection('users')
+                                .doc(uid)
+                                .collection('wallet')
+                                // ignore: deprecated_member_use
+                                .doc(currentTransaction.targetWalletID
+                                    .toString())
+                                .collection('transaction')
+                                .add({
+                              'class': classCarousel(_currentIndex),
+                              'cost': -currentTransaction.cost ?? 0,
+                              'createdOn': FieldValue.serverTimestamp(),
+                              'name': currentTransaction.name,
+                              'type': 'transfer'
+                            });
+
+                            CollectionReference wallet = FirebaseFirestore
+                                .instance
+                                .collection('users')
+                                .doc(uid)
+                                .collection('wallet');
+                            wallet
+                                .doc(currentTransaction.targetWalletID
+                                    .toString())
+                                .update({
+                                  'money': FieldValue.increment(
+                                      -currentTransaction.cost)
+                                })
+                                .then((value) => print("Wallet Updated"))
+                                .catchError((error) =>
+                                    print("Failed to update wallet: $error"));
+                          }
 
                           CollectionReference wallet = FirebaseFirestore
                               .instance
@@ -419,35 +493,25 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               .doc(uid)
                               .collection('wallet');
                           wallet
-                              .doc(currentTransaction.targetWalletID.toString())
+                              .doc(firebaseInstance.walletID.toString())
                               .update({
                                 'money': FieldValue.increment(
-                                    -currentTransaction.cost)
+                                    currentTransaction.cost)
                               })
                               .then((value) => print("Wallet Updated"))
                               .catchError((error) =>
                                   print("Failed to update wallet: $error"));
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ConfirmedMainPage(index)),
+                          );
+                        } // confirm to add transaction
+
+                        else {
+                          ScaffoldMessenger.of(context).showSnackBar(noType);
                         }
-
-                        CollectionReference wallet = FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(uid)
-                            .collection('wallet');
-                        wallet
-                            .doc(firebaseInstance.walletID.toString())
-                            .update({
-                              'money':
-                                  FieldValue.increment(currentTransaction.cost)
-                            })
-                            .then((value) => print("Wallet Updated"))
-                            .catchError((error) =>
-                                print("Failed to update wallet: $error"));
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ConfirmedMainPage(index)),
-                        ); // confirm to add transaction
                       },
                       child: SvgPicture.asset(
                         'images/check-mark.svg', // confirm svg
@@ -623,4 +687,62 @@ classCarousel(_index) {
       break;
   }
   return className;
+}
+
+classToindex_carousel(className) {
+  int index;
+  switch (className) {
+    case 'food':
+      {
+        index = 0;
+      }
+      break;
+
+    case 'shopping':
+      {
+        index = 1;
+      }
+      break;
+    case 'household':
+      {
+        index = 2;
+      }
+      break;
+    case 'travel':
+      {
+        index = 3;
+      }
+      break;
+    case 'health':
+      {
+        index = 4;
+      }
+      break;
+    case 'entertainment':
+      {
+        index = 5;
+      }
+      break;
+    case 'residence':
+      {
+        index = 6;
+      }
+      break;
+    case 'income':
+      {
+        index = 7;
+      }
+      break;
+    case 'transfer':
+      {
+        index = 8;
+      }
+      break;
+    default:
+      {
+        index = 0;
+      }
+      break;
+  }
+  return index;
 }
