@@ -24,10 +24,14 @@ class Transactions {
   void setAllVariables(manualType) async {
     print('tokens = ');
     print(this.tokens);
-    await this.deleteSpace();
-    this.checkType(manualType);
-    this.checkCost();
-    this.checkName();
+    if (this.tokens.length > 0) {
+      await this.deleteSpace();
+      if (this.tokens.length >= 2) {
+        this.checkType(manualType);
+        this.checkCost();
+        this.checkName();
+      }
+    }
   }
 
   void deleteSpace() {
@@ -74,6 +78,7 @@ class Transactions {
         break;
       }
     }
+
     print(array[costLoc]);
     var localCost = array[costLoc].replaceAll(',', '');
     print(localCost);

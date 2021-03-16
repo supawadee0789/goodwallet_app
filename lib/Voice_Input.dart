@@ -14,6 +14,7 @@ import 'Manual_income.dart';
 import 'SpeechConfirmation.dart';
 import "dart:async";
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class VoiceInput extends StatefulWidget {
   final index;
@@ -43,11 +44,25 @@ class _VoiceInputState extends State<VoiceInput> {
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
-
-    _speech.listen();
-    _speech.stop();
+    Future askForPermissions() async {
+      if (await Permission.microphone.request().isGranted) {
+        // Either the permission was already granted before or the user just granted it.
+      }
+// You can request multiple permissions at once.
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.microphone,
+      ].request();
+      print(statuses[Permission.microphone]);
+    }
   }
 
+  final noText = SnackBar(
+    content: Text(
+      'Speech undetected',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 12.sp),
+    ),
+  );
   @override
   Widget build(BuildContext context) {
     var _screenWidth = MediaQuery.of(context).size.width;
@@ -162,15 +177,20 @@ class _VoiceInputState extends State<VoiceInput> {
                               _opacity = 1;
                               _textOpacity = 0;
                             });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ConfirmationMainPage(
-                                        text: _text,
-                                        index: _walletIndex,
-                                        firebaseInstance: firebaseInstance,
-                                      )),
-                            );
+                            if (_text != null && _text != '') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ConfirmationMainPage(
+                                          text: _text,
+                                          index: _walletIndex,
+                                          firebaseInstance: firebaseInstance,
+                                        )),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(noText);
+                            }
                           }, // stop recording
                           child: RadialProgress()),
                     )
