@@ -86,6 +86,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     // print(currentTransaction.tokens);
     print(index);
     currentTransaction = new Transactions();
+    _fireStore
+        .collection('users')
+        .doc(uid)
+        .collection('wallet').where('name',)
   }
 
   // ignore: non_constant_identifier_names

@@ -43,6 +43,9 @@ class _VoiceInputState extends State<VoiceInput> {
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
+
+    _speech.listen();
+    _speech.stop();
   }
 
   @override
