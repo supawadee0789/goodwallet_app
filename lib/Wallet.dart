@@ -22,6 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -43,7 +44,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
   var name;
   var email;
   var pic;
-  bool _notification = false;
+  bool _notification;
 
   @override
   void dispose() {
@@ -58,6 +59,16 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
       print(pic);
     } catch (e) {
       print(e);
+    }
+  }
+
+  checkNotificationStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool notificationStatus = prefs.getBool('NotificationStatus');
+    if (notificationStatus == null) {
+      _notification = false;
+    } else {
+      _notification = notificationStatus;
     }
   }
 
@@ -82,6 +93,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    checkNotificationStatus();
     setState(() {
       _controller = AnimationController(
         duration: const Duration(milliseconds: 200),
@@ -296,9 +308,14 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                         ),
                                         CupertinoSwitch(
                                           value: _notification,
-                                          onChanged: (bool value) {
+                                          onChanged: (bool value) async {
+                                            final SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
                                             setState(() {
                                               _notification = value;
+                                              prefs.setBool(
+                                                  'NotificationStatus', value);
                                             });
                                             if (_notification) {
                                               sendNotification(0, 11, 20, 0);
