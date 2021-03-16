@@ -294,53 +294,67 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                         color: Color(0xff706D6D),
                                         fontSize: 14.sp),
                                   ),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.notifications_active_rounded,
-                                      color: Color(0xffC88EC5),
-                                    ),
-                                    title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Notification',
-                                          style: TextStyle(
-                                              color: Color(0xffA1A1A1),
-                                              fontSize: 11.sp),
-                                        ),
-                                        CupertinoSwitch(
-                                          value: _notification ?? false,
-                                          onChanged: (bool value) async {
-                                            final SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            setState(() {
-                                              _notification = value;
-                                              prefs.setBool(
-                                                  'NotificationStatus', value);
-                                            });
-                                            if (_notification) {
-                                              sendNotification(0, 12, 42, 0);
-                                              sendNotification(1, 12, 44, 0);
-                                              sendNotification(2, 12, 46, 0);
+                                  Divider(
+                                    color: Color(0xffC88EC5),
+                                    thickness: 0.2.h,
+                                    height: 10.h,
+                                  ),
+                                  GestureDetector(
+                                    onTap: notificationSetting,
+                                    child: ListTile(
+                                      leading: Icon(
+                                        Icons.notifications_active_rounded,
+                                        color: Color(0xffC88EC5),
+                                      ),
+                                      title: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Notification',
+                                            style: TextStyle(
+                                                color: Color(0xffA1A1A1),
+                                                fontSize: 11.sp),
+                                          ),
+                                          CupertinoSwitch(
+                                            value: _notification ?? false,
+                                            onChanged: (bool value) async {
+                                              final SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              setState(() {
+                                                _notification = value;
+                                                prefs.setBool(
+                                                    'NotificationStatus',
+                                                    value);
+                                              });
+                                              if (_notification) {
+                                                sendNotification(0, 12, 42, 0);
+                                                sendNotification(1, 12, 44, 0);
+                                                sendNotification(2, 12, 46, 0);
 
-                                              // sendNotification();
-                                              print("Turned on notification");
-                                            } else {
-                                              flutterLocalNotificationsPlugin
-                                                  .cancelAll();
-                                              print(
-                                                  "All notifications are canceled");
-                                            }
-                                          },
-                                          activeColor: Color(0xffEA8D8D),
-                                        )
-                                      ],
+                                                // sendNotification();
+                                                print("Turned on notification");
+                                              } else {
+                                                flutterLocalNotificationsPlugin
+                                                    .cancelAll();
+                                                print(
+                                                    "All notifications are canceled");
+                                              }
+                                            },
+                                            activeColor: Color(0xffEA8D8D),
+                                          )
+                                        ],
+                                      ),
+                                      horizontalTitleGap: 0.5.w,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 0),
                                     ),
-                                    horizontalTitleGap: 0.5.w,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 0),
+                                  ),
+                                  Divider(
+                                    color: Color(0xffC88EC5),
+                                    thickness: 0.2.h,
+                                    height: 10.h,
                                   ),
                                 ],
                               ),
@@ -392,6 +406,409 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  notificationSetting() {
+    showDialog(
+        barrierColor: Colors.grey[350].withOpacity(0.4),
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: Material(
+              color: Color(0),
+              child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 5.h),
+                  height: 264.h,
+                  width: 264.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18.r),
+                    border: Border.all(
+                        color: Color(0xffC88EC5),
+                        width: 1.0.w,
+                        style: BorderStyle.solid),
+                  ),
+                  child: Column(
+                    children: [
+                      Stack(children: [
+                        Center(
+                          child: Text("NOTIFICATION SETTING",
+                              style: TextStyle(
+                                  color: Color(0xff6A2388),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'HinSiliguri',
+                                  decoration: TextDecoration.none)),
+                        ),
+                        Positioned(
+                          right: 5.w,
+                          top: 0,
+                          child: GestureDetector(
+                            child: Icon(
+                              Icons.clear_rounded,
+                              color: Color(0xffEA8D8D),
+                              size: 18.w,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ]),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.h, horizontal: 26.w),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 15.h),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '1.',
+                                    style: TextStyle(
+                                        color: Color(0xffEA8D8D),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'HinSiliguri',
+                                        decoration: TextDecoration.none),
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 9.w),
+                                    width: 65.w,
+                                    height: 27.h,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      obscureText: false,
+                                      cursorColor: Colors.grey[600],
+                                      cursorWidth: 1.0,
+                                      maxLength: 2,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        contentPadding: EdgeInsets.all(3.h),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        hintText: "7",
+                                        hintStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Color(0xffEA8D8D),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xffEA8D8D)),
+                                      textAlign: TextAlign.center,
+                                      onChanged: (str) {},
+                                    ),
+                                  ),
+                                  Text(
+                                    ':',
+                                    style: TextStyle(
+                                        color: Color(0xffEA8D8D),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'HinSiliguri',
+                                        decoration: TextDecoration.none),
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 9.w),
+                                    width: 65.w,
+                                    height: 27.h,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      obscureText: false,
+                                      cursorColor: Colors.grey[600],
+                                      cursorWidth: 1.0,
+                                      maxLength: 2,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        contentPadding: EdgeInsets.all(3.h),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        hintText: "00",
+                                        hintStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Color(0xffEA8D8D),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Color(0xffEA8D8D)),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 15.h),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '2.',
+                                    style: TextStyle(
+                                        color: Color(0xffEA8D8D),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'HinSiliguri',
+                                        decoration: TextDecoration.none),
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 9.w),
+                                    width: 65.w,
+                                    height: 27.h,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      obscureText: false,
+                                      cursorColor: Colors.grey[600],
+                                      cursorWidth: 1.0,
+                                      maxLength: 2,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        contentPadding: EdgeInsets.all(3.h),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        hintText: "12",
+                                        hintStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Color(0xffEA8D8D),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xffEA8D8D)),
+                                      textAlign: TextAlign.center,
+                                      onChanged: (str) {},
+                                    ),
+                                  ),
+                                  Text(
+                                    ':',
+                                    style: TextStyle(
+                                        color: Color(0xffEA8D8D),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'HinSiliguri',
+                                        decoration: TextDecoration.none),
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 9.w),
+                                    width: 65.w,
+                                    height: 27.h,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      obscureText: false,
+                                      cursorColor: Colors.grey[600],
+                                      cursorWidth: 1.0,
+                                      maxLength: 2,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        contentPadding: EdgeInsets.all(3.h),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        hintText: "00",
+                                        hintStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Color(0xffEA8D8D),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Color(0xffEA8D8D)),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 15.h),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '3.',
+                                    style: TextStyle(
+                                        color: Color(0xffEA8D8D),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'HinSiliguri',
+                                        decoration: TextDecoration.none),
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 9.w),
+                                    width: 65.w,
+                                    height: 27.h,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      obscureText: false,
+                                      cursorColor: Colors.grey[600],
+                                      cursorWidth: 1.0,
+                                      maxLength: 2,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        contentPadding: EdgeInsets.all(3.h),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        hintText: "18",
+                                        hintStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Color(0xffEA8D8D),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xffEA8D8D)),
+                                      textAlign: TextAlign.center,
+                                      onChanged: (str) {},
+                                    ),
+                                  ),
+                                  Text(
+                                    ':',
+                                    style: TextStyle(
+                                        color: Color(0xffEA8D8D),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'HinSiliguri',
+                                        decoration: TextDecoration.none),
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 9.w),
+                                    width: 65.w,
+                                    height: 27.h,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      obscureText: false,
+                                      cursorColor: Colors.grey[600],
+                                      cursorWidth: 1.0,
+                                      maxLength: 2,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        contentPadding: EdgeInsets.all(3.h),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.r)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffCB80AD),
+                                              width: 0.5.w),
+                                        ),
+                                        hintText: "00",
+                                        hintStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Color(0xffEA8D8D),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Color(0xffEA8D8D)),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 30.h),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                height: 36.h,
+                                decoration: BoxDecoration(
+                                    color: Color(0xffC88EC5),
+                                    borderRadius: BorderRadius.circular(50.r)),
+                                child: Center(
+                                  child: Text('CONFIRM',
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontFamily: 'HinSiliguri',
+                                          decoration: TextDecoration.none)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+            ),
+          );
+        });
   }
 }
 
