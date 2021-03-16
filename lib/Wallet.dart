@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:goodwallet_app/components/Notification.dart';
 import 'package:goodwallet_app/main.dart';
-import 'package:overlay_support/overlay_support.dart';
+import 'package:intl/intl.dart';
 import 'CreateWallet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_page_transition/flutter_page_transition.dart';
@@ -22,8 +22,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -46,8 +44,12 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
   var email;
   var pic;
   bool _notification = false;
-  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-  String _message;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future userHandler() async {
     try {
       name = await _auth.currentUser.displayName;
@@ -59,7 +61,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
     }
   }
 
-  sendNotification() async {
+  sendNotification(id, hour, minute, second) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails('10000',
         'FLUTTER_NOTIFICATION_CHANNEL', 'FLUTTER_NOTIFICATION_CHANNEL_DETAIL',
         importance: Importance.max, priority: Priority.high);
@@ -70,18 +72,16 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
         iOS: iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.showDailyAtTime(
-        111,
+        id,
         'Hello, spender.',
         'This is a your notifications. ',
-        Time(22, 50, 0),
+        Time(hour, minute, second),
         platformChannelSpecifics,
         payload: 'I just haven\'t Met You Yet');
   }
 
-
   @override
   void initState() {
-
     setState(() {
       _controller = AnimationController(
         duration: const Duration(milliseconds: 200),
@@ -301,7 +301,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                               _notification = value;
                                             });
                                             if (_notification) {
-                                              sendNotification();
+                                              sendNotification(0, 11, 20, 0);
+                                              sendNotification(1, 11, 21, 0);
+                                              sendNotification(2, 11, 22, 0);
+
                                               // sendNotification();
                                               print("Turned on notification");
                                             } else {
