@@ -44,7 +44,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
   var name;
   var email;
   var pic;
-  bool _notification;
+  bool _notification = false;
 
   @override
   void dispose() {
@@ -65,6 +65,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
   checkNotificationStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool notificationStatus = prefs.getBool('NotificationStatus');
+    print(notificationStatus);
     if (notificationStatus == null) {
       _notification = false;
     } else {
@@ -93,7 +94,9 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    print('-----');
     checkNotificationStatus();
+    print('======');
     setState(() {
       _controller = AnimationController(
         duration: const Duration(milliseconds: 200),
@@ -307,7 +310,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                               fontSize: 11.sp),
                                         ),
                                         CupertinoSwitch(
-                                          value: _notification,
+                                          value: _notification ?? false,
                                           onChanged: (bool value) async {
                                             final SharedPreferences prefs =
                                                 await SharedPreferences
@@ -318,9 +321,9 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                                   'NotificationStatus', value);
                                             });
                                             if (_notification) {
-                                              sendNotification(0, 11, 20, 0);
-                                              sendNotification(1, 11, 21, 0);
-                                              sendNotification(2, 11, 22, 0);
+                                              sendNotification(0, 12, 42, 0);
+                                              sendNotification(1, 12, 44, 0);
+                                              sendNotification(2, 12, 46, 0);
 
                                               // sendNotification();
                                               print("Turned on notification");
