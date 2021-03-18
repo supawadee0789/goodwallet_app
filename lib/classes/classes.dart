@@ -69,6 +69,7 @@ class Transactions {
 
   void checkCost() async {
     var array = this.tokens;
+    var aLength = array.length;
     var costLoc = -1;
     for (var loc = array.length - 1; loc >= 0; loc--) {
       print(array[loc]);
@@ -78,13 +79,15 @@ class Transactions {
         break;
       }
     }
-
     print(array[costLoc]);
     var localCost = array[costLoc].replaceAll(',', '');
     print(localCost);
     this.cost = double.parse(localCost);
     if (this.type == 'Expense' || this.type == 'Transfer') {
       this.cost = -this.cost;
+    }
+    for (var i = costLoc; i < aLength; i++) {
+      this.tokens.removeLast();
     }
   }
 
@@ -95,16 +98,14 @@ class Transactions {
     }
     print(array);
 
-    for (var i = array.length - 1; i > 0; i--) {
-      array.removeLast();
-      print(array);
-      if (this.textType[i] == 2) {
-        if (this.type == 'Expense') {
-          array.removeLast();
-        }
-        break;
-      }
-    }
+    // for (var i = array.length - 1; i > 0; i--) {
+    //   array.removeLast();
+    //   print(array);
+    //   if (this.textType[i] == 2) {
+    //     if (this.type == 'Expense') {
+    //       array.removeLast();
+    //     }
+    //     break;
 
     var name = StringBuffer();
 
