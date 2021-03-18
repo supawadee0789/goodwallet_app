@@ -146,6 +146,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       ScaffoldMessenger.of(context).showSnackBar(noCost);
       Navigator.pop(context);
     }
+
     var query = await _fireStore
         .collection('users')
         .doc(uid)
@@ -181,7 +182,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     var url =
         Uri.parse('https://goodwalletapi.herokuapp.com/classify?name=' + name);
     await Http.get(url).then((response) {
-      if (manualType == null) {
+      if (manualType == null || _screenType == 'Expense') {
         // ignore: unnecessary_statements
         if (response != null) {
           carouselDataIndex = classToindex_carousel(response.body);
@@ -593,7 +594,8 @@ class _ClassSliderState extends State<ClassSlider> {
         aspectRatio: 2.0,
         onPageChanged: (index, reason) {
           _currentIndex = index;
-          if (parent.manualType == null || parent.manualType == 'Expense') {
+          if (parent.manualType == null && parent._screenType == null ||
+              parent.manualType == 'Expense') {
             if (index == 7) {
               buttonCarouselController.animateToPage(6,
                   duration: Duration(milliseconds: 300), curve: Curves.linear);

@@ -79,7 +79,7 @@ class _LoginPopupState extends State<LoginPopup> {
                     height: 20.h,
                   ),
                   Text(
-                    'Good Wallet kuy',
+                    'Manage your expenses in a smart way.',
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: Color(0xff8C35B1),
