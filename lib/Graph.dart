@@ -632,7 +632,7 @@ class Indicator extends StatelessWidget {
 pieChartSectionData({Color color, double value, double radius, String title}) {
   return PieChartSectionData(
       color: color,
-      value: value,
+      value: (value.isNaN || value == 0) ? 0.01 : value,
       radius: radius,
       title: title,
       titleStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),

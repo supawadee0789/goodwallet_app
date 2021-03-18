@@ -34,11 +34,11 @@ class _CreateWalletState extends State<CreateWallet> {
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError &&
                 snapshot.data.docs[firebaseInstance.walletIndex] == null) {
-              return Text('Something went wrong');
+              return Text('Something went wrong, Please restart your app.');
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading...");
+              return Center(child: CircularProgressIndicator());
             }
             DocumentSnapshot wallet =
                 snapshot.data.docs[firebaseInstance.walletIndex];
@@ -151,54 +151,68 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                       child: AnimatedOpacity(
                         opacity: bottomClick == 'Wallet' ? 1 : 0,
                         duration: Duration(milliseconds: 400),
-                        child: Center(
-                          child: Container(
-                            width: 0.85.sw,
-                            height: 0.53.sh,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(32.r),
-                                color: Color.fromRGBO(255, 255, 255, 0.66)),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: 19.h,
-                                  left: 23.w,
-                                  child: Text(
-                                    "Today List",
-                                    style: TextStyle(
-                                      color: Color(0xff8C35B1),
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w700,
+                        child: GestureDetector(
+                          onPanUpdate: (details) {
+                            if (details.delta.dx < 0) {
+                              setState(() {
+                                setState(() {
+                                  _graphController.reverse();
+                                  _walletController.forward();
+                                  _budgetController.forward();
+                                  bottomClick = 'Graph';
+                                });
+                              });
+                            }
+                          },
+                          child: Center(
+                            child: Container(
+                              width: 0.85.sw,
+                              height: 0.53.sh,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(32.r),
+                                  color: Color.fromRGBO(255, 255, 255, 0.66)),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    top: 19.h,
+                                    left: 23.w,
+                                    child: Text(
+                                      "Today List",
+                                      style: TextStyle(
+                                        color: Color(0xff8C35B1),
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: TransList(firebaseInstance.walletID,
-                                      firebaseInstance),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return new History(
-                                              firebaseInstance.walletID,
-                                              firebaseInstance);
-                                        }));
-                                      },
-                                      child: Text(
-                                        "see more",
-                                        style: TextStyle(
-                                            color: Color(0xff8C35B1),
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontSize: 11.sp),
-                                      )),
-                                ),
-                              ],
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: TransList(firebaseInstance.walletID,
+                                        firebaseInstance),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return new History(
+                                                firebaseInstance.walletID,
+                                                firebaseInstance);
+                                          }));
+                                        },
+                                        child: Text(
+                                          "see more",
+                                          style: TextStyle(
+                                              color: Color(0xff8C35B1),
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              fontSize: 11.sp),
+                                        )),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -218,7 +232,27 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                       child: AnimatedOpacity(
                         opacity: bottomClick == 'Graph' ? 1 : 0,
                         duration: Duration(milliseconds: 400),
-                        child: Graph(firebaseInstance),
+                        child: GestureDetector(
+                            onPanUpdate: (details) {
+                              if (details.delta.dx > 0) {
+                                setState(() {
+                                  bud = false;
+                                  _walletController.reverse();
+                                  _graphController.forward();
+                                  _budgetController.forward();
+                                  bottomClick = 'Wallet';
+                                });
+                              } else {
+                                setState(() {
+                                  bud = true;
+                                  _budgetController.reverse();
+                                  _walletController.forward();
+                                  _graphController.forward();
+                                  bottomClick = 'Budget';
+                                });
+                              }
+                            },
+                            child: Graph(firebaseInstance)),
                       ),
                     ),
                   ),
@@ -234,7 +268,18 @@ class _ThisWalletState extends State<ThisWallet> with TickerProviderStateMixin {
                       child: AnimatedOpacity(
                         opacity: bottomClick == 'Budget' ? 1 : 0,
                         duration: Duration(milliseconds: 400),
-                        child: Budget(firebaseInstance),
+                        child: GestureDetector(
+                            onPanUpdate: (details) {
+                              if (details.delta.dx > 0) {
+                                setState(() {
+                                  _graphController.reverse();
+                                  _walletController.forward();
+                                  _budgetController.forward();
+                                  bottomClick = 'Graph';
+                                });
+                              }
+                            },
+                            child: Budget(firebaseInstance)),
                       ),
                     ),
                   )
