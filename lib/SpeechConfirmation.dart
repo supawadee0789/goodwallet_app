@@ -181,13 +181,15 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     var url =
         Uri.parse('https://goodwalletapi.herokuapp.com/classify?name=' + name);
     await Http.get(url).then((response) {
-      // ignore: unnecessary_statements
-      if (response != null) {
-        carouselDataIndex = classToindex_carousel(response.body);
-        buttonCarouselController.animateToPage(carouselDataIndex,
-            duration: Duration(milliseconds: 300), curve: Curves.linear);
-      } else {
-        print('no responses');
+      if (manualType == null) {
+        // ignore: unnecessary_statements
+        if (response != null) {
+          carouselDataIndex = classToindex_carousel(response.body);
+          buttonCarouselController.animateToPage(carouselDataIndex,
+              duration: Duration(milliseconds: 300), curve: Curves.linear);
+        } else {
+          print('no responses');
+        }
       }
     });
   }
@@ -590,16 +592,16 @@ class _ClassSliderState extends State<ClassSlider> {
         pauseAutoPlayOnTouch: true,
         aspectRatio: 2.0,
         onPageChanged: (index, reason) {
-          setState(() {
-            _currentIndex = index;
+          _currentIndex = index;
+          if (parent.manualType == null || parent.manualType == 'Expense') {
             if (index == 7) {
-              parent._screenType = "Income";
-              parent.manualType = "Income";
+              buttonCarouselController.animateToPage(6,
+                  duration: Duration(milliseconds: 300), curve: Curves.linear);
             } else if (index == 8) {
-              parent._screenType = "Income";
-              parent.manualType = "Income";
+              buttonCarouselController.animateToPage(0,
+                  duration: Duration(milliseconds: 300), curve: Curves.linear);
             }
-          });
+          }
         },
       ),
       items: cardList.map((card) {

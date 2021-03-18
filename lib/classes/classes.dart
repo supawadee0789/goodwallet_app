@@ -99,6 +99,9 @@ class Transactions {
       array.removeLast();
       print(array);
       if (this.textType[i] == 2) {
+        if (this.type == 'Expense') {
+          array.removeLast();
+        }
         break;
       }
     }
