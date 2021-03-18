@@ -96,7 +96,7 @@ class _BudgetComponentState extends State<BudgetComponent> {
           (pie.isNaN || pie <= 0 ? '0' : (pie.toStringAsFixed(1))) + '%',
           exp == null ? 0 : exp[element]));
       sectionPie.add(PieChartSectionData(
-          value: (pie == 0) || pie.isNaN ? 100 : pie,
+          value: (pie == 0) || pie.isNaN ? 0.01 : pie,
           color: graphColor[i],
           radius: 50.r,
           showTitle: false));

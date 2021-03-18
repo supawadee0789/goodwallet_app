@@ -1076,7 +1076,14 @@ class WalletList extends StatelessWidget {
                     color: Color(0x00000000),
                     onTap: () async {
                       await wallet.reference.delete();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          duration: Duration(seconds: 3),
+                          content: Text(
+                            'Wallet ${wallet['name']} has been deleted.',
+                            textAlign: TextAlign.center,
+                          )));
                       parent.setState(() {});
+
                       // Navigator.pop(context);
                       // Navigator.push(context,
                       //     MaterialPageRoute(builder: (context) {
