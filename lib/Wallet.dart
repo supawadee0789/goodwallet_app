@@ -46,6 +46,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
   var pic;
   bool _notification = false;
 
+  var _notifyTime1 = [0, 0];
+  var _notifyTime2 = [0, 0];
+  var _notifyTime3 = [0, 0];
+
   @override
   void dispose() {
     super.dispose();
@@ -86,10 +90,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
     await flutterLocalNotificationsPlugin.showDailyAtTime(
         id,
         'Hello, spender.',
-        'This is a your notifications. ',
+        "Don't forget to note your expenses",
         Time(hour, minute, second),
         platformChannelSpecifics,
-        payload: 'I just haven\'t Met You Yet');
+        payload: '');
   }
 
   @override
@@ -224,11 +228,13 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                       opacity: openNav,
                       duration: Duration(milliseconds: 400),
                       child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _controller.forward();
-                            openNav = 0.0;
-                          });
+                        onPanUpdate: (details) {
+                          if (details.delta.dx < 0) {
+                            setState(() {
+                              _controller.forward();
+                              openNav = 0.0;
+                            });
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.fromLTRB(
@@ -329,12 +335,36 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                                     value);
                                               });
                                               if (_notification) {
-                                                sendNotification(0, 12, 42, 0);
-                                                sendNotification(1, 12, 44, 0);
-                                                sendNotification(2, 12, 46, 0);
+                                                sendNotification(
+                                                    0,
+                                                    _notifyTime1[0],
+                                                    _notifyTime1[1],
+                                                    0);
+                                                sendNotification(
+                                                    1,
+                                                    _notifyTime2[0],
+                                                    _notifyTime2[1],
+                                                    0);
+                                                sendNotification(
+                                                    3,
+                                                    _notifyTime3[0],
+                                                    _notifyTime3[1],
+                                                    0);
 
                                                 // sendNotification();
                                                 print("Turned on notification");
+
+                                                final List<
+                                                        PendingNotificationRequest>
+                                                    pendingNotificationRequests =
+                                                    await flutterLocalNotificationsPlugin
+                                                        .pendingNotificationRequests();
+                                                pendingNotificationRequests
+                                                    .forEach((element) {
+                                                  print(element.id.toString() +
+                                                      ' ' +
+                                                      element.body);
+                                                });
                                               } else {
                                                 flutterLocalNotificationsPlugin
                                                     .cancelAll();
@@ -477,7 +507,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                   Container(
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 9.w),
-                                    width: 65.w,
+                                    width: 60.w,
                                     height: 27.h,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
@@ -513,7 +543,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                           fontWeight: FontWeight.bold,
                                           color: Color(0xffEA8D8D)),
                                       textAlign: TextAlign.center,
-                                      onChanged: (str) {},
+                                      onChanged: (str) {
+                                        _notifyTime1[0] =
+                                            int.tryParse(str) ?? 0;
+                                      },
                                     ),
                                   ),
                                   Text(
@@ -528,7 +561,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                   Container(
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 9.w),
-                                    width: 65.w,
+                                    width: 60.w,
                                     height: 27.h,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
@@ -563,6 +596,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                           fontSize: 16.sp,
                                           color: Color(0xffEA8D8D)),
                                       textAlign: TextAlign.center,
+                                      onChanged: (str) {
+                                        _notifyTime1[1] =
+                                            int.tryParse(str) ?? 0;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -584,7 +621,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                   Container(
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 9.w),
-                                    width: 65.w,
+                                    width: 60.w,
                                     height: 27.h,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
@@ -620,7 +657,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                           fontWeight: FontWeight.bold,
                                           color: Color(0xffEA8D8D)),
                                       textAlign: TextAlign.center,
-                                      onChanged: (str) {},
+                                      onChanged: (str) {
+                                        _notifyTime2[0] =
+                                            int.tryParse(str) ?? 0;
+                                      },
                                     ),
                                   ),
                                   Text(
@@ -635,7 +675,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                   Container(
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 9.w),
-                                    width: 65.w,
+                                    width: 60.w,
                                     height: 27.h,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
@@ -670,6 +710,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                           fontSize: 16.sp,
                                           color: Color(0xffEA8D8D)),
                                       textAlign: TextAlign.center,
+                                      onChanged: (str) {
+                                        _notifyTime2[1] =
+                                            int.tryParse(str) ?? 0;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -691,7 +735,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                   Container(
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 9.w),
-                                    width: 65.w,
+                                    width: 60.w,
                                     height: 27.h,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
@@ -727,7 +771,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                           fontWeight: FontWeight.bold,
                                           color: Color(0xffEA8D8D)),
                                       textAlign: TextAlign.center,
-                                      onChanged: (str) {},
+                                      onChanged: (str) {
+                                        _notifyTime3[0] =
+                                            int.tryParse(str) ?? 0;
+                                      },
                                     ),
                                   ),
                                   Text(
@@ -742,7 +789,7 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                   Container(
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 9.w),
-                                    width: 65.w,
+                                    width: 60.w,
                                     height: 27.h,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
@@ -777,6 +824,10 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                                           fontSize: 16.sp,
                                           color: Color(0xffEA8D8D)),
                                       textAlign: TextAlign.center,
+                                      onChanged: (str) {
+                                        _notifyTime3[1] =
+                                            int.tryParse(str) ?? 0;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -784,8 +835,37 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                             ),
                             SizedBox(height: 30.h),
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 Navigator.pop(context);
+                                flutterLocalNotificationsPlugin.cancelAll();
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                setState(() {
+                                  _notification = true;
+                                  prefs.setBool('NotificationStatus', true);
+                                });
+                                if (_notification) {
+                                  sendNotification(
+                                      0, _notifyTime1[0], _notifyTime1[1], 0);
+                                  sendNotification(
+                                      1, _notifyTime2[0], _notifyTime2[1], 0);
+                                  sendNotification(
+                                      2, _notifyTime3[0], _notifyTime3[1], 0);
+
+                                  // sendNotification();
+                                  print("Turned on notification");
+
+                                  final List<PendingNotificationRequest>
+                                      pendingNotificationRequests =
+                                      await flutterLocalNotificationsPlugin
+                                          .pendingNotificationRequests();
+                                  pendingNotificationRequests
+                                      .forEach((element) {
+                                    print(element.id.toString() +
+                                        ' ' +
+                                        element.body);
+                                  });
+                                }
                               },
                               child: Container(
                                 height: 36.h,

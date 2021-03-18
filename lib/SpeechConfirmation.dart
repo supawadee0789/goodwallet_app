@@ -171,13 +171,26 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         buttonCarouselController.animateToPage(carouselDataIndex,
             duration: Duration(milliseconds: 300), curve: Curves.linear);
       } else {
-        print('data does not exists');
+        getAPI(currentTransaction.name);
       }
     });
-    print('done!');
   }
 
   CarouselController buttonCarouselController = CarouselController();
+  getAPI(name) async {
+    var url =
+        Uri.parse('https://goodwalletapi.herokuapp.com/classify?name=' + name);
+    await Http.get(url).then((response) {
+      // ignore: unnecessary_statements
+      if (response != null) {
+        carouselDataIndex = classToindex_carousel(response.body);
+        buttonCarouselController.animateToPage(carouselDataIndex,
+            duration: Duration(milliseconds: 300), curve: Curves.linear);
+      } else {
+        print('no responses');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -331,8 +344,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   children: [
                     AbsorbPointer(
                         absorbing: carouselAbsorb,
-                        child:
-                            ClassSlider(buttonCarouselController, _screenType)),
+                        child: ClassSlider(buttonCarouselController, this)),
                     Positioned(
                         left: 5.w,
                         top: 45.h,
@@ -534,17 +546,17 @@ int _currentIndex = 0;
 
 class ClassSlider extends StatefulWidget {
   final buttonCarouselController;
-  final _screenType;
-  ClassSlider(this.buttonCarouselController, this._screenType);
+  _ConfirmationPageState parent;
+  ClassSlider(this.buttonCarouselController, this.parent);
   @override
   _ClassSliderState createState() =>
-      _ClassSliderState(buttonCarouselController, _screenType);
+      _ClassSliderState(buttonCarouselController, parent);
 }
 
 class _ClassSliderState extends State<ClassSlider> {
   final buttonCarouselController;
-  final _screenType;
-  _ClassSliderState(this.buttonCarouselController, this._screenType);
+  _ConfirmationPageState parent;
+  _ClassSliderState(this.buttonCarouselController, this.parent);
   List cardList = [
     ClassItem('Food'),
     ClassItem('Shopping'),
@@ -580,6 +592,13 @@ class _ClassSliderState extends State<ClassSlider> {
         onPageChanged: (index, reason) {
           setState(() {
             _currentIndex = index;
+            if (index == 7) {
+              parent._screenType = "Income";
+              parent.manualType = "Income";
+            } else if (index == 8) {
+              parent._screenType = "Income";
+              parent.manualType = "Income";
+            }
           });
         },
       ),
