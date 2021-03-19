@@ -228,6 +228,12 @@ class _WalletState extends State<Wallet> with TickerProviderStateMixin {
                       opacity: openNav,
                       duration: Duration(milliseconds: 400),
                       child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _controller.forward();
+                            openNav = 0.0;
+                          });
+                        },
                         onPanUpdate: (details) {
                           if (details.delta.dx < 0) {
                             setState(() {
