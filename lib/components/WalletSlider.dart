@@ -130,7 +130,9 @@ class WalletItem extends StatelessWidget {
     return Container(
       child: Text(
         walletName,
-        style: TextStyle(color: Color(0xffB58FE7), fontSize: 16.sp),
+        style: TextStyle(
+            color: Color(0xffB58FE7),
+            fontSize: walletName.length > 9 ? 13.sp : 16.sp),
       ),
     );
   }
