@@ -46,7 +46,7 @@ class _WalletSelectorState extends State<WalletSelector> {
           return MenuButton(
             menuButtonBackgroundColor: Color(0),
             child: SizedBox(
-              width: 90.w,
+              width: 120.w,
               height: 40.h,
               child: Padding(
                 padding: EdgeInsets.only(left: 16.w, right: 11.w),
@@ -56,7 +56,8 @@ class _WalletSelectorState extends State<WalletSelector> {
                     Flexible(
                       child: Text(
                         selectedItem,
-                        style: TextStyle(color: Color(0xffA890FE)),
+                        style: TextStyle(
+                            color: Color(0xffA890FE), fontSize: 13.sp),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -86,7 +87,7 @@ class _WalletSelectorState extends State<WalletSelector> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Text(
                   value,
-                  style: TextStyle(color: Color(0xffA890FE)),
+                  style: TextStyle(color: Color(0xffA890FE), fontSize: 13.sp),
                 )), // Widget displayed for each item
             toggledChild: Container(
               color: Colors.white,
@@ -101,7 +102,8 @@ class _WalletSelectorState extends State<WalletSelector> {
                       Flexible(
                         child: Text(
                           selectedItem,
-                          style: TextStyle(color: Color(0xffA890FE)),
+                          style: TextStyle(
+                              color: Color(0xffA890FE), fontSize: 13.sp),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

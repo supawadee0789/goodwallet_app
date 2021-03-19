@@ -96,6 +96,15 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       style: TextStyle(fontSize: 12.sp),
     ),
   );
+
+  final noName = SnackBar(
+    content: Text(
+      'Transactions name undetected',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 12.sp),
+    ),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -145,6 +154,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     if (currentTransaction.cost == null) {
       ScaffoldMessenger.of(context).showSnackBar(noCost);
       Navigator.pop(context);
+    } else if (currentTransaction.name == null ||
+        currentTransaction.name == '') {
+      ScaffoldMessenger.of(context).showSnackBar(noName);
+      Navigator.pop(context);
     }
 
     var query = await _fireStore
@@ -191,8 +204,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         if (response != null && response.statusCode == 200) {
           print('APIs response is ' + response.body);
           carouselDataIndex = classToindex_carousel(response.body);
-          buttonCarouselController.animateToPage(carouselDataIndex,
-              duration: Duration(milliseconds: 300), curve: Curves.linear);
+          if (mounted) {
+            buttonCarouselController.animateToPage(carouselDataIndex,
+                duration: Duration(milliseconds: 300), curve: Curves.linear);
+          }
         } else {
           print('no response, error code: ' + response.statusCode.toString());
         }
