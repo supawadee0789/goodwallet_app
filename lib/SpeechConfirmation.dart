@@ -69,7 +69,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   String _screenType = '';
   var carouselAbsorb = false;
   int carouselDataIndex;
-  var ExpenseOpacity = 1.0;
+  var expenseOpacity = 1.0;
   var transferOpacity = 0.0;
   var incomeOpacity = 0.0;
   _ConfirmationPageState(
@@ -131,13 +131,13 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
         if (_screenType.toLowerCase() == 'income') {
           carouselAbsorb = true;
-          ExpenseOpacity = 0;
+          expenseOpacity = 0;
           incomeOpacity = 1;
           transferOpacity = 0;
         } else if (_screenType.toLowerCase() == 'transfer') {
           carouselAbsorb = true;
           incomeOpacity = 0;
-          ExpenseOpacity = 0;
+          expenseOpacity = 0;
           transferOpacity = 1;
         }
       });
@@ -158,10 +158,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     print('this is query result');
     query.forEach((element) {
       if (element.docs.isNotEmpty) {
-        print(element.docs[0]['name']);
-        print(element.docs[0]['class']);
         var dataType = element.docs[0]['type'];
-
+        var dataClass = element.docs[0]['class'];
+        print('found transaction [' +
+            element.docs[0]['name'] +
+            '] in wallet database, type = ' +
+            dataType +
+            ', class = ' +
+            dataClass);
         setState(() {
           dataType.replaceFirst(dataType[0], dataType[0].toUpperCase());
           _screenType = dataType;
@@ -238,7 +242,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 print(manualType);
 
                                 carouselAbsorb = false;
-                                ExpenseOpacity = 1;
+                                expenseOpacity = 1;
                                 transferOpacity = 0;
                                 incomeOpacity = 0;
                                 buttonCarouselController.animateToPage(
@@ -275,7 +279,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 manualType = 'Income';
                                 print(manualType);
                                 carouselAbsorb = true;
-                                ExpenseOpacity = 0;
+                                expenseOpacity = 0;
                                 transferOpacity = 0;
                                 incomeOpacity = 1;
                               });
@@ -307,7 +311,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 manualType = 'Transfer';
                                 print(manualType);
                                 carouselAbsorb = true;
-                                ExpenseOpacity = 0;
+                                expenseOpacity = 0;
                                 transferOpacity = 1;
                                 incomeOpacity = 0;
                               });
@@ -346,14 +350,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     AbsorbPointer(
                         absorbing: carouselAbsorb,
                         child: Opacity(
-                            opacity: ExpenseOpacity,
+                            opacity: expenseOpacity,
                             child:
                                 ClassSlider(buttonCarouselController, this))),
                     Positioned(
                         left: 5.w,
                         top: 45.h,
                         child: Opacity(
-                          opacity: ExpenseOpacity,
+                          opacity: expenseOpacity,
                           child: GestureDetector(
                             onTap: () {
                               buttonCarouselController.previousPage();
@@ -369,7 +373,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         right: 5.w,
                         top: 45.h,
                         child: Opacity(
-                          opacity: ExpenseOpacity,
+                          opacity: expenseOpacity,
                           child: GestureDetector(
                             onTap: () {
                               buttonCarouselController.nextPage();
@@ -614,16 +618,6 @@ class _ClassSliderState extends State<ClassSlider> {
         aspectRatio: 2.0,
         onPageChanged: (index, reason) {
           _currentIndex = index;
-          if (parent.manualType == null && parent._screenType == null ||
-              parent.manualType == 'Expense') {
-            if (index == 7) {
-              buttonCarouselController.animateToPage(6,
-                  duration: Duration(milliseconds: 300), curve: Curves.linear);
-            } else if (index == 8) {
-              buttonCarouselController.animateToPage(0,
-                  duration: Duration(milliseconds: 300), curve: Curves.linear);
-            }
-          }
         },
       ),
       items: cardList.map((card) {
