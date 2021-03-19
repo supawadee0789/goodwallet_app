@@ -69,8 +69,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   String _screenType = '';
   var carouselAbsorb = false;
   int carouselDataIndex;
-  var iconOpacity = 1.0;
+  var ExpenseOpacity = 1.0;
   var transferOpacity = 0.0;
+  var incomeOpacity = 0.0;
   _ConfirmationPageState(
       {Key key, @required this.resultText, this.index, this.firebaseInstance});
 
@@ -130,15 +131,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
         if (_screenType.toLowerCase() == 'income') {
           carouselAbsorb = true;
-          iconOpacity = 0;
-          buttonCarouselController.animateToPage(7,
-              duration: Duration(milliseconds: 300), curve: Curves.linear);
+          ExpenseOpacity = 0;
+          incomeOpacity = 1;
+          transferOpacity = 0;
         } else if (_screenType.toLowerCase() == 'transfer') {
           carouselAbsorb = true;
-          iconOpacity = 0;
+          incomeOpacity = 0;
+          ExpenseOpacity = 0;
           transferOpacity = 1;
-          buttonCarouselController.animateToPage(8,
-              duration: Duration(milliseconds: 300), curve: Curves.linear);
         }
       });
     });
@@ -184,12 +184,13 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     await Http.get(url).then((response) {
       if (manualType == null || _screenType == 'Expense') {
         // ignore: unnecessary_statements
-        if (response != null) {
+        if (response != null && response.statusCode == 200) {
+          print('APIs response is ' + response.body);
           carouselDataIndex = classToindex_carousel(response.body);
           buttonCarouselController.animateToPage(carouselDataIndex,
               duration: Duration(milliseconds: 300), curve: Curves.linear);
         } else {
-          print('no responses');
+          print('no response, error code: ' + response.statusCode.toString());
         }
       }
     });
@@ -237,8 +238,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 print(manualType);
 
                                 carouselAbsorb = false;
-                                iconOpacity = 1;
+                                ExpenseOpacity = 1;
                                 transferOpacity = 0;
+                                incomeOpacity = 0;
                                 buttonCarouselController.animateToPage(
                                     carouselDataIndex ?? 0,
                                     duration: Duration(milliseconds: 300),
@@ -273,11 +275,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 manualType = 'Income';
                                 print(manualType);
                                 carouselAbsorb = true;
-                                iconOpacity = 0;
+                                ExpenseOpacity = 0;
                                 transferOpacity = 0;
-                                buttonCarouselController.animateToPage(7,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.linear);
+                                incomeOpacity = 1;
                               });
                             },
                             child: Container(
@@ -307,11 +307,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 manualType = 'Transfer';
                                 print(manualType);
                                 carouselAbsorb = true;
-                                iconOpacity = 0;
+                                ExpenseOpacity = 0;
                                 transferOpacity = 1;
-                                buttonCarouselController.animateToPage(8,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.linear);
+                                incomeOpacity = 0;
                               });
                             },
                             child: Container(
@@ -347,27 +345,40 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   children: [
                     AbsorbPointer(
                         absorbing: carouselAbsorb,
-                        child: ClassSlider(buttonCarouselController, this)),
+                        child: Opacity(
+                            opacity: ExpenseOpacity,
+                            child:
+                                ClassSlider(buttonCarouselController, this))),
                     Positioned(
                         left: 5.w,
                         top: 45.h,
                         child: Opacity(
-                          opacity: iconOpacity,
-                          child: Icon(
-                            Icons.keyboard_arrow_left_rounded,
-                            color: Colors.white,
-                            size: 40.w,
+                          opacity: ExpenseOpacity,
+                          child: GestureDetector(
+                            onTap: () {
+                              buttonCarouselController.previousPage();
+                            },
+                            child: Icon(
+                              Icons.keyboard_arrow_left_rounded,
+                              color: Colors.white,
+                              size: 40.w,
+                            ),
                           ),
                         )),
                     Positioned(
                         right: 5.w,
                         top: 45.h,
                         child: Opacity(
-                          opacity: iconOpacity,
-                          child: Icon(
-                            Icons.keyboard_arrow_right_rounded,
-                            color: Colors.white,
-                            size: 40.w,
+                          opacity: ExpenseOpacity,
+                          child: GestureDetector(
+                            onTap: () {
+                              buttonCarouselController.nextPage();
+                            },
+                            child: Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                              color: Colors.white,
+                              size: 40.w,
+                            ),
                           ),
                         )),
                     Positioned(
@@ -381,7 +392,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               WalletSelector(currentTransaction)
                             ],
                           ),
-                        ))
+                        )),
+                    Center(
+                        child: Opacity(
+                      opacity: incomeOpacity,
+                      child: ClassItem('Income'),
+                    )),
+                    Center(
+                        child: Opacity(
+                      opacity: transferOpacity,
+                      child: ClassItem('Transfer'),
+                    ))
                   ],
                 ))
               ],
@@ -460,14 +481,28 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               .doc(firebaseInstance.walletID.toString())
                               .collection('transaction')
                               .add({
-                            'class': classCarousel(_currentIndex),
+                            'class': type.toLowerCase() == 'expense'
+                                ? classCarousel(_currentIndex)
+                                : type.toLowerCase(),
                             'cost': cost ?? 0,
                             'createdOn': FieldValue.serverTimestamp(),
                             'name': currentTransaction.name,
                             'type': type.toLowerCase() ?? 'null'
                           });
-                          //transfer target
+                          // adjust total money of current wallet
+                          CollectionReference wallet = FirebaseFirestore
+                              .instance
+                              .collection('users')
+                              .doc(uid)
+                              .collection('wallet');
+                          wallet
+                              .doc(firebaseInstance.walletID.toString())
+                              .update({'money': FieldValue.increment(cost)})
+                              .then((value) => print("Wallet Updated"))
+                              .catchError((error) =>
+                                  print("Failed to update wallet: $error"));
 
+                          //transfer target
                           if (type.toLowerCase() == 'transfer') {
                             _fireStore
                                 .collection('users')
@@ -478,13 +513,13 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                     .toString())
                                 .collection('transaction')
                                 .add({
-                              'class': classCarousel(_currentIndex),
-                              'cost': -currentTransaction.cost ?? 0,
+                              'class': 'transfer',
+                              'cost': cost < 0 ? -cost : cost,
                               'createdOn': FieldValue.serverTimestamp(),
                               'name': currentTransaction.name,
                               'type': 'transfer'
                             });
-
+                            // adjust total money of target wallet
                             CollectionReference wallet = FirebaseFirestore
                                 .instance
                                 .collection('users')
@@ -495,27 +530,12 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                     .toString())
                                 .update({
                                   'money': FieldValue.increment(
-                                      -currentTransaction.cost)
+                                      cost < 0 ? -cost : cost)
                                 })
                                 .then((value) => print("Wallet Updated"))
                                 .catchError((error) =>
                                     print("Failed to update wallet: $error"));
                           }
-
-                          CollectionReference wallet = FirebaseFirestore
-                              .instance
-                              .collection('users')
-                              .doc(uid)
-                              .collection('wallet');
-                          wallet
-                              .doc(firebaseInstance.walletID.toString())
-                              .update({
-                                'money': FieldValue.increment(
-                                    currentTransaction.cost)
-                              })
-                              .then((value) => print("Wallet Updated"))
-                              .catchError((error) =>
-                                  print("Failed to update wallet: $error"));
 
                           Navigator.push(
                             context,
@@ -568,8 +588,8 @@ class _ClassSliderState extends State<ClassSlider> {
     ClassItem('Health'),
     ClassItem('Entertainment'),
     ClassItem('Residence'),
-    ClassItem('Income'),
-    ClassItem('Transfer')
+    // ClassItem('Income'),
+    // ClassItem('Transfer')
   ];
 
   List<T> map<T>(List list, Function handler) {
@@ -693,16 +713,7 @@ classCarousel(_index) {
         className = 'residence';
       }
       break;
-    case 7:
-      {
-        className = 'income';
-      }
-      break;
-    case 8:
-      {
-        className = 'transfer';
-      }
-      break;
+
     default:
       {
         className = 'food';
@@ -749,16 +760,6 @@ classToindex_carousel(className) {
     case 'residence':
       {
         index = 6;
-      }
-      break;
-    case 'income':
-      {
-        index = 7;
-      }
-      break;
-    case 'transfer':
-      {
-        index = 8;
       }
       break;
     default:

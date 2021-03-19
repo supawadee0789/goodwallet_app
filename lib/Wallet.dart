@@ -1045,7 +1045,9 @@ class WalletList extends StatelessWidget {
                             wallet['name'],
                             style: TextStyle(
                                 color: Color(0xffA1A1A1),
-                                fontSize: 20.sp,
+                                fontSize: wallet['name'].toString().length > 9
+                                    ? 16.sp
+                                    : 20.sp,
                                 decoration: TextDecoration.none,
                                 fontFamily: 'Knit'),
                           ),
@@ -1055,7 +1057,8 @@ class WalletList extends StatelessWidget {
                                 .replaceAllMapped(reg, mathFunc),
                             style: TextStyle(
                                 color: Color(0xffA890FE),
-                                fontSize: 32.sp,
+                                fontSize:
+                                    wallet['money'] > 10000 ? 26.sp : 32.sp,
                                 fontWeight: FontWeight.w600,
                                 decoration: TextDecoration.none),
                           )

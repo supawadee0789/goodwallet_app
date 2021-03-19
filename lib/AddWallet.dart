@@ -71,11 +71,13 @@ class _AddWalletState extends State<AddWallet> {
                     Container(
                       width: 214.w,
                       child: TextField(
+                        maxLength: 15,
                         focusNode: focusName,
                         decoration: new InputDecoration(
                             hintText: hintText,
                             hintStyle: TextStyle(
-                                color: Color(0xffA1A1A1), fontSize: 22.sp)),
+                                color: Color(0xffA1A1A1), fontSize: 22.sp),
+                            counterText: ''),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 22.sp, color: Color(0xffA1A1A1)),
