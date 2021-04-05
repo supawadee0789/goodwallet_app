@@ -10,8 +10,7 @@ Good Wallet is an expense management application.
 
 `git clone https://github.com/macropusgiganteus/goodwallet.git`
 
-### 2. Go to directory -> goodwallet/Source code/Application/
-### 3. Build an application
+### 2. Build an application
 
 #### - On simulators :
 
